@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 14.463526429590928,
+        "y": 4.51677370359817
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 13.234638448972328,
+        "y": 4.573742020580489
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 10.84196913571492,
+        "y": 4.51677370359817
+      },
+      "prevControl": {
+        "x": 11.224470692596208,
+        "y": 5.086456873421361
+      },
+      "nextControl": {
+        "x": 10.413291959212765,
+        "y": 3.8783183343396415
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 10.426914254843737,
+        "y": 1.7985711504417947
+      },
+      "prevControl": {
+        "x": 10.467605909831107,
+        "y": 3.4750673359214748
+      },
+      "nextControl": null,
+      "isLocked": false
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 1.0050860052540533
+  },
+  "reversed": false,
+  "folder": "red_autos",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  }
+}

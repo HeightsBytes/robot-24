@@ -1,0 +1,24 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 14.463526429590928,
+      "y": 4.51677370359817
+    },
+    "rotation": 178.430645195251
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "curve_red"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null
+}

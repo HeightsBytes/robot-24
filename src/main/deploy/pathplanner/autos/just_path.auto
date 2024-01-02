@@ -1,0 +1,42 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 14.463526429590928,
+      "y": 4.51677370359817
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "arm_car"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "curve_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "arm_stow"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null
+}

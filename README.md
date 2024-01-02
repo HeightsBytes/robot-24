@@ -1,4 +1,4 @@
-[![CI](https://github.com/HeightsBytes/robot-24/actions/workflows/build.yml/badge.svg)](https://github.com/HeightsBytes/robot-24/actions/workflows/build.yml)
+[![CI](https://github.com/HeightsBytes/robot-24/actions/workflows/build.yml/badge.svg)](https://github.com/HeightsBytes/robot-24/actions/workflows/build.yml) [![Lint and Format](https://github.com/HeightsBytes/robot-24/actions/workflows/format.yml/badge.svg)](https://github.com/HeightsBytes/robot-24/actions/workflows/format.yml)
 
 # Code Rules
 1. [Autonomous](#autonomous)    

@@ -24,8 +24,8 @@ Note: It is very likely that pathplanner will add path mirroring when the field 
 - [Phoenix(CTRE)Lib](https://pro.docs.ctr-electronics.com/en/latest/docs/yearly-changes/yearly-changelog.html)
 
 ## Coding Guidelines
-### Pull Requests
-While not required, it is highly encouraged that people use pull requests in order to ensure code quality.  
+### Branches
+When writing something new at home, it is advised to create a branch in this repo and making a pull request.
 
 ### Commits on main
-It is highly discouraged to commit directly to main, people should create branches for features they intend to make. 
+It is highly discouraged to commit directly to main, people should create branches for features they intend to make. Exceptions are made for code that was written during meetings and small changes. 

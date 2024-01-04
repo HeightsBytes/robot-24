@@ -4,6 +4,8 @@
 1. [Autonomous](#autonomous)    
 2. [Libraries](#libraries)
 3. [Coding Guidelines](#coding-guidelines)
+4. [Building](#building)
+5. [Linting](#linting)
 
 ## Autonomous
 ### Pathplanner
@@ -29,3 +31,14 @@ When writing something new at home, it is advised to create a branch in this rep
 
 ### Commits on main
 It is highly discouraged to commit directly to main, people should create branches for features they intend to make. Exceptions are made for code that was written during meetings and small changes. 
+
+## Building 
+### VSCode
+On the WPILib VSCode extension, code can simply be built and deployed with the wpilib extension. 
+
+### Other
+To build on other editors, use the command line and use use './gradlew build' to build. All tasks can be listed with './gradlew tasks'
+If it asks for execute access, just use chmod +x gradlew. 
+
+## Linting
+See [This](https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/code-formatting.html)

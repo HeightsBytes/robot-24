@@ -16,8 +16,10 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
     : m_driveMotor(driveMotorChannel, rev::CANSparkMax::MotorType::kBrushless),
       m_turningMotor(turningMotorChannel,
                      rev::CANSparkMax::MotorType::kBrushless),
-      m_sparkDriveEncoder(m_driveMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
-      m_sparkTurnEncoder(m_turningMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
+      m_sparkDriveEncoder(m_driveMotor.GetEncoder(
+          rev::SparkRelativeEncoder::Type::kHallSensor)),
+      m_sparkTurnEncoder(m_turningMotor.GetEncoder(
+          rev::SparkRelativeEncoder::Type::kHallSensor)),
       m_tController(m_turningMotor.GetPIDController()),
       m_dController(m_driveMotor.GetPIDController()),
       m_turningEncoder(turningEncoderPorts, offset),

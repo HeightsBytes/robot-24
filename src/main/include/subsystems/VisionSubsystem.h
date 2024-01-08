@@ -44,7 +44,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
       std::optional<photonlib::EstimatedRobotPose> pose);
 
   frc::AprilTagFieldLayout m_layout =
-      frc::LoadAprilTagLayoutField(frc::AprilTagField::k2023ChargedUp);
+      frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo);
 
   photonlib::PhotonPoseEstimator m_rightEst;
   photonlib::PhotonPoseEstimator m_leftEst;

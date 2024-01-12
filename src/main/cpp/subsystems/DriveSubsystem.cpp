@@ -44,7 +44,15 @@ DriveSubsystem::DriveSubsystem()
       [this] { return GetPose(); }, [this](frc::Pose2d pose) { SetPose(pose); },
       [this] { return GetVelocity(); },
       [this](frc::ChassisSpeeds speeds) { DriveRobotRelative(speeds); },
-      AutoConstants::kConfig, this);
+      AutoConstants::kConfig,
+      [this] {
+        auto alliance = frc::DriverStation::GetAlliance();
+        if (alliance) {
+          return alliance.value() == frc::DriverStation::Alliance::kRed;
+        }
+        return false;
+      },
+      this);
 }
 
 void DriveSubsystem::Periodic() {

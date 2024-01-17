@@ -117,6 +117,23 @@ inline const frc::Transform3d LeftTransform{
     frc::Rotation3d{0_deg, 0_deg, 150_deg}};
 }  // namespace VisionConstants
 
+namespace IntakeConstants {
+// TODO: find constants
+} // namespace IntakeConstants
+
+namespace ClimbConstants {
+// TODO: find constants
+} // namespace ClimbConstants
+
+namespace ArmConstants {
+//TODO: find constants
+} // namespace ArmConstants
+
+namespace ShooterConstants {
+//TODO: find constants
+} // namespace ShooterConstant
+
+
 namespace AutoConstants {
 
 inline constexpr auto kMaxSpeed = 3_mps;

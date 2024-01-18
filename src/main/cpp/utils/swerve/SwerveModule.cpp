@@ -24,8 +24,8 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
       m_dController(m_driveMotor.GetPIDController()),
       m_turningEncoder(turningEncoderPorts, offset),
       m_id(turningEncoderPorts) {
-  m_driveMotor.RestoreFactoryDefaults();
-  m_turningMotor.RestoreFactoryDefaults();
+  // m_driveMotor.RestoreFactoryDefaults();
+  // m_turningMotor.RestoreFactoryDefaults();
 
   // make motors default to break mode
   m_driveMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
@@ -62,8 +62,8 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   m_dController.SetFF(ModuleConstants::kFFDrive * 1 / 12);
   m_dController.SetOutputRange(-1, 1);
 
-  m_driveMotor.BurnFlash();
-  m_turningMotor.BurnFlash();
+  // m_driveMotor.BurnFlash();
+  // m_turningMotor.BurnFlash();
 }
 
 frc::SwerveModuleState SwerveModule::GetState() const {

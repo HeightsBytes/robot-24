@@ -166,6 +166,9 @@ void ClimbSubsystem::ClimbRight() {
 }
 
 void ClimbSubsystem::ArmControl() {
+  if (!m_zeroed) {
+    return;
+  }
   if (m_manual) {
     m_leftTarget = GetLeftHeight();
     m_rightTarget = GetRightHeight();

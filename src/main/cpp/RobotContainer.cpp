@@ -55,8 +55,10 @@ void RobotContainer::ConfigureDriverButtons() {
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
-  m_operatorController.A().OnTrue(m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kMax));
-  m_operatorController.B().OnTrue(m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kStow));
+  m_operatorController.A().OnTrue(
+      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kMax));
+  m_operatorController.B().OnTrue(
+      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kStow));
 }
 
 void RobotContainer::ConfigureTriggers() {

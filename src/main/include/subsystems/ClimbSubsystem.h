@@ -19,6 +19,9 @@
 // Independent control
 // Assume zero upon startup
 class ClimbSubsystem : public frc2::SubsystemBase {
+
+  friend class ZeroClimber;
+
  public:
   enum class Behavior { kSync, kAsync };
 
@@ -71,4 +74,6 @@ class ClimbSubsystem : public frc2::SubsystemBase {
   units::meter_t m_syncTarget;
   units::meter_t m_leftTarget;
   units::meter_t m_rightTarget;
+
+  bool m_zeroed;
 };

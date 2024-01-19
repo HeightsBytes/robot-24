@@ -22,7 +22,8 @@ ClimbSubsystem::ClimbSubsystem()
       m_behavior(Behavior::kSync),
       m_syncTarget(ClimbConstants::Positions::kStow),
       m_leftTarget(ClimbConstants::Positions::kStow),
-      m_rightTarget(ClimbConstants::Positions::kStow) {
+      m_rightTarget(ClimbConstants::Positions::kStow),
+      m_zeroed(false) {
   m_motorLeft.RestoreFactoryDefaults();
   m_motorRight.RestoreFactoryDefaults();
 

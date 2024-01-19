@@ -40,6 +40,7 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureDriverButtons();
   ConfigureOperatorButtons();
+  ConfigureTriggers();
 
   // Uses right trigger + left stick axis + right stick axis
   m_drive.SetDefaultCommand(DefaultDrive(
@@ -50,11 +51,13 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  // m_driverController.A().OnTrue(frc2::cmd::Print("Example!"));
   m_driverController.RightBumper().ToggleOnTrue(IntakeNote(&m_intake).ToPtr());
 }
 
-void RobotContainer::ConfigureOperatorButtons() {}
+void RobotContainer::ConfigureOperatorButtons() {
+  m_operatorController.A().OnTrue(m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kMax));
+  m_operatorController.B().OnTrue(m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kStow));
+}
 
 void RobotContainer::ConfigureTriggers() {
   m_zeroClimberTrigger.OnTrue(ZeroClimber(&m_climber).ToPtr());

@@ -196,6 +196,16 @@ namespace ShooterConstants {
   inline constexpr double kD = 0;
   inline constexpr double kFF = 0;
 
+  inline constexpr auto kCurrentLimit = 0_A;
+
+  namespace Setpoint {
+    inline constexpr auto kMax = 5880_rpm;
+    inline constexpr auto kIdle = 300_rpm;
+    inline constexpr auto kShooting = 5000_rpm;  // guesstimate
+    inline constexpr auto kTrapAmp = 2000_rpm;   // also guesstimate
+  }                                              // namespace Setpoint
+  inline constexpr auto kTollerance = 100_rpm;
+
 }  // namespace ShooterConstants
 
 namespace AutoConstants {

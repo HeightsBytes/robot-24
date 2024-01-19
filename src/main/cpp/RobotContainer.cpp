@@ -54,9 +54,7 @@ void RobotContainer::ConfigureDriverButtons() {
   m_driverController.RightBumper().ToggleOnTrue(IntakeNote(&m_intake).ToPtr());
 }
 
-void RobotContainer::ConfigureOperatorButtons() {
-
-}
+void RobotContainer::ConfigureOperatorButtons() {}
 
 void RobotContainer::ConfigureTriggers() {
   m_zeroClimberTrigger.OnTrue(ZeroClimber(&m_climber).ToPtr());

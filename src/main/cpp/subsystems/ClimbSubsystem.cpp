@@ -169,7 +169,7 @@ void ClimbSubsystem::ArmControl() {
   if (m_manual) {
     m_leftTarget = GetLeftHeight();
     m_rightTarget = GetRightHeight();
-    m_syncTarget =  (m_leftTarget + m_rightTarget) / 2;
+    m_syncTarget = (m_leftTarget + m_rightTarget) / 2;
     return;
   } else if (m_behavior == Behavior::kSync) {
     ClimbSync();

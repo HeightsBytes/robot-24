@@ -4,6 +4,7 @@
 
 #include "subsystems/ClimbSubsystem.h"
 
+#include <frc/MathUtil.h>
 #include <frc2/command/Commands.h>
 
 #include "Constants.h"
@@ -23,7 +24,8 @@ ClimbSubsystem::ClimbSubsystem()
       m_syncTarget(ClimbConstants::Positions::kStow),
       m_leftTarget(ClimbConstants::Positions::kStow),
       m_rightTarget(ClimbConstants::Positions::kStow),
-      m_zeroed(false) {
+      m_zeroed(false),
+      m_manual(false) {
   m_motorLeft.RestoreFactoryDefaults();
   m_motorRight.RestoreFactoryDefaults();
 
@@ -56,12 +58,7 @@ ClimbSubsystem::ClimbSubsystem()
 
 // This method will be called once per scheduler run
 void ClimbSubsystem::Periodic() {
-  if (m_behavior == Behavior::kSync) {
-    ClimbSync();
-  } else {
-    ClimbLeft();
-    ClimbRight();
-  }
+  ArmControl();
 }
 
 units::meter_t ClimbSubsystem::GetLeftHeight() const {
@@ -93,6 +90,20 @@ void ClimbSubsystem::SetRightTarget(units::meter_t target) {
 
 bool ClimbSubsystem::IsZeroed() const {
   return m_zeroed;
+}
+
+bool ClimbSubsystem::AtLeftTarget() const {
+  return frc::IsNear(m_leftTarget, GetLeftHeight(),
+                     ClimbConstants::kPositionTollerance);
+}
+
+bool ClimbSubsystem::AtRightTarget() const {
+  return frc::IsNear(m_rightTarget, GetRightHeight(),
+                     ClimbConstants::kPositionTollerance);
+}
+
+bool ClimbSubsystem::AtTargets() const {
+  return AtLeftTarget() && AtRightTarget();
 }
 
 frc2::CommandPtr ClimbSubsystem::SetSyncBehaviorCMD(
@@ -127,6 +138,13 @@ void ClimbSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty("Right Target", LAMBDA(m_rightTarget.value()),
                             nullptr);
 
+  builder.AddBooleanProperty("At Left Target", LAMBDA(AtLeftTarget()), nullptr);
+
+  builder.AddBooleanProperty("At Right Target", LAMBDA(AtRightTarget()),
+                             nullptr);
+
+  builder.AddBooleanProperty("At Targets", LAMBDA(AtTargets()), nullptr);
+
 #undef LAMBDA
 }
 
@@ -145,4 +163,20 @@ void ClimbSubsystem::ClimbLeft() {
 void ClimbSubsystem::ClimbRight() {
   m_controllerRight.SetReference(m_rightTarget.value(),
                                  rev::CANSparkMax::ControlType::kPosition);
+}
+
+void ClimbSubsystem::ArmControl() {
+  if (m_manual) {
+    m_leftTarget = GetLeftHeight();
+    m_rightTarget = GetRightHeight();
+    m_syncTarget =  (m_leftTarget + m_rightTarget) / 2;
+    return;
+  } else if (m_behavior == Behavior::kSync) {
+    ClimbSync();
+    return;
+  } else {
+    ClimbLeft();
+    ClimbRight();
+    return;
+  }
 }

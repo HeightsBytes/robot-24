@@ -53,7 +53,8 @@ class RobotContainer {
 
   // Triggers
 
-  frc2::Trigger m_zeroClimberTrigger{[this] { return m_climber.IsZeroed(); }};
+  // True if not zeroed
+  frc2::Trigger m_zeroClimberTrigger{[this] { return !m_climber.IsZeroed(); }};
 
   void ConfigureDriverButtons();
 

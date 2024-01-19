@@ -14,6 +14,7 @@ ZeroClimber::ZeroClimber(ClimbSubsystem* climber)
 
 // Called when the command is initially scheduled.
 void ZeroClimber::Initialize() {
+  m_climber->m_manual = true;
   m_climber->m_motorLeft.Set(-.05);
   m_climber->m_motorRight.Set(-.05);
 }
@@ -37,6 +38,9 @@ void ZeroClimber::End(bool interrupted) {
   if (m_leftZeroed && m_rightZeroed) {
     m_climber->m_zeroed = true;
   }
+  m_climber->m_motorLeft.Set(0);
+  m_climber->m_motorRight.Set(0);
+  m_climber->m_manual = false;
 }
 
 // Returns true when the command should end.

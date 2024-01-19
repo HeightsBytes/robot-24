@@ -166,6 +166,8 @@ inline constexpr double kMaxPower = 1;
 
 inline constexpr auto kZeroingCurrentThreshold = 0_A;
 
+inline constexpr auto kPositionTollerance = 0.05_m;
+
 namespace Positions {
 inline constexpr auto kStow = 0_m;
 inline constexpr auto kMax = 0_m;

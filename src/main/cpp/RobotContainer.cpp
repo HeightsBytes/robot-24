@@ -51,10 +51,11 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureDriverButtons() {
   // m_driverController.A().OnTrue(frc2::cmd::Print("Example!"));
+  m_driverController.RightBumper().ToggleOnTrue(IntakeNote(&m_intake).ToPtr());
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
-  m_operatorController.A().WhileTrue(IntakeNote(&m_intake).ToPtr());
+
 }
 
 void RobotContainer::ConfigureTriggers() {

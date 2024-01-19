@@ -39,6 +39,8 @@ class ClimbSubsystem : public frc2::SubsystemBase {
   void SetLeftTarget(units::meter_t target);
   void SetRightTarget(units::meter_t target);
 
+  bool IsZeroed() const;
+
   // Commands -- [[nodiscard]] added because they need to be scheduled to work
   [[nodiscard]]
   frc2::CommandPtr SetSyncBehaviorCMD(Behavior behavior);

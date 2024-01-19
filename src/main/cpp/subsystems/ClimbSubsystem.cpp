@@ -91,6 +91,10 @@ void ClimbSubsystem::SetRightTarget(units::meter_t target) {
   m_behavior = ClimbSubsystem::Behavior::kAsync;
 }
 
+bool ClimbSubsystem::IsZeroed() const {
+  return m_zeroed;
+}
+
 frc2::CommandPtr ClimbSubsystem::SetSyncBehaviorCMD(
     ClimbSubsystem::Behavior behavior) {
   return this->RunOnce([this, behavior] { SetSyncBehavior(behavior); });

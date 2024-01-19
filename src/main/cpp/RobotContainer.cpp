@@ -15,6 +15,7 @@
 
 #include "commands/DefaultDrive.h"
 #include "commands/IntakeNote.h"
+#include "commands/ZeroClimber.h"
 #include "subsystems/DriveSubsystem.h"
 
 RobotContainer::RobotContainer() {
@@ -54,6 +55,10 @@ void RobotContainer::ConfigureDriverButtons() {
 
 void RobotContainer::ConfigureOperatorButtons() {
   m_operatorController.A().WhileTrue(IntakeNote(&m_intake).ToPtr());
+}
+
+void RobotContainer::ConfigureTriggers() {
+  m_zeroClimberTrigger.OnTrue(ZeroClimber(&m_climber).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

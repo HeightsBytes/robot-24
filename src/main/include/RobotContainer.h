@@ -17,6 +17,7 @@
 #include <string>
 
 #include "Constants.h"
+#include "subsystems/ClimbSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
@@ -46,12 +47,17 @@ class RobotContainer {
   VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
   DriveSubsystem m_drive;
   IntakeSubsystem m_intake;
+  ClimbSubsystem m_climber;
 
   frc::SendableChooser<std::string> m_chooser;
 
   // Triggers
 
+  frc2::Trigger m_zeroClimberTrigger{[this] { return m_climber.IsZeroed(); }};
+
   void ConfigureDriverButtons();
 
   void ConfigureOperatorButtons();
+
+  void ConfigureTriggers();
 };

@@ -16,10 +16,9 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class ZeroClimber
-    : public frc2::CommandHelper<frc2::Command, ZeroClimber> {
+class ZeroClimber : public frc2::CommandHelper<frc2::Command, ZeroClimber> {
  public:
-  ZeroClimber(ClimbSubsystem* climber);
+  explicit ZeroClimber(ClimbSubsystem* climber);
 
   void Initialize() override;
 
@@ -30,10 +29,8 @@ class ZeroClimber
   bool IsFinished() override;
 
  private:
-
   ClimbSubsystem* m_climber;
 
   bool m_leftZeroed;
   bool m_rightZeroed;
-  
 };

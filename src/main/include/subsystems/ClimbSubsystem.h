@@ -19,7 +19,6 @@
 // Independent control
 // Assume zero upon startup
 class ClimbSubsystem : public frc2::SubsystemBase {
-
   friend class ZeroClimber;
 
  public:

@@ -14,6 +14,7 @@
 #include <utility>
 
 #include "commands/DefaultDrive.h"
+#include "commands/IntakeNote.h"
 #include "subsystems/DriveSubsystem.h"
 
 RobotContainer::RobotContainer() {
@@ -25,6 +26,10 @@ RobotContainer::RobotContainer() {
   // Other Commands
   pathplanner::NamedCommands::registerCommand(
       "drive_switch", std::move(m_drive.SetGyro(180_deg)));
+
+  // Intake Commands
+  pathplanner::NamedCommands::registerCommand("intake_note",
+                                              IntakeNote(&m_intake).ToPtr());
 
   frc::SmartDashboard::PutData("PDP", &m_pdp);
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
@@ -44,11 +49,11 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  m_driverController.A().OnTrue(frc2::cmd::Print("Example!"));
+  // m_driverController.A().OnTrue(frc2::cmd::Print("Example!"));
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
-  m_operatorController.A().OnTrue(frc2::cmd::Print("Example!"));
+  m_operatorController.A().WhileTrue(IntakeNote(&m_intake).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

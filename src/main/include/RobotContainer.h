@@ -18,6 +18,7 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
 
 /**
@@ -42,10 +43,13 @@ class RobotContainer {
   frc::PowerDistribution m_pdp{0, frc::PowerDistribution::ModuleType::kCTRE};
 
   // The robot's subsystems
-  DriveSubsystem m_drive;
   VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
+  DriveSubsystem m_drive;
+  IntakeSubsystem m_intake;
 
   frc::SendableChooser<std::string> m_chooser;
+
+  // Triggers
 
   void ConfigureDriverButtons();
 

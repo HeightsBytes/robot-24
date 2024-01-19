@@ -15,11 +15,11 @@
 #include <units/angle.h>
 #include <units/angular_acceleration.h>
 #include <units/angular_velocity.h>
+#include <units/current.h>
 #include <units/length.h>
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
-#include <units/current.h>
 
 #include <numbers>
 
@@ -120,7 +120,33 @@ inline const frc::Transform3d LeftTransform{
 
 namespace IntakeConstants {
 // TODO: find constants
-} // namespace IntakeConstants
+
+inline constexpr int kPivotMotorID = 0;
+inline constexpr int kIntakeMotorID = 0;
+
+inline constexpr double kP = 0;
+inline constexpr double kI = 0;
+inline constexpr double kD = 0;
+
+inline constexpr int kLimitID = 0;
+
+inline constexpr double kPositionConversion = 360;
+
+inline constexpr auto kIntakeLimit = 0_A;
+inline constexpr auto kPivotLimit = 0_A;
+
+namespace Positions {
+inline constexpr auto kGround = 0_deg;
+inline constexpr auto kStow = 0_deg;
+}  // namespace Positions
+
+namespace Speeds {
+inline constexpr double kEject = 0;
+inline constexpr double kIntake = 0;
+inline constexpr double kFeedShooter = 0;
+}  // namespace Speeds
+
+}  // namespace IntakeConstants
 
 namespace ClimbConstants {
 // TODO: find constants
@@ -141,26 +167,33 @@ inline constexpr double kMaxPower = 1;
 inline constexpr auto kZeroingCurrentThreshold = 0_A;
 
 namespace Positions {
-    inline constexpr auto kStow = 0_m;
-    inline constexpr auto kMax = 0_m;
-    inline constexpr auto kTrap = 0_m;
-} // namespace Positions
+inline constexpr auto kStow = 0_m;
+inline constexpr auto kMax = 0_m;
+inline constexpr auto kTrap = 0_m;
+}  // namespace Positions
 
-
-} // namespace ClimbConstants
+}  // namespace ClimbConstants
 
 namespace ArmConstants {
-//TODO: find constants
+// TODO: find constants
 
 inline constexpr int kMotor0ID = 0;
 inline constexpr int kMotor1ID = 0;
 
-} // namespace ArmConstants
+}  // namespace ArmConstants
 
 namespace ShooterConstants {
-//TODO: find constants
-} // namespace ShooterConstant
+// TODO: find constants
 
+inline constexpr int kMotor0ID = 0;
+inline constexpr int kMotor1ID = 0;
+
+inline constexpr double kP = 0;
+inline constexpr double kI = 0;
+inline constexpr double kD = 0;
+inline constexpr double kFF = 0;
+
+}  // namespace ShooterConstants
 
 namespace AutoConstants {
 

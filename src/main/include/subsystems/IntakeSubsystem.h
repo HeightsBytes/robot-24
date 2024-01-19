@@ -4,10 +4,25 @@
 
 #pragma once
 
+#include <frc/DigitalInput.h>
+#include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <rev/CANSparkMax.h>
+#include <units/angle.h>
+#include <wpi/sendable/SendableBuilder.h>
 
+#include <string>
+
+// 2 NEO motor
+// 1 intake motor
+// 1 pivot motor
+// 1 through bore encoder
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
+  enum class PivotTarget { kNone, kGround, kStow };
+
+  enum class IntakeState { kNone, kIntake, kEject, kFeedShooter };
+
   IntakeSubsystem();
 
   /**
@@ -15,7 +30,29 @@ class IntakeSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
+  bool HaveNote() const;
+
+  void SetPivotTarget(PivotTarget target);
+
+  void SetIntakeState(IntakeState);
+
+  void InitSendable(wpi::SendableBuilder& builder) override;
+
  private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+  std::string ToStr(PivotTarget target) const;
+  std::string ToStr(IntakeState state) const;
+
+  units::degree_t TargetToSetpoint(PivotTarget target) const;
+  double StateToSetpoint(IntakeState state) const;
+
+  rev::CANSparkMax m_pivot;
+  rev::CANSparkMax m_intake;
+
+  rev::SparkAbsoluteEncoder m_pivotEncoder;
+  rev::SparkPIDController m_pivotController;
+
+  frc::DigitalInput m_limitSwitch;
+
+  PivotTarget m_target;
+  IntakeState m_state;
 };

@@ -148,7 +148,7 @@ MacroBlockEnd:   ''
 Macros:
   - 'HAL_ENUM(name)=enum name'
 MaxEmptyLinesToKeep: 1
-NamespaceIndentation: None
+NamespaceIndentation: All
 ObjCBinPackProtocolList: Never
 ObjCBlockIndentWidth: 2
 ObjCBreakBeforeNestedBlockParam: true

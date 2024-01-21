@@ -71,3 +71,11 @@ std::optional<PosePacket> VisionSubsystem::PhotonToPosePacket(
   return PosePacket(pose.value().estimatedPose.ToPose2d(),
                     pose.value().timestamp);
 }
+
+std::optional<units::degree_t> VisionSubsystem::AngleToStage() const {
+  return 0_deg;
+}
+
+std::optional<frc::Pose3d> VisionSubsystem::GetTagPose(int id) const {
+  return m_layout.GetTagPose(id);
+}

@@ -83,6 +83,8 @@ void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   builder.AddStringProperty("Actual State", LAMBDA(ToStr(m_actual)), nullptr);
   builder.AddStringProperty("Target State", LAMBDA(ToStr(m_target)), nullptr);
+
+#undef LAMBDA
 }
 
 void ShooterSubsystem::CheckState() {

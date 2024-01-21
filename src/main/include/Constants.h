@@ -180,8 +180,26 @@ namespace ClimbConstants {
 namespace ArmConstants {
   // TODO: find constants
 
-  inline constexpr int kMotor0ID = 0;
-  inline constexpr int kMotor1ID = 0;
+  inline constexpr int kMotorID = 0;
+
+  inline constexpr double kP = 0;
+  inline constexpr double kI = 0;
+  inline constexpr double kD = 0;
+  inline constexpr double kG = 0;
+
+  inline constexpr auto kOffset = 0_deg;
+
+  inline constexpr auto kCurrentLimit = 0_A;
+
+  inline constexpr double kConversionFactor = 360;
+
+  inline constexpr bool kEncoderInverted = false;
+
+  namespace Setpoint {
+    inline constexpr auto kStow = 0_deg;
+    inline constexpr auto kAmp = 0_deg;
+    inline constexpr auto kTollerance = 1_deg;
+  }  // namespace Setpoint
 
 }  // namespace ArmConstants
 

@@ -29,6 +29,9 @@ ClimbSubsystem::ClimbSubsystem()
   m_motorLeft.RestoreFactoryDefaults();
   m_motorRight.RestoreFactoryDefaults();
 
+  m_motorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_motorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
   m_encoderLeft.SetPositionConversionFactor(
       ClimbConstants::kPositionConversion);
   m_encoderRight.SetPositionConversionFactor(
@@ -48,9 +51,6 @@ ClimbSubsystem::ClimbSubsystem()
                                   ClimbConstants::kMaxPower);
   m_controllerRight.SetOutputRange(ClimbConstants::kMinPower,
                                    ClimbConstants::kMaxPower);
-
-  m_motorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  m_motorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
   m_motorLeft.BurnFlash();
   m_motorRight.BurnFlash();

@@ -35,9 +35,7 @@ void ZeroClimber::Execute() {
 
 // Called once the command ends or is interrupted.
 void ZeroClimber::End(bool interrupted) {
-  if (m_leftZeroed && m_rightZeroed) {
-    m_climber->m_zeroed = true;
-  }
+  m_climber->m_zeroed = m_leftZeroed && m_rightZeroed;
   m_climber->m_motorLeft.Set(0);
   m_climber->m_motorRight.Set(0);
   m_climber->m_manual = false;

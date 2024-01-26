@@ -50,23 +50,23 @@ units::degree_t ArmSubsystem::GetAngle() const {
 }
 
 bool ArmSubsystem::AtTarget() const {
-    return GetCurrentState() == GetTargetState();
+  return GetCurrentState() == GetTargetState();
 }
 
 ArmSubsystem::State ArmSubsystem::GetCurrentState() const {
-    return m_actual;
+  return m_actual;
 }
 
 ArmSubsystem::State ArmSubsystem::GetTargetState() const {
-    return m_target;
+  return m_target;
 }
 
 void ArmSubsystem::SetState(State state) {
-    m_target = state;
+  m_target = state;
 }
 
 frc2::CommandPtr ArmSubsystem::SetStateCMD(State state) {
-    return this->RunOnce([this, state] {SetState(state);});
+  return this->RunOnce([this, state] { SetState(state); });
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {

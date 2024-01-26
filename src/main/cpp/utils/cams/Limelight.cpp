@@ -17,7 +17,7 @@
   nt::NetworkTableInstance::GetDefault() \
       .GetTable("limelight")             \
       ->GetNumber(x, 0.0)
-#define GET_ARRAY_VAL(x, _size)                 \
+#define GET_ARRAY_VAL(x, _size)          \
   nt::NetworkTableInstance::GetDefault() \
       .GetTable("limelight")             \
       ->GetNumberArray(x, std::span<const double>(_size))
@@ -66,17 +66,16 @@ LimeLight::LEDMode LimeLight::GetLED() {
   return LimeLight::LEDMode(GETVAL("ledMode"));
 }
 
-
-// For this method, it appears that wpiblue should really be using wpiblue no matter what, will implment in this way
+// For this method, it appears that wpiblue should really be using wpiblue no
+// matter what, will implment in this way
 std::optional<PosePacket> LimeLight::GetPose() {
   static std::vector<double> results;
   if (!HasTarget()) {
     return std::nullopt;
   }
-  results =
-        nt::NetworkTableInstance::GetDefault()
-            .GetTable("limelight")
-            ->GetNumberArray("botpose_wpiblue", std::span<const double>());
+  results = nt::NetworkTableInstance::GetDefault()
+                .GetTable("limelight")
+                ->GetNumberArray("botpose_wpiblue", std::span<const double>());
 
   // if (frc::DriverStation::GetAlliance() !=
   //     frc::DriverStation::Alliance::kBlue) {
@@ -87,9 +86,10 @@ std::optional<PosePacket> LimeLight::GetPose() {
   // } else {
   //   results = nt::NetworkTableInstance::GetDefault()
   //                 .GetTable("limelight")
-  //                 ->GetNumberArray("botpose_wpired", std::span<const double>());
+  //                 ->GetNumberArray("botpose_wpired", std::span<const
+  //                 double>());
   // }
-  
+
   frc::Translation2d translation{units::meter_t(results[0]),
                                  units::meter_t(results[1])};
   frc::Rotation2d rotation{units::degree_t(results[5])};

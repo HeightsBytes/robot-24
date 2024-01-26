@@ -36,7 +36,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   void SetState(State state);
 
-  [[nodiscard]] frc2::CommandPtr SetStateCMD(State state);
+  [[nodiscard]]
+  frc2::CommandPtr SetStateCMD(State state);
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 

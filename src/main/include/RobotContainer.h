@@ -17,9 +17,12 @@
 #include <string>
 
 #include "Constants.h"
+#include "subsystems/ClimbSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -46,12 +49,20 @@ class RobotContainer {
   VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
   DriveSubsystem m_drive;
   IntakeSubsystem m_intake;
+  ClimbSubsystem m_climber;
+  ArmSubsystem m_arm{[this]() -> frc::Pose2d {return m_drive.GetPose();}};
+  ShooterSubsystem m_shooter;
 
   frc::SendableChooser<std::string> m_chooser;
 
   // Triggers
 
+  // True if not zeroed
+  frc2::Trigger m_zeroClimberTrigger{[this] { return !m_climber.IsZeroed(); }};
+
   void ConfigureDriverButtons();
 
   void ConfigureOperatorButtons();
+
+  void ConfigureTriggers();
 };

@@ -19,14 +19,14 @@
 // Independent control
 // Assume zero upon startup
 class ClimbSubsystem : public frc2::SubsystemBase {
+  // Friend zero climber because it is a "special" command
+  friend class ZeroClimber;
+
  public:
   enum class Behavior { kSync, kAsync };
 
   ClimbSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
   void Periodic() override;
 
   units::meter_t GetLeftHeight() const;
@@ -36,6 +36,11 @@ class ClimbSubsystem : public frc2::SubsystemBase {
   void SetSyncTarget(units::meter_t target);
   void SetLeftTarget(units::meter_t target);
   void SetRightTarget(units::meter_t target);
+
+  bool IsZeroed() const;
+  bool AtLeftTarget() const;
+  bool AtRightTarget() const;
+  bool AtTargets() const;
 
   // Commands -- [[nodiscard]] added because they need to be scheduled to work
   [[nodiscard]]
@@ -51,10 +56,9 @@ class ClimbSubsystem : public frc2::SubsystemBase {
 
  private:
   void ClimbSync();
-
   void ClimbLeft();
-
   void ClimbRight();
+  void ArmControl();
 
   // left and right relative to the back of the robot
   rev::CANSparkMax m_motorLeft;
@@ -71,4 +75,7 @@ class ClimbSubsystem : public frc2::SubsystemBase {
   units::meter_t m_syncTarget;
   units::meter_t m_leftTarget;
   units::meter_t m_rightTarget;
+
+  bool m_zeroed;
+  bool m_manual;
 };

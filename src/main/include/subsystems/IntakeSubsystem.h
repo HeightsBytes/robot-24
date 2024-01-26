@@ -33,8 +33,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   bool HaveNote() const;
 
   void SetPivotTarget(PivotTarget target);
-
-  void SetIntakeState(IntakeState);
+  void SetIntakeState(IntakeState state);
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 

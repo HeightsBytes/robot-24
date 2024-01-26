@@ -7,10 +7,12 @@
 #include <frc/apriltag/AprilTagFieldLayout.h>
 #include <frc/apriltag/AprilTagFields.h>
 #include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Pose3d.h>
 #include <frc/smartdashboard/Field2d.h>
 #include <frc2/command/SubsystemBase.h>
 #include <photonlib/PhotonCamera.h>
 #include <photonlib/PhotonPoseEstimator.h>
+#include <units/angle.h>
 
 #include <optional>
 #include <vector>
@@ -36,6 +38,10 @@ class VisionSubsystem : public frc2::SubsystemBase {
   static VisionSubsystem& GetInstance();
 
   std::vector<PosePacket> GetPose();
+
+  std::optional<units::degree_t> AngleToStage() const;
+
+  std::optional<frc::Pose3d> GetTagPose(int id) const;
 
  private:
   VisionSubsystem();

@@ -15,6 +15,7 @@
 
 #include "commands/DefaultDrive.h"
 #include "commands/IntakeNote.h"
+#include "commands/ZeroClimber.h"
 #include "subsystems/DriveSubsystem.h"
 
 RobotContainer::RobotContainer() {
@@ -39,6 +40,7 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureDriverButtons();
   ConfigureOperatorButtons();
+  ConfigureTriggers();
 
   // Uses right trigger + left stick axis + right stick axis
   m_drive.SetDefaultCommand(DefaultDrive(
@@ -49,11 +51,18 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  // m_driverController.A().OnTrue(frc2::cmd::Print("Example!"));
+  m_driverController.RightBumper().ToggleOnTrue(IntakeNote(&m_intake).ToPtr());
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
-  m_operatorController.A().WhileTrue(IntakeNote(&m_intake).ToPtr());
+  m_operatorController.A().OnTrue(
+      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kMax));
+  m_operatorController.B().OnTrue(
+      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kStow));
+}
+
+void RobotContainer::ConfigureTriggers() {
+  m_zeroClimberTrigger.OnTrue(ZeroClimber(&m_climber).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

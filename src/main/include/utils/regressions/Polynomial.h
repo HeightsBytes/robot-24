@@ -11,23 +11,23 @@
 #include "RegressionBase.h"
 
 namespace hb {
-template <int terms>
-  requires(terms > 0)
-class Polynomial : public RegressionBase {
- public:
-  /** from least to greatest **/
-  explicit Polynomial(wpi::array<double, terms> constants) {
-    m_constants = constants;
-  }
-
-  double Calculate(double input) const override {
-    double output = 0;
-    for (int i = 0; i < degree; i++) {
-      output += std::pow(input, i) * m_constants[i];
+  template <int terms>
+    requires(terms > 0)
+  class Polynomial : public RegressionBase {
+   public:
+    /** from least to greatest **/
+    explicit Polynomial(wpi::array<double, terms> constants) {
+      m_constants = constants;
     }
-  }
 
- private:
-  wpi::array<double, terms> m_constants;
-};
+    double Calculate(double input) const override {
+      double output = 0;
+      for (int i = 0; i < degree; i++) {
+        output += std::pow(input, i) * m_constants[i];
+      }
+    }
+
+   private:
+    wpi::array<double, terms> m_constants;
+  };
 }  // namespace hb

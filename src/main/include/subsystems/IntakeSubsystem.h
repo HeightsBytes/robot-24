@@ -35,6 +35,11 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void SetPivotTarget(PivotTarget target);
   void SetIntakeState(IntakeState state);
 
+  [[nodiscard]]
+  frc2::CommandPtr SetPivotTargetCMD(PivotTarget target);
+  [[nodiscard]]
+  frc2::CommandPtr SetIntakeStateCMD(IntakeState state);
+
   void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:

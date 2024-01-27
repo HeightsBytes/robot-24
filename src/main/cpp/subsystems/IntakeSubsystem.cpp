@@ -55,6 +55,14 @@ void IntakeSubsystem::SetIntakeState(IntakeState state) {
   m_state = state;
 }
 
+frc2::CommandPtr IntakeSubsystem::SetPivotTargetCMD(PivotTarget target) {
+  return this->RunOnce([this, target] { SetPivotTarget(target); });
+}
+
+frc2::CommandPtr IntakeSubsystem::SetIntakeStateCMD(IntakeState state) {
+  return this->RunOnce([this, state] { SetIntakeState(state); });
+}
+ 
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Intake Subsystem");
 

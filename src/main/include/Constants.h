@@ -208,6 +208,8 @@ namespace ShooterConstants {
 
   inline constexpr int kLeftFlywheelID = 0;
   inline constexpr int kRightFlywheelID = 0;
+  inline constexpr int kLeftFeederID = 0;
+  inline constexpr int kRightFeederID = 0;
   inline constexpr int kBeamBreakPort = 0;
 
   inline constexpr double kP = 0;

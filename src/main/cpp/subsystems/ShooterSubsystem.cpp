@@ -19,6 +19,8 @@ ShooterSubsystem::ShooterSubsystem()
           m_rightFlywheel.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
       m_controller0(m_leftFlywheel.GetPIDController()),
       m_controller1(m_rightFlywheel.GetPIDController()),
+      m_leftFeeder(ShooterConstants::kLeftFeederID, rev::CANSparkMax::MotorType::kBrushless),
+      m_rightFeeder(ShooterConstants::kRightFeederID, rev::CANSparkMax::MotorType::kBrushless),
       m_beamBreak(ShooterConstants::kBeamBreakPort),
       m_actual(State::kStopped),
       m_target(State::kIdle) {
@@ -41,6 +43,11 @@ ShooterSubsystem::ShooterSubsystem()
   m_controller1.SetD(ShooterConstants::kD);
   m_controller1.SetFF(ShooterConstants::kFF);
 
+  m_leftFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_rightFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  
+  m_leftFeeder.BurnFlash();
+  m_rightFeeder.BurnFlash();
   m_leftFlywheel.BurnFlash();
   m_rightFlywheel.BurnFlash();
 }
@@ -53,8 +60,16 @@ void ShooterSubsystem::Periodic() {
                              rev::CANSparkFlex::ControlType::kVelocity);
 }
 
-bool ShooterSubsystem::HasGamePiece() const {
+bool ShooterSubsystem::HasNote() const {
   return m_beamBreak.Get();
+}
+
+bool ShooterSubsystem::AtRPM() const {
+  return GetTargetState() == GetCurrentState();
+}
+
+bool ShooterSubsystem::ShooterReady() const {
+  return HasNote() && AtRPM();
 }
 
 units::revolutions_per_minute_t ShooterSubsystem::GetSpeed0() const {
@@ -79,6 +94,18 @@ void ShooterSubsystem::SetTargetState(State target) {
 
 frc2::CommandPtr ShooterSubsystem::SetTargetStateCMD(State target) {
   return RunOnce([this, target] { SetTargetState(target); });
+}
+
+frc2::Trigger ShooterSubsystem::HasNoteTrigger() {
+  return frc2::Trigger([this] {return HasNote();});
+}
+
+frc2::Trigger ShooterSubsystem::AtRPMTrigger() {
+  return frc2::Trigger([this] {return AtRPM();});
+}
+
+frc2::Trigger ShooterSubsystem::ShooterReadyTrigger() {
+  return frc2::Trigger([this] {return ShooterReady();});
 }
 
 void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {

@@ -69,6 +69,10 @@ frc2::CommandPtr ArmSubsystem::SetStateCMD(State state) {
   return this->RunOnce([this, state] { SetState(state); });
 }
 
+frc2::Trigger ArmSubsystem::AtTargetTrigger() {
+  return frc2::Trigger([this] {return AtTarget();});
+}
+
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Arm");
 

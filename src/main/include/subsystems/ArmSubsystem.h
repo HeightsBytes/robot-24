@@ -7,6 +7,7 @@
 #include <frc/geometry/Pose2d.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/button/Trigger.h>
 #include <rev/CANSparkMax.h>
 #include <units/angle.h>
 #include <units/voltage.h>
@@ -38,6 +39,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]]
   frc2::CommandPtr SetStateCMD(State state);
+
+  frc2::Trigger AtTargetTrigger();
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 

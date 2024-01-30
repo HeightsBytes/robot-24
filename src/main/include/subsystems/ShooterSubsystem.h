@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc/DigitalInput.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkFlex.h>
@@ -20,6 +21,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   ShooterSubsystem();
 
   void Periodic() override;
+
+  bool HasGamePiece() const;
 
   units::revolutions_per_minute_t GetSpeed0() const;
   units::revolutions_per_minute_t GetSpeed1() const;
@@ -49,6 +52,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   rev::SparkPIDController m_controller0;
   rev::SparkPIDController m_controller1;
+
+  frc::DigitalInput m_beamBreak;
 
   State m_actual;
   State m_target;

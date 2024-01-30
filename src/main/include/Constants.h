@@ -208,6 +208,7 @@ namespace ShooterConstants {
 
   inline constexpr int kMotor0ID = 0;
   inline constexpr int kMotor1ID = 0;
+  inline constexpr int kBeamBreakPort = 0;
 
   inline constexpr double kP = 0;
   inline constexpr double kI = 0;

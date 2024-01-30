@@ -19,6 +19,7 @@ ShooterSubsystem::ShooterSubsystem()
           m_motor1.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
       m_controller0(m_motor0.GetPIDController()),
       m_controller1(m_motor1.GetPIDController()),
+      m_beamBreak(ShooterConstants::kBeamBreakPort),
       m_actual(State::kStopped),
       m_target(State::kIdle) {
   m_motor0.RestoreFactoryDefaults();
@@ -50,6 +51,10 @@ void ShooterSubsystem::Periodic() {
                              rev::CANSparkFlex::ControlType::kVelocity);
   m_controller1.SetReference(ToRPM(m_target).value(),
                              rev::CANSparkFlex::ControlType::kVelocity);
+}
+
+bool ShooterSubsystem::HasGamePiece() const {
+  return m_beamBreak.Get();
 }
 
 units::revolutions_per_minute_t ShooterSubsystem::GetSpeed0() const {

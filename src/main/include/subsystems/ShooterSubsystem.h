@@ -44,8 +44,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   units::revolutions_per_minute_t ToRPM(State state) const;
 
-  rev::CANSparkFlex m_motor0;
-  rev::CANSparkFlex m_motor1;
+  rev::CANSparkFlex m_leftFlywheel;
+  rev::CANSparkFlex m_rightFlywheel;
 
   rev::SparkRelativeEncoder m_encoder0;
   rev::SparkRelativeEncoder m_encoder1;

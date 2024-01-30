@@ -206,8 +206,8 @@ namespace ArmConstants {
 namespace ShooterConstants {
   // TODO: find constants
 
-  inline constexpr int kMotor0ID = 0;
-  inline constexpr int kMotor1ID = 0;
+  inline constexpr int kLeftFlywheelID = 0;
+  inline constexpr int kRightFlywheelID = 0;
   inline constexpr int kBeamBreakPort = 0;
 
   inline constexpr double kP = 0;

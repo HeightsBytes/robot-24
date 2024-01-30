@@ -9,27 +9,27 @@
 #include "Constants.h"
 
 ShooterSubsystem::ShooterSubsystem()
-    : m_motor0(ShooterConstants::kMotor0ID,
+    : m_leftFlywheel(ShooterConstants::kLeftFlywheelID,
                rev::CANSparkFlex::MotorType::kBrushless),
-      m_motor1(ShooterConstants::kMotor1ID,
+      m_rightFlywheel(ShooterConstants::kRightFlywheelID,
                rev::CANSparkFlex::MotorType::kBrushless),
       m_encoder0(
-          m_motor0.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
+          m_leftFlywheel.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
       m_encoder1(
-          m_motor1.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
-      m_controller0(m_motor0.GetPIDController()),
-      m_controller1(m_motor1.GetPIDController()),
+          m_rightFlywheel.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
+      m_controller0(m_leftFlywheel.GetPIDController()),
+      m_controller1(m_rightFlywheel.GetPIDController()),
       m_beamBreak(ShooterConstants::kBeamBreakPort),
       m_actual(State::kStopped),
       m_target(State::kIdle) {
-  m_motor0.RestoreFactoryDefaults();
-  m_motor1.RestoreFactoryDefaults();
+  m_leftFlywheel.RestoreFactoryDefaults();
+  m_rightFlywheel.RestoreFactoryDefaults();
 
-  m_motor0.SetSmartCurrentLimit(ShooterConstants::kCurrentLimit.value());
-  m_motor1.SetSmartCurrentLimit(ShooterConstants::kCurrentLimit.value());
+  m_leftFlywheel.SetSmartCurrentLimit(ShooterConstants::kCurrentLimit.value());
+  m_rightFlywheel.SetSmartCurrentLimit(ShooterConstants::kCurrentLimit.value());
 
-  m_motor0.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
-  m_motor1.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
+  m_leftFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
+  m_rightFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
 
   m_controller0.SetP(ShooterConstants::kP);
   m_controller0.SetI(ShooterConstants::kI);
@@ -41,8 +41,8 @@ ShooterSubsystem::ShooterSubsystem()
   m_controller1.SetD(ShooterConstants::kD);
   m_controller1.SetFF(ShooterConstants::kFF);
 
-  m_motor0.BurnFlash();
-  m_motor1.BurnFlash();
+  m_leftFlywheel.BurnFlash();
+  m_rightFlywheel.BurnFlash();
 }
 
 // This method will be called once per scheduler run

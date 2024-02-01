@@ -17,7 +17,7 @@
 #include "commands/IntakeNote.h"
 #include "commands/RequestSpeaker.h"
 #include "commands/ZeroClimber.h"
-#include "subsystems/DriveSubsystem.h"
+#include "commands/ShootSpeaker.h"
 
 RobotContainer::RobotContainer() {
   m_chooser.AddOption("Test Auto", "test_auto");
@@ -56,11 +56,13 @@ void RobotContainer::ConfigureDriverButtons() {
       .WhileTrue(IntakeNote(&m_intake).ToPtr());
 
   (m_dleftTrigger && m_shooter.HasNoteTrigger())
-      .OnTrue(RequestSpeaker(
+      .WhileTrue(RequestSpeaker(
                   &m_arm, &m_drive, &m_shooter,
                   [this] { return m_driverController.GetLeftY(); },
                   [this] { return m_driverController.GetLeftX(); })
                   .ToPtr());
+
+  (m_drightTrigger && m_state.SpeakerPreppedTrigger()).OnTrue(ShootSpeaker(&m_shooter).ToPtr());
 
 }
 

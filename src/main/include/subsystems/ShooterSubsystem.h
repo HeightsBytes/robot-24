@@ -35,6 +35,7 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   State GetCurrentState() const;
 
   void SetTargetState(State target);
+  void SetFeeder(double setpoint);
 
   [[nodiscard]]
   frc2::CommandPtr SetTargetStateCMD(State target);

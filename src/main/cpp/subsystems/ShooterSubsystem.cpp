@@ -94,6 +94,11 @@ void ShooterSubsystem::SetTargetState(State target) {
   m_target = target;
 }
 
+void ShooterSubsystem::SetFeeder(double setpoint) {
+  m_leftFeeder.Set(setpoint);
+  m_rightFeeder.Set(-setpoint);
+}
+
 frc2::CommandPtr ShooterSubsystem::SetTargetStateCMD(State target) {
   return RunOnce([this, target] { SetTargetState(target); });
 }

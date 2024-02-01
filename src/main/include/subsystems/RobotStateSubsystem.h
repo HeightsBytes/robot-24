@@ -8,16 +8,22 @@
 #include <frc2/command/button/Trigger.h>
 #include <wpi/sendable/SendableBuilder.h>
 
+#include <string>
+
 #include "subsystems/ArmSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
-
-#include <string>
 
 class RobotStateSubsystem : public frc2::SubsystemBase {
  public:
   RobotStateSubsystem(ArmSubsystem* arm, ShooterSubsystem* shooter);
 
-  enum class State { kIdle, kSpeakerPrepped, kAmpPrepped, kTrapPrepped, kMoving };
+  enum class State {
+    kIdle,
+    kSpeakerPrepped,
+    kAmpPrepped,
+    kTrapPrepped,
+    kMoving
+  };
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -35,7 +41,6 @@ class RobotStateSubsystem : public frc2::SubsystemBase {
   void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
-
   std::string ToStr(State state) const;
 
   void UpdateState();
@@ -44,5 +49,4 @@ class RobotStateSubsystem : public frc2::SubsystemBase {
   ShooterSubsystem* m_shooter;
 
   State m_state;
-
 };

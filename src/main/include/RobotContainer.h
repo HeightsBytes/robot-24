@@ -21,9 +21,9 @@
 #include "subsystems/ClimbSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
+#include "subsystems/RobotStateSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
-#include "subsystems/RobotStateSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -53,7 +53,9 @@ class RobotContainer {
   ClimbSubsystem m_climber;
   ArmSubsystem m_arm{[this]() -> frc::Pose2d { return m_drive.GetPose(); }};
   ShooterSubsystem m_shooter;
-  RobotStateSubsystem m_state{&m_arm, &m_shooter}; // does not command, simply uses dependency injection for state
+  RobotStateSubsystem m_state{&m_arm,
+                              &m_shooter};  // does not command, simply uses
+                                            // dependency injection for state
 
   frc::SendableChooser<std::string> m_chooser;
 

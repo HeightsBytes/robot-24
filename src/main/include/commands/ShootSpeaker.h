@@ -16,10 +16,9 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class ShootSpeaker
-    : public frc2::CommandHelper<frc2::Command, ShootSpeaker> {
+class ShootSpeaker : public frc2::CommandHelper<frc2::Command, ShootSpeaker> {
  public:
-  ShootSpeaker(ShooterSubsystem* shooter);
+  explicit ShootSpeaker(ShooterSubsystem* shooter);
 
   void Initialize() override;
 

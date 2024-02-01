@@ -227,6 +227,12 @@ namespace ShooterConstants {
   }                                              // namespace Setpoint
   inline constexpr auto kTollerance = 100_rpm;
 
+  inline constexpr frc::Pose2d kRedSpeakerPose = {};
+  inline constexpr frc::Pose2d kBlueSpeakerPose = {};
+
+  inline constexpr int kBlueApriltagID = 7;
+  inline constexpr int kRedApriltagID = 4;
+
 }  // namespace ShooterConstants
 
 namespace AutoConstants {

@@ -26,5 +26,5 @@ void IntakeNote::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool IntakeNote::IsFinished() {
-  return m_intake->HaveNote();
+  return m_intake->HasNote();
 }

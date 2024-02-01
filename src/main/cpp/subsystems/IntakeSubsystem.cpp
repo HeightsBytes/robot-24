@@ -43,7 +43,7 @@ void IntakeSubsystem::Periodic() {
   m_intake.Set(StateToSetpoint(m_state));
 }
 
-bool IntakeSubsystem::HaveNote() const {
+bool IntakeSubsystem::HasNote() const {
   return m_limitSwitch.Get();
 }
 
@@ -62,7 +62,11 @@ frc2::CommandPtr IntakeSubsystem::SetPivotTargetCMD(PivotTarget target) {
 frc2::CommandPtr IntakeSubsystem::SetIntakeStateCMD(IntakeState state) {
   return this->RunOnce([this, state] { SetIntakeState(state); });
 }
- 
+
+frc2::Trigger IntakeSubsystem::HasNoteTrigger() {
+  return frc2::Trigger([this] { return HasNote(); });
+}
+
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Intake Subsystem");
 

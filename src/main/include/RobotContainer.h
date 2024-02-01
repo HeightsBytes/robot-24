@@ -57,6 +57,11 @@ class RobotContainer {
 
   // Triggers
 
+  frc2::Trigger m_dleftTrigger{
+      [this] { return m_driverController.GetLeftTriggerAxis() > 0.6; }};
+  frc2::Trigger m_drightTrigger{
+      [this] { return m_driverController.GetRightTriggerAxis() > 0.6; }};
+
   // True if not zeroed
   frc2::Trigger m_zeroClimberTrigger{[this] { return !m_climber.IsZeroed(); }};
 

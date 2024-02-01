@@ -15,6 +15,7 @@
 
 #include "commands/DefaultDrive.h"
 #include "commands/IntakeNote.h"
+#include "commands/RequestSpeaker.h"
 #include "commands/ZeroClimber.h"
 #include "subsystems/DriveSubsystem.h"
 
@@ -51,7 +52,16 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  m_driverController.RightBumper().ToggleOnTrue(IntakeNote(&m_intake).ToPtr());
+  (m_driverController.RightBumper() && m_shooter.HasNoteTrigger())
+      .WhileTrue(IntakeNote(&m_intake).ToPtr());
+
+  (m_dleftTrigger && m_shooter.HasNoteTrigger())
+      .OnTrue(RequestSpeaker(
+                  &m_arm, &m_drive, &m_shooter,
+                  [this] { return m_driverController.GetLeftY(); },
+                  [this] { return m_driverController.GetLeftX(); })
+                  .ToPtr());
+
 }
 
 void RobotContainer::ConfigureOperatorButtons() {

@@ -10,17 +10,19 @@
 
 ShooterSubsystem::ShooterSubsystem()
     : m_leftFlywheel(ShooterConstants::kLeftFlywheelID,
-               rev::CANSparkFlex::MotorType::kBrushless),
+                     rev::CANSparkFlex::MotorType::kBrushless),
       m_rightFlywheel(ShooterConstants::kRightFlywheelID,
-               rev::CANSparkFlex::MotorType::kBrushless),
-      m_encoder0(
-          m_leftFlywheel.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
-      m_encoder1(
-          m_rightFlywheel.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)),
+                      rev::CANSparkFlex::MotorType::kBrushless),
+      m_encoder0(m_leftFlywheel.GetEncoder(
+          rev::SparkRelativeEncoder::Type::kHallSensor)),
+      m_encoder1(m_rightFlywheel.GetEncoder(
+          rev::SparkRelativeEncoder::Type::kHallSensor)),
       m_controller0(m_leftFlywheel.GetPIDController()),
       m_controller1(m_rightFlywheel.GetPIDController()),
-      m_leftFeeder(ShooterConstants::kLeftFeederID, rev::CANSparkMax::MotorType::kBrushless),
-      m_rightFeeder(ShooterConstants::kRightFeederID, rev::CANSparkMax::MotorType::kBrushless),
+      m_leftFeeder(ShooterConstants::kLeftFeederID,
+                   rev::CANSparkMax::MotorType::kBrushless),
+      m_rightFeeder(ShooterConstants::kRightFeederID,
+                    rev::CANSparkMax::MotorType::kBrushless),
       m_beamBreak(ShooterConstants::kBeamBreakPort),
       m_actual(State::kStopped),
       m_target(State::kIdle) {
@@ -45,7 +47,7 @@ ShooterSubsystem::ShooterSubsystem()
 
   m_leftFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_rightFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  
+
   m_leftFeeder.BurnFlash();
   m_rightFeeder.BurnFlash();
   m_leftFlywheel.BurnFlash();
@@ -97,15 +99,15 @@ frc2::CommandPtr ShooterSubsystem::SetTargetStateCMD(State target) {
 }
 
 frc2::Trigger ShooterSubsystem::HasNoteTrigger() {
-  return frc2::Trigger([this] {return HasNote();});
+  return frc2::Trigger([this] { return HasNote(); });
 }
 
 frc2::Trigger ShooterSubsystem::AtRPMTrigger() {
-  return frc2::Trigger([this] {return AtRPM();});
+  return frc2::Trigger([this] { return AtRPM(); });
 }
 
 frc2::Trigger ShooterSubsystem::ShooterReadyTrigger() {
-  return frc2::Trigger([this] {return ShooterReady();});
+  return frc2::Trigger([this] { return ShooterReady(); });
 }
 
 void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {

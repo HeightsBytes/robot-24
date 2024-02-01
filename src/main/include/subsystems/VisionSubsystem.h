@@ -43,8 +43,16 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   std::optional<frc::Pose3d> GetTagPose(int id) const;
 
+  photonlib::PhotonPipelineResult GetLeftResult();
+  photonlib::PhotonPipelineResult GetRightResult();
+
+  static std::optional<photonlib::PhotonTrackedTarget> HasResult(
+      std::span<const photonlib::PhotonTrackedTarget> result, int ID);
+
  private:
   VisionSubsystem();
+
+  void UpdatePacket();
 
   std::optional<PosePacket> PhotonToPosePacket(
       std::optional<photonlib::EstimatedRobotPose> pose);

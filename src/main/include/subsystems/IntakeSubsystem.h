@@ -7,6 +7,7 @@
 #include <frc/DigitalInput.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/button/Trigger.h>
 #include <rev/CANSparkMax.h>
 #include <units/angle.h>
 #include <wpi/sendable/SendableBuilder.h>
@@ -30,7 +31,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  bool HaveNote() const;
+  bool HasNote() const;
 
   void SetPivotTarget(PivotTarget target);
   void SetIntakeState(IntakeState state);
@@ -39,6 +40,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   frc2::CommandPtr SetPivotTargetCMD(PivotTarget target);
   [[nodiscard]]
   frc2::CommandPtr SetIntakeStateCMD(IntakeState state);
+
+  frc2::Trigger HasNoteTrigger();
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 

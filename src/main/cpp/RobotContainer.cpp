@@ -14,8 +14,10 @@
 #include <utility>
 
 #include "commands/DefaultDrive.h"
+#include "commands/Handover.h"
 #include "commands/IntakeNote.h"
 #include "commands/RequestSpeaker.h"
+#include "commands/ScoreAmp.h"
 #include "commands/ShootSpeaker.h"
 #include "commands/ZeroClimber.h"
 
@@ -52,7 +54,7 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  (m_driverController.RightBumper() && m_shooter.HasNoteTrigger())
+  (m_driverController.RightBumper() && !m_shooter.HasNoteTrigger())
       .WhileTrue(IntakeNote(&m_intake).ToPtr());
 
   (m_dleftTrigger && m_shooter.HasNoteTrigger())
@@ -64,6 +66,9 @@ void RobotContainer::ConfigureDriverButtons() {
 
   (m_drightTrigger && m_state.SpeakerPreppedTrigger())
       .OnTrue(ShootSpeaker(&m_shooter).ToPtr());
+
+  (m_drightTrigger && m_state.AmpPreppedTrigger())
+      .OnTrue(ScoreAmp(&m_shooter).ToPtr());
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
@@ -75,6 +80,9 @@ void RobotContainer::ConfigureOperatorButtons() {
 
 void RobotContainer::ConfigureTriggers() {
   m_zeroClimberTrigger.OnTrue(ZeroClimber(&m_climber).ToPtr());
+
+  (m_intake.HasNoteTrigger() && !m_shooter.HasNoteTrigger())
+      .OnTrue(Handover(&m_arm, &m_shooter, &m_intake).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

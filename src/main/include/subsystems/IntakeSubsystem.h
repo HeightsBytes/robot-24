@@ -36,6 +36,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void SetPivotTarget(PivotTarget target);
   void SetIntakeState(IntakeState state);
 
+  PivotTarget GetCurrentState() const;
+
   [[nodiscard]]
   frc2::CommandPtr SetPivotTargetCMD(PivotTarget target);
   [[nodiscard]]

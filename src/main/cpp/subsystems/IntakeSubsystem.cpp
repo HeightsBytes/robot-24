@@ -55,6 +55,10 @@ void IntakeSubsystem::SetIntakeState(IntakeState state) {
   m_state = state;
 }
 
+IntakeSubsystem::PivotTarget IntakeSubsystem::GetCurrentState() const {
+  return PivotTarget::kNone;
+}
+
 frc2::CommandPtr IntakeSubsystem::SetPivotTargetCMD(PivotTarget target) {
   return this->RunOnce([this, target] { SetPivotTarget(target); });
 }

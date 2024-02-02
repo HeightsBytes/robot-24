@@ -14,7 +14,12 @@
 #include <utility>
 
 #include "commands/DefaultDrive.h"
-#include "subsystems/DriveSubsystem.h"
+#include "commands/Handover.h"
+#include "commands/IntakeNote.h"
+#include "commands/RequestSpeaker.h"
+#include "commands/ScoreAmp.h"
+#include "commands/ShootSpeaker.h"
+#include "commands/ZeroClimber.h"
 
 RobotContainer::RobotContainer() {
   m_chooser.AddOption("Test Auto", "test_auto");
@@ -26,6 +31,10 @@ RobotContainer::RobotContainer() {
   pathplanner::NamedCommands::registerCommand(
       "drive_switch", std::move(m_drive.SetGyro(180_deg)));
 
+  // Intake Commands
+  pathplanner::NamedCommands::registerCommand("intake_note",
+                                              IntakeNote(&m_intake).ToPtr());
+
   frc::SmartDashboard::PutData("PDP", &m_pdp);
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   frc::SmartDashboard::PutData("Command Scheduler",
@@ -34,6 +43,7 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureDriverButtons();
   ConfigureOperatorButtons();
+  ConfigureTriggers();
 
   // Uses right trigger + left stick axis + right stick axis
   m_drive.SetDefaultCommand(DefaultDrive(
@@ -44,11 +54,35 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  m_driverController.A().OnTrue(frc2::cmd::Print("Example!"));
+  (m_driverController.RightBumper() && !m_shooter.HasNoteTrigger())
+      .WhileTrue(IntakeNote(&m_intake).ToPtr());
+
+  (m_dleftTrigger && m_shooter.HasNoteTrigger())
+      .WhileTrue(RequestSpeaker(
+                     &m_arm, &m_drive, &m_shooter,
+                     [this] { return m_driverController.GetLeftY(); },
+                     [this] { return m_driverController.GetLeftX(); })
+                     .ToPtr());
+
+  (m_drightTrigger && m_state.SpeakerPreppedTrigger())
+      .OnTrue(ShootSpeaker(&m_shooter).ToPtr());
+
+  (m_drightTrigger && m_state.AmpPreppedTrigger())
+      .OnTrue(ScoreAmp(&m_shooter).ToPtr());
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
-  m_operatorController.A().OnTrue(frc2::cmd::Print("Example!"));
+  m_operatorController.A().OnTrue(
+      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kMax));
+  m_operatorController.B().OnTrue(
+      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kStow));
+}
+
+void RobotContainer::ConfigureTriggers() {
+  m_zeroClimberTrigger.OnTrue(ZeroClimber(&m_climber).ToPtr());
+
+  (m_intake.HasNoteTrigger() && !m_shooter.HasNoteTrigger())
+      .OnTrue(Handover(&m_arm, &m_shooter, &m_intake).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

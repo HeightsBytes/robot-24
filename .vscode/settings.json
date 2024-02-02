@@ -92,6 +92,7 @@
     "regex": "cpp",
     "fstream": "cpp",
     "future": "cpp",
-    "typeindex": "cpp"
+    "typeindex": "cpp",
+    "cstdbool": "cpp"
   }
 }

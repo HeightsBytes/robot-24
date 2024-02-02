@@ -17,10 +17,10 @@
   nt::NetworkTableInstance::GetDefault() \
       .GetTable("limelight")             \
       ->GetNumber(x, 0.0)
-#define GET_ARRAY_VAL(x)                 \
+#define GET_ARRAY_VAL(x, _size)          \
   nt::NetworkTableInstance::GetDefault() \
       .GetTable("limelight")             \
-      ->GetNumberArray(x, std::span<const double>(6))
+      ->GetNumberArray(x, std::span<const double>(_size))
 #define SETVAL(x, y) \
   nt::NetworkTableInstance::GetDefault().GetTable("limelight")->PutNumber(x, y)
 
@@ -66,22 +66,30 @@ LimeLight::LEDMode LimeLight::GetLED() {
   return LimeLight::LEDMode(GETVAL("ledMode"));
 }
 
+// For this method, it appears that wpiblue should really be using wpiblue no
+// matter what, will implment in this way
 std::optional<PosePacket> LimeLight::GetPose() {
   static std::vector<double> results;
   if (!HasTarget()) {
     return std::nullopt;
   }
-  if (frc::DriverStation::GetAlliance() !=
-      frc::DriverStation::Alliance::kBlue) {
-    results =
-        nt::NetworkTableInstance::GetDefault()
-            .GetTable("limelight")
-            ->GetNumberArray("botpose_wpiblue", std::span<const double>());
-  } else {
-    results = nt::NetworkTableInstance::GetDefault()
-                  .GetTable("limelight")
-                  ->GetNumberArray("botpose_wpired", std::span<const double>());
-  }
+  results = nt::NetworkTableInstance::GetDefault()
+                .GetTable("limelight")
+                ->GetNumberArray("botpose_wpiblue", std::span<const double>());
+
+  // if (frc::DriverStation::GetAlliance() !=
+  //     frc::DriverStation::Alliance::kBlue) {
+  //   results =
+  //       nt::NetworkTableInstance::GetDefault()
+  //           .GetTable("limelight")
+  //           ->GetNumberArray("botpose_wpiblue", std::span<const double>());
+  // } else {
+  //   results = nt::NetworkTableInstance::GetDefault()
+  //                 .GetTable("limelight")
+  //                 ->GetNumberArray("botpose_wpired", std::span<const
+  //                 double>());
+  // }
+
   frc::Translation2d translation{units::meter_t(results[0]),
                                  units::meter_t(results[1])};
   frc::Rotation2d rotation{units::degree_t(results[5])};

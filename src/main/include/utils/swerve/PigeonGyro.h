@@ -10,34 +10,34 @@
 #include <units/angular_velocity.h>
 
 namespace hb {
-class PigeonGyro {
- public:
-  explicit PigeonGyro(int ID);
+  class PigeonGyro {
+   public:
+    explicit PigeonGyro(int ID);
 
-  units::degree_t GetAngle() const;
+    units::degree_t GetAngle() const;
 
-  units::degrees_per_second_t GetRate() const;
+    units::degrees_per_second_t GetRate() const;
 
-  void Reset();
+    void Reset();
 
-  units::degree_t GetPitch() const;
+    units::degree_t GetPitch() const;
 
-  units::degree_t GetRoll() const;
+    units::degree_t GetRoll() const;
 
-  frc::Rotation2d GetRot2d() const;
+    frc::Rotation2d GetRot2d() const;
 
-  units::radian_t GetRad() const;
+    units::radian_t GetRad() const;
 
-  void SetPosition(units::degree_t);
+    void SetPosition(units::degree_t);
 
-  units::degree_t GetCompassHeading() const;
+    units::degree_t GetCompassHeading() const;
 
-  void Set(units::degree_t heading);
+    void Set(units::degree_t heading);
 
- private:
-  ctre::phoenix::sensors::PigeonIMU* pigeon;
-  mutable double m_angle;
-  mutable double m_rate;
-  double m_offset;
-};
+   private:
+    ctre::phoenix::sensors::PigeonIMU* pigeon;
+    mutable double m_angle;
+    mutable double m_rate;
+    double m_offset;
+  };
 }  // namespace hb

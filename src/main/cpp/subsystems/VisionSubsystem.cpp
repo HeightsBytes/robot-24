@@ -28,6 +28,55 @@ VisionSubsystem::VisionSubsystem()
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
+  UpdatePacket();
+}
+
+VisionSubsystem& VisionSubsystem::GetInstance() {
+  static VisionSubsystem inst;
+  return inst;
+}
+
+std::vector<PosePacket> VisionSubsystem::GetPose() {
+  return m_packets;
+}
+
+photonlib::PhotonPipelineResult VisionSubsystem::GetLeftResult() {
+  return m_leftEst.GetCamera()->GetLatestResult();
+}
+
+photonlib::PhotonPipelineResult VisionSubsystem::GetRightResult() {
+  return m_rightEst.GetCamera()->GetLatestResult();
+}
+
+std::optional<photonlib::PhotonTrackedTarget> VisionSubsystem::HasResult(
+    std::span<const photonlib::PhotonTrackedTarget> results, int ID) {
+  for (const auto& res : results) {
+    if (res.GetFiducialId() == ID) {
+      return res;
+    }
+  }
+
+  return std::nullopt;
+}
+
+std::optional<PosePacket> VisionSubsystem::PhotonToPosePacket(
+    std::optional<photonlib::EstimatedRobotPose> pose) {
+  if (!pose.has_value())
+    return std::nullopt;
+
+  return PosePacket(pose.value().estimatedPose.ToPose2d(),
+                    pose.value().timestamp);
+}
+
+std::optional<units::degree_t> VisionSubsystem::AngleToStage() const {
+  return 0_deg;
+}
+
+std::optional<frc::Pose3d> VisionSubsystem::GetTagPose(int id) const {
+  return m_layout.GetTagPose(id);
+}
+
+void VisionSubsystem::UpdatePacket() {
   std::vector<PosePacket> packets;
 
   std::optional<PosePacket> llPose = hb::LimeLight::GetPose();
@@ -52,22 +101,4 @@ void VisionSubsystem::Periodic() {
   }
 
   m_packets = packets;
-}
-
-VisionSubsystem& VisionSubsystem::GetInstance() {
-  static VisionSubsystem inst;
-  return inst;
-}
-
-std::vector<PosePacket> VisionSubsystem::GetPose() {
-  return m_packets;
-}
-
-std::optional<PosePacket> VisionSubsystem::PhotonToPosePacket(
-    std::optional<photonlib::EstimatedRobotPose> pose) {
-  if (!pose.has_value())
-    return std::nullopt;
-
-  return PosePacket(pose.value().estimatedPose.ToPose2d(),
-                    pose.value().timestamp);
 }

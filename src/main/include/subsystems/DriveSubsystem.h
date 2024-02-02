@@ -108,6 +108,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // Sets the pose of the robot's estimator
   void SetPose(frc::Pose2d pose);
 
+  [[nodiscard]]
   frc2::CommandPtr SetGyro(units::degree_t angle);
 
   void InitSendable(wpi::SendableBuilder& builder) override;

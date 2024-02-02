@@ -4,15 +4,16 @@
 
 #pragma once
 
+#include <frc/DigitalInput.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/Trigger.h>
-#include <frc/DigitalInput.h>
-#include <rev/CANSparkMax.h>
 #include <rev/AbsoluteEncoder.h>
+#include <rev/CANSparkMax.h>
 #include <rev/SparkPIDController.h>
-#include <wpi/sendable/SendableBuilder.h>
-#include <string>
 #include <units/angle.h>
+#include <wpi/sendable/SendableBuilder.h>
+
+#include <string>
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
@@ -42,13 +43,15 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   inline IntakeState GetTargetIntakeState() const { return m_intakeTarget; }
   inline IntakeState GetCurrentIntakeState() const { return m_intakeCurrent; }
 
-  inline units::degree_t GetPosition() const { 
-    return units::degree_t(m_pivotEncoder.GetPosition()); }
+  inline units::degree_t GetPosition() const {
+    return units::degree_t(m_pivotEncoder.GetPosition());
+  }
 
-  frc2::Trigger HasNoteTrigger() const { return frc2::Trigger{[this] {return HasNote();}}; }
+  frc2::Trigger HasNoteTrigger() const {
+    return frc2::Trigger{[this] { return HasNote(); }};
+  }
 
  private:
-
   void ControlLoop();
   void UpdatePivotState();
   void UpdateIntakeState();
@@ -67,7 +70,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   rev::CANSparkMax m_intakeMotor;
 
   frc::DigitalInput m_noteSwitch;
-  
+
   MotionState m_motion;
 
   PivotState m_pivotCurrent;
@@ -75,5 +78,4 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   IntakeState m_intakeCurrent;
   IntakeState m_intakeTarget;
-
 };

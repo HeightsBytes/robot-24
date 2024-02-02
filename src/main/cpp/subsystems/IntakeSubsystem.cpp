@@ -5,112 +5,179 @@
 #include "subsystems/IntakeSubsystem.h"
 
 #include "Constants.h"
+#include "utils/Util.h"
 
 IntakeSubsystem::IntakeSubsystem()
-    : m_pivot(IntakeConstants::kPivotMotorID,
-              rev::CANSparkMax::MotorType::kBrushless),
-      m_intake(IntakeConstants::kIntakeMotorID,
-               rev::CANSparkMax::MotorType::kBrushless),
-      m_pivotEncoder(m_pivot.GetAbsoluteEncoder(
+    : m_pivotMotor(IntakeConstants::kPivotMotorID,
+                   rev::CANSparkMax::MotorType::kBrushless),
+      m_pivotController(m_pivotMotor.GetPIDController()),
+      m_pivotEncoder(m_pivotMotor.GetAbsoluteEncoder(
           rev::SparkAbsoluteEncoder::Type::kDutyCycle)),
-      m_pivotController(m_pivot.GetPIDController()),
-      m_limitSwitch(IntakeConstants::kLimitID),
-      m_target(PivotTarget::kNone),
-      m_state(IntakeState::kNone) {
-  m_pivot.RestoreFactoryDefaults();
-  m_intake.RestoreFactoryDefaults();
+      m_intakeMotor(IntakeConstants::kIntakeMotorID,
+                    rev::CANSparkMax::MotorType::kBrushless),
+      m_noteSwitch(IntakeConstants::kLimitID),
+      m_motion(IntakeSubsystem::MotionState::kAutomatic),
+      m_pivotCurrent(PivotState::kMoving),
+      m_pivotTarget(PivotState::kStow),
+      m_intakeCurrent(IntakeState::kStopped),
+      m_intakeTarget(IntakeState::kStopped) {
+  m_pivotMotor.RestoreFactoryDefaults();
+  m_intakeMotor.RestoreFactoryDefaults();
 
-  m_pivot.SetSmartCurrentLimit(IntakeConstants::kPivotLimit.value());
-  m_intake.SetSmartCurrentLimit(IntakeConstants::kIntakeLimit.value());
+  m_pivotMotor.SetSmartCurrentLimit(IntakeConstants::kPivotLimit.value());
+  m_intakeMotor.SetSmartCurrentLimit(IntakeConstants::kIntakeLimit.value());
 
-  m_pivot.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  m_intake.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+  m_pivotMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_intakeMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
   m_pivotEncoder.SetPositionConversionFactor(
       IntakeConstants::kPositionConversion);
+  m_pivotEncoder.SetZeroOffset(IntakeConstants::kZeroOffset);
 
   m_pivotController.SetFeedbackDevice(m_pivotEncoder);
 
   m_pivotController.SetP(IntakeConstants::kP);
   m_pivotController.SetI(IntakeConstants::kI);
   m_pivotController.SetD(IntakeConstants::kD);
+  m_pivotController.SetOutputRange(-1, 1);
+
+  m_pivotMotor.BurnFlash();
+  m_intakeMotor.BurnFlash();
 }
 
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
-  m_pivotController.SetReference(TargetToSetpoint(m_target).value(),
-                                 rev::CANSparkMax::ControlType::kPosition);
-  m_intake.Set(StateToSetpoint(m_state));
-}
-
-bool IntakeSubsystem::HasNote() const {
-  return m_limitSwitch.Get();
-}
-
-void IntakeSubsystem::SetPivotTarget(PivotTarget target) {
-  m_target = target;
-}
-
-void IntakeSubsystem::SetIntakeState(IntakeState state) {
-  m_state = state;
-}
-
-IntakeSubsystem::PivotTarget IntakeSubsystem::GetCurrentState() const {
-  return PivotTarget::kNone;
-}
-
-frc2::CommandPtr IntakeSubsystem::SetPivotTargetCMD(PivotTarget target) {
-  return this->RunOnce([this, target] { SetPivotTarget(target); });
-}
-
-frc2::CommandPtr IntakeSubsystem::SetIntakeStateCMD(IntakeState state) {
-  return this->RunOnce([this, state] { SetIntakeState(state); });
-}
-
-frc2::Trigger IntakeSubsystem::HasNoteTrigger() {
-  return frc2::Trigger([this] { return HasNote(); });
+  UpdatePivotState();
+  UpdateIntakeState();
+  if (m_motion != MotionState::kDisabled) {
+    ControlLoop();
+  } else {
+    m_intakeMotor.Set(0.0);
+    m_pivotMotor.Set(0.0);
+  }
 }
 
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Intake Subsystem");
-
-#define LAMBDA(x) [this] { return x; }
-
-  builder.AddStringProperty("State", LAMBDA(ToStr(m_state)), nullptr);
-  builder.AddStringProperty("Pivot Target", LAMBDA(ToStr(m_target)), nullptr);
-
-  builder.AddDoubleProperty("Angle", LAMBDA(m_pivotEncoder.GetPosition()),
-                            nullptr);
-  builder.AddDoubleProperty("Speed Percent", LAMBDA(m_intake.Get()), nullptr);
-
-#undef LAMBDA
 }
 
-std::string IntakeSubsystem::ToStr(PivotTarget target) const {
-  switch (target) {
-    default:
-    case PivotTarget::kNone:
-      return "None";
+void IntakeSubsystem::ControlLoop() {
+  m_intakeMotor.Set(ToOutput(m_intakeTarget));
+  m_pivotController.SetReference(ToOutput(m_pivotTarget),
+                                 rev::CANSparkMax::ControlType::kPosition);
+}
+
+void IntakeSubsystem::UpdatePivotState() {
+  double position = GetPosition().value();
+
+  // Check ground
+  if (hb::InRange(position, IntakeConstants::Positions::kGround.value(),
+                  IntakeConstants::Positions::kTollerance.value())) {
+    m_pivotCurrent = PivotState::kGround;
+    return;
+  }
+
+  // Check stow
+  if (hb::InRange(position, IntakeConstants::Positions::kStow.value(),
+                  IntakeConstants::Positions::kTollerance.value())) {
+    m_pivotCurrent = PivotState::kStow;
+    return;
+  }
+
+  m_pivotCurrent = PivotState::kMoving;
+}
+
+void IntakeSubsystem::UpdateIntakeState() {
+  double speed = m_intakeMotor.Get();
+
+  if (speed == 0) {
+    m_intakeCurrent = IntakeState::kStopped;
+    return;
+  }
+
+  if (speed == IntakeConstants::Speeds::kEject) {
+    m_intakeCurrent = IntakeState::kEject;
+    return;
+  }
+
+  if (speed == IntakeConstants::Speeds::kFeedShooter) {
+    m_intakeCurrent = IntakeState::kFeed;
+    return;
+  }
+
+  if (speed == IntakeConstants::Speeds::kIntake) {
+    m_intakeCurrent = IntakeState::kIntaking;
+    return;
+  }
+}
+
+double IntakeSubsystem::ToOutput(IntakeState state) const {
+  switch (state) {
+    case IntakeState::kEject:
+      return IntakeConstants::Speeds::kEject;
       break;
 
-    case PivotTarget::kGround:
+    case IntakeState::kFeed:
+      return IntakeConstants::Speeds::kFeedShooter;
+      break;
+
+    case IntakeState::kIntaking:
+      return IntakeConstants::Speeds::kIntake;
+      break;
+
+    default:
+    case IntakeState::kStopped:
+      return 0.0;
+      break;
+  }
+}
+
+double IntakeSubsystem::ToOutput(PivotState state) const {
+  switch (state) {
+    default:
+    case PivotState::kStow:
+      return IntakeConstants::Positions::kStow.value();
+      break;
+
+    case PivotState::kGround:
+      return IntakeConstants::Positions::kGround.value();
+      break;
+  }
+}
+
+std::string IntakeSubsystem::ToStr(MotionState state) const {
+  switch (state) {
+    case MotionState::kAutomatic:
+      return "Automatic";
+      break;
+
+    default:
+    case MotionState::kDisabled:
+      return "Disabled";
+      break;
+  }
+}
+
+std::string IntakeSubsystem::ToStr(PivotState state) const {
+  switch (state) {
+    case PivotState::kGround:
       return "Ground";
       break;
 
-    case PivotTarget::kStow:
+    case PivotState::kStow:
       return "Stow";
+      break;
+
+    default:
+    case PivotState::kMoving:
+      return "Moving";
       break;
   }
 }
 
 std::string IntakeSubsystem::ToStr(IntakeState state) const {
   switch (state) {
-    default:
-    case IntakeState::kNone:
-      return "None";
-      break;
-
-    case IntakeState::kIntake:
+    case IntakeState::kIntaking:
       return "Intaking";
       break;
 
@@ -118,47 +185,13 @@ std::string IntakeSubsystem::ToStr(IntakeState state) const {
       return "Ejecting";
       break;
 
-    case IntakeState::kFeedShooter:
-      return "Feeding Shooter";
+    case IntakeState::kFeed:
+      return "Feeding";
       break;
-  }
-}
 
-units::degree_t IntakeSubsystem::TargetToSetpoint(PivotTarget target) const {
-  switch (target) {
     default:
-    case PivotTarget::kNone:
-      // no target means no motion
-      return units::degree_t(m_pivotEncoder.GetPosition());
-      break;
-
-    case PivotTarget::kGround:
-      return IntakeConstants::Positions::kGround;
-      break;
-
-    case PivotTarget::kStow:
-      return IntakeConstants::Positions::kStow;
-      break;
-  }
-}
-
-double IntakeSubsystem::StateToSetpoint(IntakeState state) const {
-  switch (state) {
-    default:
-    case IntakeState::kNone:
-      return 0;
-      break;
-
-    case IntakeState::kEject:
-      return IntakeConstants::Speeds::kEject;
-      break;
-
-    case IntakeState::kFeedShooter:
-      return IntakeConstants::Speeds::kFeedShooter;
-      break;
-
-    case IntakeState::kIntake:
-      return IntakeConstants::Speeds::kIntake;
+    case IntakeState::kStopped:
+      return "Stopped";
       break;
   }
 }

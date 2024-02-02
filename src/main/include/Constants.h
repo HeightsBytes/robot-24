@@ -132,6 +132,7 @@ namespace IntakeConstants {
   inline constexpr int kLimitID = 0;
 
   inline constexpr double kPositionConversion = 360;
+  inline constexpr double kZeroOffset = 0;
 
   inline constexpr auto kIntakeLimit = 0_A;
   inline constexpr auto kPivotLimit = 0_A;
@@ -139,6 +140,7 @@ namespace IntakeConstants {
   namespace Positions {
     inline constexpr auto kGround = 0_deg;
     inline constexpr auto kStow = 0_deg;
+    inline constexpr auto kTollerance = 3_deg;
   }  // namespace Positions
 
   namespace Speeds {

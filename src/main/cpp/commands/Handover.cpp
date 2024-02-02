@@ -15,24 +15,23 @@ Handover::Handover(ArmSubsystem* arm, ShooterSubsystem* shooter,
 void Handover::Initialize() {
   m_arm->SetState(ArmSubsystem::State::kStow);
   m_shooter->SetTargetState(ShooterSubsystem::State::kStopped);
-  m_intake->SetPivotTarget(IntakeSubsystem::PivotTarget::kStow);
+  m_intake->SetPivotState(IntakeSubsystem::PivotState::kStow);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void Handover::Execute() {
   if (m_arm->GetCurrentState() != ArmSubsystem::State::kStow)
     return;
-  if (m_intake->GetCurrentState() != IntakeSubsystem::PivotTarget::kStow)
+  if (m_intake->GetCurrentPivotState() != IntakeSubsystem::PivotState::kStow)
     return;
 
-  m_intake->SetIntakeState(IntakeSubsystem::IntakeState::kFeedShooter);
+  m_intake->SetIntakeState(IntakeSubsystem::IntakeState::kFeed);
   m_shooter->SetFeeder(0.2);
 }
 
 // Called once the command ends or is interrupted.
 void Handover::End(bool interrupted) {
-  m_intake->SetIntakeState(IntakeSubsystem::IntakeState::kNone);
-  m_intake->SetPivotTarget(IntakeSubsystem::PivotTarget::kNone);
+  m_intake->SetIntakeState(IntakeSubsystem::IntakeState::kStopped);
   m_shooter->SetFeeder(0.0);
   m_shooter->SetTargetState(ShooterSubsystem::State::kIdle);
 }

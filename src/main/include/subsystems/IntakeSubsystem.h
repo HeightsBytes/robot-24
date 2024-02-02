@@ -4,64 +4,76 @@
 
 #pragma once
 
-#include <frc/DigitalInput.h>
-#include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/Trigger.h>
+#include <frc/DigitalInput.h>
 #include <rev/CANSparkMax.h>
-#include <units/angle.h>
+#include <rev/AbsoluteEncoder.h>
+#include <rev/SparkPIDController.h>
 #include <wpi/sendable/SendableBuilder.h>
-
 #include <string>
+#include <units/angle.h>
 
-// 2 NEO motor
-// 1 intake motor
-// 1 pivot motor
-// 1 through bore encoder
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
-  enum class PivotTarget { kNone, kGround, kStow };
-
-  enum class IntakeState { kNone, kIntake, kEject, kFeedShooter };
-
   IntakeSubsystem();
+
+  enum class MotionState { kDisabled, kAutomatic };
+  enum class PivotState { kStow, kGround, kMoving };
+  enum class IntakeState { kStopped, kIntaking, kFeed, kEject };
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
 
-  bool HasNote() const;
-
-  void SetPivotTarget(PivotTarget target);
-  void SetIntakeState(IntakeState state);
-
-  PivotTarget GetCurrentState() const;
-
-  [[nodiscard]]
-  frc2::CommandPtr SetPivotTargetCMD(PivotTarget target);
-  [[nodiscard]]
-  frc2::CommandPtr SetIntakeStateCMD(IntakeState state);
-
-  frc2::Trigger HasNoteTrigger();
-
   void InitSendable(wpi::SendableBuilder& builder) override;
 
+  inline bool HasNote() const { return m_noteSwitch.Get(); }
+
+  inline void SetMotionState(MotionState state) { m_motion = state; }
+  inline MotionState GetMotionState() const { return m_motion; }
+
+  inline void SetPivotState(PivotState target) { m_pivotTarget = target; }
+  inline PivotState GetTargetPivotState() const { return m_pivotTarget; }
+  inline PivotState GetCurrentPivotState() const { return m_pivotCurrent; }
+
+  inline void SetIntakeState(IntakeState target) { m_intakeTarget = target; }
+  inline IntakeState GetTargetIntakeState() const { return m_intakeTarget; }
+  inline IntakeState GetCurrentIntakeState() const { return m_intakeCurrent; }
+
+  inline units::degree_t GetPosition() const { 
+    return units::degree_t(m_pivotEncoder.GetPosition()); }
+
+  frc2::Trigger HasNoteTrigger() const { return frc2::Trigger{[this] {return HasNote();}}; }
+
  private:
-  std::string ToStr(PivotTarget target) const;
+
+  void ControlLoop();
+  void UpdatePivotState();
+  void UpdateIntakeState();
+
+  double ToOutput(IntakeState state) const;
+  double ToOutput(PivotState state) const;
+
+  std::string ToStr(MotionState state) const;
+  std::string ToStr(PivotState state) const;
   std::string ToStr(IntakeState state) const;
 
-  units::degree_t TargetToSetpoint(PivotTarget target) const;
-  double StateToSetpoint(IntakeState state) const;
-
-  rev::CANSparkMax m_pivot;
-  rev::CANSparkMax m_intake;
-
-  rev::SparkAbsoluteEncoder m_pivotEncoder;
+  rev::CANSparkMax m_pivotMotor;
   rev::SparkPIDController m_pivotController;
+  rev::SparkAbsoluteEncoder m_pivotEncoder;
 
-  frc::DigitalInput m_limitSwitch;
+  rev::CANSparkMax m_intakeMotor;
 
-  PivotTarget m_target;
-  IntakeState m_state;
+  frc::DigitalInput m_noteSwitch;
+  
+  MotionState m_motion;
+
+  PivotState m_pivotCurrent;
+  PivotState m_pivotTarget;
+
+  IntakeState m_intakeCurrent;
+  IntakeState m_intakeTarget;
+
 };

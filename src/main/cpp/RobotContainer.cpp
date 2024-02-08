@@ -13,78 +13,34 @@
 #include <memory>
 #include <utility>
 
-#include "commands/DefaultDrive.h"
-#include "commands/Handover.h"
-#include "commands/IntakeNote.h"
-#include "commands/RequestSpeaker.h"
-#include "commands/ScoreAmp.h"
-#include "commands/ShootSpeaker.h"
-#include "commands/ZeroClimber.h"
+#include "commands/ShootNote.h"
 
 RobotContainer::RobotContainer() {
-  m_chooser.AddOption("Test Auto", "test_auto");
-  m_chooser.AddOption("Straight Line", "just_move");
-  m_chooser.AddOption("Balance Path", "red_auto");
-  m_chooser.AddOption("Crazy Auto", "red_crazy_auto");
-
-  // Other Commands
-  pathplanner::NamedCommands::registerCommand(
-      "drive_switch", std::move(m_drive.SetGyro(180_deg)));
-
-  // Intake Commands
-  pathplanner::NamedCommands::registerCommand("intake_note",
-                                              IntakeNote(&m_intake).ToPtr());
-
   frc::SmartDashboard::PutData("PDP", &m_pdp);
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   frc::SmartDashboard::PutData("Command Scheduler",
                                &frc2::CommandScheduler::GetInstance());
 
+  frc::SmartDashboard::PutData("Shooter", &m_shooter);
+
   // Configure the button bindings
   ConfigureDriverButtons();
   ConfigureOperatorButtons();
   ConfigureTriggers();
-
-  // Uses right trigger + left stick axis + right stick axis
-  m_drive.SetDefaultCommand(DefaultDrive(
-      &m_drive, [this] { return m_driverController.GetLeftY(); },
-      [this] { return m_driverController.GetLeftX(); },
-      [this] { return m_driverController.GetRightX(); },
-      [this] { return m_driverController.GetRightTriggerAxis(); }));
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  (m_driverController.RightBumper() && !m_shooter.HasNoteTrigger())
-      .WhileTrue(IntakeNote(&m_intake).ToPtr());
+  m_driverController.A().OnTrue(
+      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kSpeaker));
 
-  (m_dleftTrigger && m_shooter.HasNoteTrigger())
-      .WhileTrue(RequestSpeaker(
-                     &m_arm, &m_drive, &m_shooter,
-                     [this] { return m_driverController.GetLeftY(); },
-                     [this] { return m_driverController.GetLeftX(); })
-                     .ToPtr());
-
-  (m_drightTrigger && m_state.SpeakerPreppedTrigger())
-      .OnTrue(ShootSpeaker(&m_shooter).ToPtr());
-
-  (m_drightTrigger && m_state.AmpPreppedTrigger())
-      .OnTrue(ScoreAmp(&m_shooter).ToPtr());
+  (m_drightTrigger && m_shooter.ShooterReadyTrigger())
+      .OnTrue(ShootNote(&m_shooter).ToPtr());
 }
 
-void RobotContainer::ConfigureOperatorButtons() {
-  m_operatorController.A().OnTrue(
-      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kMax));
-  m_operatorController.B().OnTrue(
-      m_climber.SetSyncTargetCMD(ClimbConstants::Positions::kStow));
-}
+void RobotContainer::ConfigureOperatorButtons() {}
 
-void RobotContainer::ConfigureTriggers() {
-  m_zeroClimberTrigger.OnTrue(ZeroClimber(&m_climber).ToPtr());
-
-  (m_intake.HasNoteTrigger() && !m_shooter.HasNoteTrigger())
-      .OnTrue(Handover(&m_arm, &m_shooter, &m_intake).ToPtr());
-}
+void RobotContainer::ConfigureTriggers() {}
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return pathplanner::PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
+  return frc2::cmd::None();
 }

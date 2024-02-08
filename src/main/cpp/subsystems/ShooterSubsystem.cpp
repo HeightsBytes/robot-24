@@ -23,7 +23,6 @@ ShooterSubsystem::ShooterSubsystem()
                    rev::CANSparkMax::MotorType::kBrushless),
       m_rightFeeder(ShooterConstants::kRightFeederID,
                     rev::CANSparkMax::MotorType::kBrushless),
-      m_beamBreak(ShooterConstants::kBeamBreakPort),
       m_actual(State::kStopped),
       m_target(State::kIdle) {
   m_leftFlywheel.RestoreFactoryDefaults();
@@ -56,42 +55,28 @@ ShooterSubsystem::ShooterSubsystem()
 
 // This method will be called once per scheduler run
 void ShooterSubsystem::Periodic() {
+  if (m_tuning) {
+    m_controller0.SetP(kP);
+    m_controller1.SetP(kP);
+
+    m_controller0.SetI(kI);
+    m_controller1.SetI(kI);
+
+    m_controller0.SetD(kD);
+    m_controller1.SetD(kD);
+
+    m_controller0.SetFF(kFF);
+    m_controller1.SetFF(kFF);
+  } else {
+    kP = m_controller0.GetP();
+    kI = m_controller0.GetI();
+    kD = m_controller0.GetD();
+    kFF = m_controller0.GetFF();
+  }
   m_controller0.SetReference(ToRPM(m_target).value(),
                              rev::CANSparkFlex::ControlType::kVelocity);
   m_controller1.SetReference(ToRPM(m_target).value(),
                              rev::CANSparkFlex::ControlType::kVelocity);
-}
-
-bool ShooterSubsystem::HasNote() const {
-  return m_beamBreak.Get();
-}
-
-bool ShooterSubsystem::AtRPM() const {
-  return GetTargetState() == GetCurrentState();
-}
-
-bool ShooterSubsystem::ShooterReady() const {
-  return HasNote() && AtRPM();
-}
-
-units::revolutions_per_minute_t ShooterSubsystem::GetSpeed0() const {
-  return units::revolutions_per_minute_t(m_encoder0.GetVelocity());
-}
-
-units::revolutions_per_minute_t ShooterSubsystem::GetSpeed1() const {
-  return units::revolutions_per_minute_t(m_encoder0.GetVelocity());
-}
-
-ShooterSubsystem::State ShooterSubsystem::GetTargetState() const {
-  return m_target;
-}
-
-ShooterSubsystem::State ShooterSubsystem::GetCurrentState() const {
-  return m_actual;
-}
-
-void ShooterSubsystem::SetTargetState(State target) {
-  m_target = target;
 }
 
 void ShooterSubsystem::SetFeeder(double setpoint) {
@@ -103,18 +88,6 @@ frc2::CommandPtr ShooterSubsystem::SetTargetStateCMD(State target) {
   return RunOnce([this, target] { SetTargetState(target); });
 }
 
-frc2::Trigger ShooterSubsystem::HasNoteTrigger() {
-  return frc2::Trigger([this] { return HasNote(); });
-}
-
-frc2::Trigger ShooterSubsystem::AtRPMTrigger() {
-  return frc2::Trigger([this] { return AtRPM(); });
-}
-
-frc2::Trigger ShooterSubsystem::ShooterReadyTrigger() {
-  return frc2::Trigger([this] { return ShooterReady(); });
-}
-
 void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Shooter");
 
@@ -122,6 +95,22 @@ void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   builder.AddStringProperty("Actual State", LAMBDA(ToStr(m_actual)), nullptr);
   builder.AddStringProperty("Target State", LAMBDA(ToStr(m_target)), nullptr);
+
+  builder.AddDoubleProperty("Velocity 0", LAMBDA(GetSpeed0().value()), nullptr);
+  builder.AddDoubleProperty("Velocity 1", LAMBDA(GetSpeed1().value()), nullptr);
+  builder.AddDoubleProperty("Velocity Average",
+                            LAMBDA(GetAverageSpeed().value()), nullptr);
+
+  builder.AddBooleanProperty("Tuning", LAMBDA(IsTuning()),
+                             [this](bool value) { m_tuning = value; });
+  builder.AddDoubleProperty("kP", LAMBDA(m_controller0.GetP()),
+                            [this](double value) { kP = value; });
+  builder.AddDoubleProperty("kI", LAMBDA(m_controller0.GetI()),
+                            [this](double value) { kI = value; });
+  builder.AddDoubleProperty("kD", LAMBDA(m_controller0.GetD()),
+                            [this](double value) { kD = value; });
+  builder.AddDoubleProperty("kFF", LAMBDA(m_controller0.GetFF()),
+                            [this](double value) { kFF = value; });
 
 #undef LAMBDA
 }

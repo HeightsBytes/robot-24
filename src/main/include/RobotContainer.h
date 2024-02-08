@@ -46,16 +46,7 @@ class RobotContainer {
 
   frc::PowerDistribution m_pdp{0, frc::PowerDistribution::ModuleType::kCTRE};
 
-  // The robot's subsystems
-  VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
-  DriveSubsystem m_drive;
-  IntakeSubsystem m_intake;
-  ClimbSubsystem m_climber;
-  ArmSubsystem m_arm{[this]() -> frc::Pose2d { return m_drive.GetPose(); }};
   ShooterSubsystem m_shooter;
-  RobotStateSubsystem m_state{&m_arm,
-                              &m_shooter};  // does not command, simply uses
-                                            // dependency injection for state
 
   frc::SendableChooser<std::string> m_chooser;
 
@@ -65,9 +56,6 @@ class RobotContainer {
       [this] { return m_driverController.GetLeftTriggerAxis() > 0.6; }};
   frc2::Trigger m_drightTrigger{
       [this] { return m_driverController.GetRightTriggerAxis() > 0.6; }};
-
-  // True if not zeroed
-  frc2::Trigger m_zeroClimberTrigger{[this] { return !m_climber.IsZeroed(); }};
 
   void ConfigureDriverButtons();
 

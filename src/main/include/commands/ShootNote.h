@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc/Timer.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
@@ -16,9 +17,9 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class ScoreAmp : public frc2::CommandHelper<frc2::Command, ScoreAmp> {
+class ShootNote : public frc2::CommandHelper<frc2::Command, ShootNote> {
  public:
-  explicit ScoreAmp(ShooterSubsystem* shooter);
+  ShootNote(ShooterSubsystem* shooter);
 
   void Initialize() override;
 
@@ -30,4 +31,5 @@ class ScoreAmp : public frc2::CommandHelper<frc2::Command, ScoreAmp> {
 
  private:
   ShooterSubsystem* m_shooter;
+  frc::Timer m_timer;
 };

@@ -217,7 +217,7 @@ namespace ShooterConstants {
   inline constexpr double kP = 0;
   inline constexpr double kI = 0;
   inline constexpr double kD = 0;
-  inline constexpr double kFF = 0;
+  inline constexpr double kFF = 1 / 5880;
 
   inline constexpr auto kCurrentLimit = 0_A;
 

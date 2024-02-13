@@ -16,6 +16,7 @@
 #include <functional>
 #include <string>
 
+#include "Constants.h"
 #include "VisionSubsystem.h"
 #include "utils/regressions/Linear.h"
 
@@ -24,7 +25,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
  public:
   enum class State { kStow, kAmp, kTargeting, kSwitching };
 
-  explicit ArmSubsystem(std::function<frc::Pose2d()> poseFunction);
+  ArmSubsystem(/** std::function<frc::Pose2d()> poseFunction **/);
 
   void Periodic() override;
 
@@ -61,13 +62,20 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   rev::SparkPIDController m_controller;
 
-  VisionSubsystem& m_vision;
+  // VisionSubsystem& m_vision;
 
   State m_actual;
   State m_target;
 
-  std::function<frc::Pose2d()> m_pose;
+  // std::function<frc::Pose2d()> m_pose;
 
   // placeholder regression
   hb::Linear m_angleFunction;
+
+  bool m_tuning = true;
+
+  double kP = ArmConstants::kP;
+  double kI = ArmConstants::kI;
+  double kD = ArmConstants::kD;
+  double Setpoint = 0;  // degrees
 };

@@ -27,7 +27,7 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
   inline bool ShooterReady() const {
-    return GetCurrentState() == GetTargetState();
+    return (GetCurrentState() == GetTargetState());
   }
 
   inline units::revolutions_per_minute_t GetSpeed0() const {
@@ -41,13 +41,18 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   }
 
   inline State GetTargetState() const { return m_target; }
-  inline State GetCurrentState() const { return m_actual; }
+  inline State GetCurrentState() const { return m_actual0; }
 
   inline void SetTargetState(State target) { m_target = target; }
   void SetFeeder(double setpoint);
 
   [[nodiscard]]
   frc2::CommandPtr SetTargetStateCMD(State target);
+
+  [[nodiscard]]
+  frc2::CommandPtr SetFeederCMD(double set) {
+    return this->RunOnce([this, set] { SetFeeder(set); });
+  }
 
   frc2::Trigger ShooterReadyTrigger() {
     return frc2::Trigger([this] { return ShooterReady(); });
@@ -56,13 +61,13 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
-  void CheckState();
+  void CheckState0();
+  void CheckState1();
 
   std::string ToStr(State state) const;
 
-  units::revolutions_per_minute_t ToRPM(State state) const;
-
-  bool IsTuning() const { return m_tuning; }
+  units::revolutions_per_minute_t ToRPM0(State state) const;
+  units::revolutions_per_minute_t ToRPM1(State state) const;
 
   rev::CANSparkFlex m_leftFlywheel;
   rev::CANSparkFlex m_rightFlywheel;
@@ -76,14 +81,16 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   rev::CANSparkMax m_leftFeeder;
   rev::CANSparkMax m_rightFeeder;
 
-  State m_actual;
+  State m_actual0;
+  State m_actual1;
   State m_target;
 
   /***TUNING***/
 
-  bool m_tuning = false;
-  double kP = ShooterConstants::kP;
-  double kI = ShooterConstants::kI;
-  double kD = ShooterConstants::kD;
-  double kFF = ShooterConstants::kFF;
+  // bool m_tuning = false;
+  // double kP = ShooterConstants::kP;
+  // double kI = ShooterConstants::kI;
+  // double kD = ShooterConstants::kD;
+  // double kFF = ShooterConstants::kFF;
+  // double RPMSetpoint = ShooterConstants::Setpoint::kShooting.value();
 };

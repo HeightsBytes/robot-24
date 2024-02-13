@@ -182,9 +182,9 @@ namespace ClimbConstants {
 namespace ArmConstants {
   // TODO: find constants
 
-  inline constexpr int kMotorID = 0;
+  inline constexpr int kMotorID = 7;
 
-  inline constexpr double kP = 0;
+  inline constexpr double kP = 0.02;
   inline constexpr double kI = 0;
   inline constexpr double kD = 0;
   inline constexpr double kG = 0;
@@ -208,25 +208,27 @@ namespace ArmConstants {
 namespace ShooterConstants {
   // TODO: find constants
 
-  inline constexpr int kLeftFlywheelID = 0;
-  inline constexpr int kRightFlywheelID = 0;
-  inline constexpr int kLeftFeederID = 0;
-  inline constexpr int kRightFeederID = 0;
+  inline constexpr int kLeftFlywheelID = 4;
+  inline constexpr int kRightFlywheelID = 2;
+  inline constexpr int kLeftFeederID = 8;
+  inline constexpr int kRightFeederID = 9;
   inline constexpr int kBeamBreakPort = 0;
 
-  inline constexpr double kP = 0;
+  // Done experimentally
+  inline constexpr double kP = 0.0001;
   inline constexpr double kI = 0;
-  inline constexpr double kD = 0;
-  inline constexpr double kFF = 1 / 5880;
+  inline constexpr double kD = 0.0002;
+  inline constexpr double kFF = 0.00015;
 
-  inline constexpr auto kCurrentLimit = 0_A;
+  inline constexpr auto kCurrentLimit = 60_A;
 
   namespace Setpoint {
     inline constexpr auto kMax = 5880_rpm;
     inline constexpr auto kIdle = 300_rpm;
-    inline constexpr auto kShooting = 5000_rpm;  // guesstimate
-    inline constexpr auto kTrapAmp = 2000_rpm;   // also guesstimate
-  }                                              // namespace Setpoint
+    inline constexpr auto kShooting0 = 5500_rpm;
+    inline constexpr auto kShooting1 = 3000_rpm;
+    inline constexpr auto kTrapAmp = 2000_rpm;
+  }  // namespace Setpoint
   inline constexpr auto kTollerance = 100_rpm;
 
   inline constexpr frc::Pose2d kRedSpeakerPose = {};

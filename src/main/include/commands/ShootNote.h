@@ -19,7 +19,7 @@
  */
 class ShootNote : public frc2::CommandHelper<frc2::Command, ShootNote> {
  public:
-  ShootNote(ShooterSubsystem* shooter);
+  explicit ShootNote(ShooterSubsystem* shooter);
 
   void Initialize() override;
 

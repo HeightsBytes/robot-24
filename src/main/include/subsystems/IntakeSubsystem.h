@@ -8,6 +8,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/Trigger.h>
 #include <rev/AbsoluteEncoder.h>
+#include <rev/CANSparkFlex.h>
 #include <rev/CANSparkMax.h>
 #include <rev/SparkPIDController.h>
 #include <units/angle.h>
@@ -63,7 +64,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   std::string ToStr(PivotState state) const;
   std::string ToStr(IntakeState state) const;
 
-  rev::CANSparkMax m_pivotMotor;
+  rev::CANSparkFlex m_pivotMotor;
   rev::SparkPIDController m_pivotController;
   rev::SparkAbsoluteEncoder m_pivotEncoder;
 

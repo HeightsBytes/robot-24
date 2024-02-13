@@ -15,6 +15,8 @@
 
 #include <string>
 
+#include "Constants.h"
+
 // 2 NEO Vortex
 class ShooterSubsystem : public frc2::SubsystemBase {
  public:
@@ -24,34 +26,48 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void Periodic() override;
 
-  bool HasNote() const;
-  bool AtRPM() const;
-  bool ShooterReady() const;
+  inline bool ShooterReady() const {
+    return (GetCurrentState() == GetTargetState());
+  }
 
-  units::revolutions_per_minute_t GetSpeed0() const;
-  units::revolutions_per_minute_t GetSpeed1() const;
+  inline units::revolutions_per_minute_t GetSpeed0() const {
+    return units::revolutions_per_minute_t(m_encoder0.GetVelocity());
+  }
+  inline units::revolutions_per_minute_t GetSpeed1() const {
+    return units::revolutions_per_minute_t(m_encoder1.GetVelocity());
+  }
+  inline units::revolutions_per_minute_t GetAverageSpeed() const {
+    return (GetSpeed0() + GetSpeed1()) / 2;
+  }
 
-  State GetTargetState() const;
-  State GetCurrentState() const;
+  inline State GetTargetState() const { return m_target; }
+  inline State GetCurrentState() const { return m_actual0; }
 
-  void SetTargetState(State target);
+  inline void SetTargetState(State target) { m_target = target; }
   void SetFeeder(double setpoint);
 
   [[nodiscard]]
   frc2::CommandPtr SetTargetStateCMD(State target);
 
-  frc2::Trigger HasNoteTrigger();
-  frc2::Trigger AtRPMTrigger();
-  frc2::Trigger ShooterReadyTrigger();
+  [[nodiscard]]
+  frc2::CommandPtr SetFeederCMD(double set) {
+    return this->RunOnce([this, set] { SetFeeder(set); });
+  }
+
+  frc2::Trigger ShooterReadyTrigger() {
+    return frc2::Trigger([this] { return ShooterReady(); });
+  }
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
-  void CheckState();
+  void CheckState0();
+  void CheckState1();
 
   std::string ToStr(State state) const;
 
-  units::revolutions_per_minute_t ToRPM(State state) const;
+  units::revolutions_per_minute_t ToRPM0(State state) const;
+  units::revolutions_per_minute_t ToRPM1(State state) const;
 
   rev::CANSparkFlex m_leftFlywheel;
   rev::CANSparkFlex m_rightFlywheel;
@@ -65,8 +81,16 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   rev::CANSparkMax m_leftFeeder;
   rev::CANSparkMax m_rightFeeder;
 
-  frc::DigitalInput m_beamBreak;
-
-  State m_actual;
+  State m_actual0;
+  State m_actual1;
   State m_target;
+
+  /***TUNING***/
+
+  // bool m_tuning = false;
+  // double kP = ShooterConstants::kP;
+  // double kI = ShooterConstants::kI;
+  // double kD = ShooterConstants::kD;
+  // double kFF = ShooterConstants::kFF;
+  // double RPMSetpoint = ShooterConstants::Setpoint::kShooting.value();
 };

@@ -52,8 +52,6 @@ class ArmSubsystem : public frc2::SubsystemBase {
   units::degree_t ToAngle(State state) const;
   units::degree_t StageAngle() const;
 
-  units::volt_t CalculateKg() const;
-
   std::string ToStr(State state) const;
 
   rev::CANSparkMax m_motor;

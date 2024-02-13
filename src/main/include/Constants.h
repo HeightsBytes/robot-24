@@ -200,7 +200,7 @@ namespace ArmConstants {
   namespace Setpoint {
     inline constexpr auto kStow = 0_deg;
     inline constexpr auto kAmp = 0_deg;
-    inline constexpr auto kTollerance = 1_deg;
+    inline constexpr auto kTollerance = 0.5_deg;
   }  // namespace Setpoint
 
 }  // namespace ArmConstants
@@ -223,7 +223,6 @@ namespace ShooterConstants {
   inline constexpr auto kCurrentLimit = 60_A;
 
   namespace Setpoint {
-    inline constexpr auto kMax = 5880_rpm;
     inline constexpr auto kIdle = 300_rpm;
     inline constexpr auto kShooting0 = 5500_rpm;
     inline constexpr auto kShooting1 = 3000_rpm;

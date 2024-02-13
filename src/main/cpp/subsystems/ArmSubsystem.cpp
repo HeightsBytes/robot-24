@@ -22,7 +22,7 @@ ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
       m_target(State::kStow),
       // m_pose(std::move(poseFunction)),
       m_angleFunction(0, 0) {
-  m_motor.RestoreFactoryDefaults();
+  // m_motor.RestoreFactoryDefaults();
 
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
   // m_motor.SetSmartCurrentLimit(ArmConstants::kCurrentLimit.value());
@@ -45,13 +45,12 @@ ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
 
   m_controller.SetOutputRange(-1, 1);
 
-  m_motor.BurnFlash();
+  // m_motor.BurnFlash();
 }
 
 // This method will be called once per scheduler run
 void ArmSubsystem::Periodic() {
-  // CheckState();
-
+  CheckState();
   if (m_tuning) {
     m_controller.SetP(kP);
     m_controller.SetI(kI);
@@ -122,8 +121,7 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
 void ArmSubsystem::ControlLoop() {
   m_controller.SetReference(ToAngle(m_target).value(),
-                            rev::CANSparkMax::ControlType::kPosition, 0,
-                            CalculateKg().value());
+                            rev::CANSparkMax::ControlType::kPosition);
 }
 
 void ArmSubsystem::CheckState() {
@@ -192,12 +190,6 @@ units::degree_t ArmSubsystem::StageAngle() const {
   //           .value()));
   // }
   return 0_deg;
-}
-
-units::volt_t ArmSubsystem::CalculateKg() const {
-  auto ret = ArmConstants::kG * units::math::cos(GetAngle());
-
-  return units::volt_t(ret.value());
 }
 
 std::string ArmSubsystem::ToStr(State state) const {

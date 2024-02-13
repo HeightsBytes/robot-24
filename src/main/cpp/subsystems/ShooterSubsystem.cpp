@@ -20,17 +20,13 @@ ShooterSubsystem::ShooterSubsystem()
       m_controller0(m_leftFlywheel.GetPIDController()),
       m_controller1(m_rightFlywheel.GetPIDController()),
       m_leftFeeder(ShooterConstants::kLeftFeederID,
-                   rev::CANSparkMax::MotorType::kBrushless),
+                   rev::CANSparkMax::MotorType::kBrushed),
       m_rightFeeder(ShooterConstants::kRightFeederID,
-                    rev::CANSparkMax::MotorType::kBrushless),
-      m_beamBreak(ShooterConstants::kBeamBreakPort),
-      m_actual(State::kStopped),
-      m_target(State::kIdle) {
-  m_leftFlywheel.RestoreFactoryDefaults();
-  m_rightFlywheel.RestoreFactoryDefaults();
-
-  m_leftFlywheel.SetSmartCurrentLimit(ShooterConstants::kCurrentLimit.value());
-  m_rightFlywheel.SetSmartCurrentLimit(ShooterConstants::kCurrentLimit.value());
+                    rev::CANSparkMax::MotorType::kBrushed),
+      m_actual0(State::kStopped),
+      m_actual1(State::kStopped),
+      m_target(State::kStopped) {
+  m_rightFlywheel.SetInverted(true);
 
   m_leftFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
   m_rightFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
@@ -48,50 +44,21 @@ ShooterSubsystem::ShooterSubsystem()
   m_leftFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_rightFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
-  m_leftFeeder.BurnFlash();
-  m_rightFeeder.BurnFlash();
-  m_leftFlywheel.BurnFlash();
-  m_rightFlywheel.BurnFlash();
+  m_leftFlywheel.SetClosedLoopRampRate(1.25);
+  m_rightFlywheel.SetClosedLoopRampRate(1.25);
 }
 
 // This method will be called once per scheduler run
 void ShooterSubsystem::Periodic() {
-  m_controller0.SetReference(ToRPM(m_target).value(),
-                             rev::CANSparkFlex::ControlType::kVelocity);
-  m_controller1.SetReference(ToRPM(m_target).value(),
-                             rev::CANSparkFlex::ControlType::kVelocity);
-}
-
-bool ShooterSubsystem::HasNote() const {
-  return m_beamBreak.Get();
-}
-
-bool ShooterSubsystem::AtRPM() const {
-  return GetTargetState() == GetCurrentState();
-}
-
-bool ShooterSubsystem::ShooterReady() const {
-  return HasNote() && AtRPM();
-}
-
-units::revolutions_per_minute_t ShooterSubsystem::GetSpeed0() const {
-  return units::revolutions_per_minute_t(m_encoder0.GetVelocity());
-}
-
-units::revolutions_per_minute_t ShooterSubsystem::GetSpeed1() const {
-  return units::revolutions_per_minute_t(m_encoder0.GetVelocity());
-}
-
-ShooterSubsystem::State ShooterSubsystem::GetTargetState() const {
-  return m_target;
-}
-
-ShooterSubsystem::State ShooterSubsystem::GetCurrentState() const {
-  return m_actual;
-}
-
-void ShooterSubsystem::SetTargetState(State target) {
-  m_target = target;
+  if (m_target == State::kStopped) {
+    m_leftFlywheel.Set(0);
+    m_rightFlywheel.Set(0);
+  } else {
+    m_controller0.SetReference(ToRPM0(m_target).value(),
+                               rev::CANSparkFlex::ControlType::kVelocity);
+    m_controller1.SetReference(ToRPM1(m_target).value(),
+                               rev::CANSparkFlex::ControlType::kVelocity);
+  }
 }
 
 void ShooterSubsystem::SetFeeder(double setpoint) {
@@ -103,60 +70,100 @@ frc2::CommandPtr ShooterSubsystem::SetTargetStateCMD(State target) {
   return RunOnce([this, target] { SetTargetState(target); });
 }
 
-frc2::Trigger ShooterSubsystem::HasNoteTrigger() {
-  return frc2::Trigger([this] { return HasNote(); });
-}
-
-frc2::Trigger ShooterSubsystem::AtRPMTrigger() {
-  return frc2::Trigger([this] { return AtRPM(); });
-}
-
-frc2::Trigger ShooterSubsystem::ShooterReadyTrigger() {
-  return frc2::Trigger([this] { return ShooterReady(); });
-}
-
 void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Shooter");
 
 #define LAMBDA(x) [this] { return x; }
 
-  builder.AddStringProperty("Actual State", LAMBDA(ToStr(m_actual)), nullptr);
+  builder.AddStringProperty("Actual State", LAMBDA(ToStr(m_actual0)), nullptr);
   builder.AddStringProperty("Target State", LAMBDA(ToStr(m_target)), nullptr);
+
+  builder.AddDoubleProperty("Velocity 0", LAMBDA(GetSpeed0().value()), nullptr);
+  builder.AddDoubleProperty("Velocity 1", LAMBDA(GetSpeed1().value()), nullptr);
+  builder.AddDoubleProperty("Velocity Average",
+                            LAMBDA(GetAverageSpeed().value()), nullptr);
+
+  // builder.AddBooleanProperty("Tuning", LAMBDA(IsTuning()),
+  //                            [this](bool value) { m_tuning = value; });
+  // builder.AddDoubleProperty("kP", LAMBDA(m_controller0.GetP()),
+  //                           [this](double value) { kP = value; });
+  // builder.AddDoubleProperty("kI", LAMBDA(m_controller0.GetI()),
+  //                           [this](double value) { kI = value; });
+  // builder.AddDoubleProperty("kD", LAMBDA(m_controller0.GetD()),
+  //                           [this](double value) { kD = value; });
+  // builder.AddDoubleProperty("kFF", LAMBDA(m_controller0.GetFF()),
+  //                           [this](double value) { kFF = value; });
+
+  // builder.AddDoubleProperty("Target Speed", LAMBDA(RPMSetpoint),
+  // [this](double value) {RPMSetpoint = value;});
 
 #undef LAMBDA
 }
 
-void ShooterSubsystem::CheckState() {
-  auto average = (GetSpeed0() + GetSpeed1()) / 2.0;
+void ShooterSubsystem::CheckState0() {
+  auto average = GetSpeed0();
 
   // Check Stopped
   if (frc::IsNear(0_rpm, average, ShooterConstants::kTollerance)) {
-    m_actual = State::kStopped;
+    m_actual0 = State::kStopped;
     return;
   }
 
   // Check Idle
   if (frc::IsNear(ShooterConstants::Setpoint::kIdle, average,
                   ShooterConstants::kTollerance)) {
-    m_actual = State::kIdle;
+    m_actual0 = State::kIdle;
     return;
   }
 
   // Check Trap Amp
   if (frc::IsNear(ShooterConstants::Setpoint::kTrapAmp, average,
                   ShooterConstants::kTollerance)) {
-    m_actual = State::kIdle;
+    m_actual0 = State::kIdle;
     return;
   }
 
   // Check Speaker
-  if (frc::IsNear(ShooterConstants::Setpoint::kShooting, average,
+  if (frc::IsNear(ShooterConstants::Setpoint::kShooting0, average,
                   ShooterConstants::kTollerance)) {
-    m_actual = State::kSpeaker;
+    m_actual0 = State::kSpeaker;
     return;
   }
 
-  m_actual = State::kSwitching;
+  m_actual0 = State::kSwitching;
+}
+
+void ShooterSubsystem::CheckState1() {
+  auto average = GetSpeed1();
+
+  // Check Stopped
+  if (frc::IsNear(0_rpm, average, ShooterConstants::kTollerance)) {
+    m_actual0 = State::kStopped;
+    return;
+  }
+
+  // Check Idle
+  if (frc::IsNear(ShooterConstants::Setpoint::kIdle, average,
+                  ShooterConstants::kTollerance)) {
+    m_actual0 = State::kIdle;
+    return;
+  }
+
+  // Check Trap Amp
+  if (frc::IsNear(ShooterConstants::Setpoint::kTrapAmp, average,
+                  ShooterConstants::kTollerance)) {
+    m_actual0 = State::kIdle;
+    return;
+  }
+
+  // Check Speaker
+  if (frc::IsNear(ShooterConstants::Setpoint::kShooting1, average,
+                  ShooterConstants::kTollerance)) {
+    m_actual0 = State::kSpeaker;
+    return;
+  }
+
+  m_actual0 = State::kSwitching;
 }
 
 std::string ShooterSubsystem::ToStr(State state) const {
@@ -184,7 +191,7 @@ std::string ShooterSubsystem::ToStr(State state) const {
   }
 }
 
-units::revolutions_per_minute_t ShooterSubsystem::ToRPM(State state) const {
+units::revolutions_per_minute_t ShooterSubsystem::ToRPM0(State state) const {
   switch (state) {
     default:
     case State::kStopped:
@@ -197,7 +204,29 @@ units::revolutions_per_minute_t ShooterSubsystem::ToRPM(State state) const {
       break;
 
     case State::kSpeaker:
-      return ShooterConstants::Setpoint::kShooting;
+      return ShooterConstants::Setpoint::kShooting0;
+      break;
+
+    case State::kTrapAmp:
+      return ShooterConstants::Setpoint::kTrapAmp;
+      break;
+  }
+}
+
+units::revolutions_per_minute_t ShooterSubsystem::ToRPM1(State state) const {
+  switch (state) {
+    default:
+    case State::kStopped:
+    case State::kSwitching:
+      return 0_rpm;
+      break;
+
+    case State::kIdle:
+      return ShooterConstants::Setpoint::kIdle;
+      break;
+
+    case State::kSpeaker:
+      return ShooterConstants::Setpoint::kShooting1;
       break;
 
     case State::kTrapAmp:

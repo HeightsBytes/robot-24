@@ -75,27 +75,12 @@ void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
 #define LAMBDA(x) [this] { return x; }
 
-  builder.AddStringProperty("Actual State", LAMBDA(ToStr(m_actual0)), nullptr);
+  builder.AddStringProperty("Actual State 0", LAMBDA(ToStr(m_actual0)), nullptr);
+  builder.AddStringProperty("Actual State 1", LAMBDA(ToStr(m_actual1)), nullptr);
   builder.AddStringProperty("Target State", LAMBDA(ToStr(m_target)), nullptr);
 
   builder.AddDoubleProperty("Velocity 0", LAMBDA(GetSpeed0().value()), nullptr);
   builder.AddDoubleProperty("Velocity 1", LAMBDA(GetSpeed1().value()), nullptr);
-  builder.AddDoubleProperty("Velocity Average",
-                            LAMBDA(GetAverageSpeed().value()), nullptr);
-
-  // builder.AddBooleanProperty("Tuning", LAMBDA(IsTuning()),
-  //                            [this](bool value) { m_tuning = value; });
-  // builder.AddDoubleProperty("kP", LAMBDA(m_controller0.GetP()),
-  //                           [this](double value) { kP = value; });
-  // builder.AddDoubleProperty("kI", LAMBDA(m_controller0.GetI()),
-  //                           [this](double value) { kI = value; });
-  // builder.AddDoubleProperty("kD", LAMBDA(m_controller0.GetD()),
-  //                           [this](double value) { kD = value; });
-  // builder.AddDoubleProperty("kFF", LAMBDA(m_controller0.GetFF()),
-  //                           [this](double value) { kFF = value; });
-
-  // builder.AddDoubleProperty("Target Speed", LAMBDA(RPMSetpoint),
-  // [this](double value) {RPMSetpoint = value;});
 
 #undef LAMBDA
 }
@@ -138,32 +123,32 @@ void ShooterSubsystem::CheckState1() {
 
   // Check Stopped
   if (frc::IsNear(0_rpm, average, ShooterConstants::kTollerance)) {
-    m_actual0 = State::kStopped;
+    m_actual1 = State::kStopped;
     return;
   }
 
   // Check Idle
   if (frc::IsNear(ShooterConstants::Setpoint::kIdle, average,
                   ShooterConstants::kTollerance)) {
-    m_actual0 = State::kIdle;
+    m_actual1 = State::kIdle;
     return;
   }
 
   // Check Trap Amp
   if (frc::IsNear(ShooterConstants::Setpoint::kTrapAmp, average,
                   ShooterConstants::kTollerance)) {
-    m_actual0 = State::kIdle;
+    m_actual1 = State::kIdle;
     return;
   }
 
   // Check Speaker
   if (frc::IsNear(ShooterConstants::Setpoint::kShooting1, average,
                   ShooterConstants::kTollerance)) {
-    m_actual0 = State::kSpeaker;
+    m_actual1 = State::kSpeaker;
     return;
   }
 
-  m_actual0 = State::kSwitching;
+  m_actual1 = State::kSwitching;
 }
 
 std::string ShooterSubsystem::ToStr(State state) const {

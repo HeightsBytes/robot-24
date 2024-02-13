@@ -22,7 +22,6 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/IntakerSubsystem.h"
-#include "subsystems/RobotStateSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
 

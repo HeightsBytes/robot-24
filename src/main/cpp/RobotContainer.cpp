@@ -7,6 +7,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
 #include <frc2/command/Commands.h>
+#include <frc2/command/button/RobotModeTriggers.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 
@@ -64,7 +65,9 @@ void RobotContainer::ConfigureDriverButtons() {
 
 void RobotContainer::ConfigureOperatorButtons() {}
 
-void RobotContainer::ConfigureTriggers() {}
+void RobotContainer::ConfigureTriggers() {
+    frc2::RobotModeTriggers::Teleop().OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
+}
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   return frc2::cmd::None();

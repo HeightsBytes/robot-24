@@ -27,7 +27,7 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
   inline bool ShooterReady() const {
-    return (GetCurrentState() == GetTargetState());
+    return (GetActualState0() == GetTargetState()) && (GetActualState1() == GetTargetState());
   }
 
   inline units::revolutions_per_minute_t GetSpeed0() const {
@@ -36,12 +36,10 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   inline units::revolutions_per_minute_t GetSpeed1() const {
     return units::revolutions_per_minute_t(m_encoder1.GetVelocity());
   }
-  inline units::revolutions_per_minute_t GetAverageSpeed() const {
-    return (GetSpeed0() + GetSpeed1()) / 2;
-  }
 
   inline State GetTargetState() const { return m_target; }
-  inline State GetCurrentState() const { return m_actual0; }
+  inline State GetActualState0() const { return m_actual0; }
+  inline State GetActualState1() const { return m_actual1; }
 
   inline void SetTargetState(State target) { m_target = target; }
   void SetFeeder(double setpoint);

@@ -30,34 +30,27 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  m_driverController.A().OnTrue(
-      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kTrapAmp));
-
-  // m_driverController.B().OnTrue(
-  //     m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kIdle));
-
-  m_driverController.X().OnTrue(
-      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
-
-  // (m_drightTrigger && m_shooter.ShooterReadyTrigger())
-  //     .OnTrue(ShootNote(&m_shooter).ToPtr());
+  m_drightTrigger
+      .OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kSpeaker))
+      .OnFalse(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
 
   m_driverController.RightBumper()
-      .OnTrue(m_shooter.SetFeederCMD(1.0))
+      .OnTrue(m_shooter.SetFeederCMD(-1))
       .OnFalse(m_shooter.SetFeederCMD(0));
-  m_driverController.LeftBumper()
-      .OnTrue(m_shooter.SetFeederCMD(0.25))
-      .OnFalse(m_shooter.SetFeederCMD(0));
-
-  m_dleftTrigger.OnTrue(m_intake.SetIntake(0.5)).OnFalse(m_intake.SetIntake(0));
-  m_drightTrigger.OnTrue(m_intake.SetIntake(-0.5))
-      .OnFalse(m_intake.SetIntake(0));
 
   m_driverController.Y()
-      .OnTrue(m_intake.SetPivot(0.25))
-      .OnFalse(m_intake.SetPivot(0));
-  m_driverController.B()
-      .OnTrue(m_intake.SetPivot(-0.25))
+      .OnTrue(
+          m_shooter.SetFeederCMD(-0.25).AlongWith(m_intake.SetIntake(-0.25)))
+      .OnFalse(m_shooter.SetFeederCMD(0).AlongWith(m_intake.SetIntake(0)));
+  m_driverController.B().OnTrue(m_arm.SetTargetCMD(0_deg));
+  m_driverController.X().OnTrue(m_arm.SetTargetCMD(60_deg));
+  m_driverController.A()
+      .OnTrue(m_intake.SetIntake(0.25))
+      .OnFalse(m_intake.SetIntake(0));
+
+  m_dleftTrigger.OnTrue(m_intake.SetPivot(0.5)).OnFalse(m_intake.SetPivot(0));
+  m_driverController.LeftBumper()
+      .OnTrue(m_intake.SetPivot(-0.5))
       .OnFalse(m_intake.SetPivot(0));
 }
 

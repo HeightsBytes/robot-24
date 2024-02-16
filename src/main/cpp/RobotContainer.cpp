@@ -14,8 +14,6 @@
 #include <memory>
 #include <utility>
 
-#include "commands/ShootNote.h"
-
 RobotContainer::RobotContainer() {
   frc::SmartDashboard::PutData("PDP", &m_pdp);
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);

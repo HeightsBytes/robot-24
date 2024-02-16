@@ -20,7 +20,6 @@
 #include "subsystems/ArmSubsystem.h"
 #include "subsystems/ClimbSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
 #include "subsystems/IntakerSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
 #include "subsystems/VisionSubsystem.h"

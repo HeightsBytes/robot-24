@@ -75,6 +75,10 @@ bool ArmSubsystem::AtTarget() const {
   return m_atTarget;
 }
 
+bool ArmSubsystem::IsAt(units::degree_t val) const {
+  return hb::InRange(GetAngle().value(), val.value(), ArmConstants::Setpoint::kTollerance.value());
+}
+
 void ArmSubsystem::SetTarget(units::degree_t target) {
   m_target = target;
 }
@@ -93,10 +97,12 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 #define LAMBDA(x) [this] { return x; }
 
   builder.AddDoubleProperty("Angle", LAMBDA(GetAngle().value()), nullptr);
+  builder.AddDoubleProperty("Velocity", LAMBDA(GetVelocity().value()), nullptr);
+  builder.AddDoubleProperty("Setpoint", LAMBDA(m_target.value()), nullptr);
 
   builder.AddBooleanProperty("At Target", LAMBDA(AtTarget()), nullptr);
 
-  builder.AddDoubleProperty("Setpoint", LAMBDA(Setpoint),
+  builder.AddDoubleProperty("Tuning Setpoint", LAMBDA(Setpoint),
                             [this](double newval) { Setpoint = newval; });
   builder.AddDoubleProperty("kP", LAMBDA(kP),
                             [this](double value) { kP = value; });

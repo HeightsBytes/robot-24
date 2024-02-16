@@ -200,7 +200,7 @@ namespace ArmConstants {
   namespace Setpoint {
     inline constexpr auto kStow = 0_deg;
     inline constexpr auto kAmp = 0_deg;
-    inline constexpr auto kTollerance = 0.5_deg;
+    inline constexpr auto kTollerance = 0.375_deg;
   }  // namespace Setpoint
 
 }  // namespace ArmConstants

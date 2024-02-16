@@ -31,6 +31,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
   units::degrees_per_second_t GetVelocity() const;
 
   bool AtTarget() const;
+  bool IsAt(units::degree_t value) const;
 
   void SetTarget(units::degree_t target);
 

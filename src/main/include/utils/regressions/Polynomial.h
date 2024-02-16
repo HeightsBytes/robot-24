@@ -25,6 +25,7 @@ namespace hb {
       for (int i = 0; i < degree; i++) {
         output += std::pow(input, i) * m_constants[i];
       }
+      return output;
     }
 
    private:

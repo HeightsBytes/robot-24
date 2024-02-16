@@ -66,8 +66,9 @@ namespace DriveConstants {
   inline constexpr auto kMaxAngularAcceleration =
       units::radians_per_second_squared_t(2 * std::numbers::pi);
 
-  inline constexpr auto kTrackWidth = 12_in;   // half
-  inline constexpr auto kTrackLength = 15_in;  // half
+  // Module is in 2.625_in on either side from the frame
+  inline constexpr auto kTrackWidth = 12_in - 2.625_in;   // half
+  inline constexpr auto kTrackLength = 15_in - 2.625_in;  // half
 
   // Forward is +x and left is +y
   inline frc::SwerveDriveKinematics<4> kDriveKinematics{

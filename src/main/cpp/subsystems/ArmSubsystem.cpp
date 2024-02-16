@@ -19,8 +19,7 @@ ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
           rev::SparkAbsoluteEncoder::Type::kDutyCycle)),
       m_controller(m_motor.GetPIDController()),
       m_target(ArmConstants::Setpoint::kStow),
-      m_atTarget(false)
-       {
+      m_atTarget(false) {
   // m_motor.RestoreFactoryDefaults();
 
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
@@ -31,7 +30,7 @@ ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
   // m_encoder.SetZeroOffset(ArmConstants::kOffset.value());
 
   m_encoder.SetPositionConversionFactor(360);
-  m_encoder.SetVelocityConversionFactor((1.0/60.0) * 360);
+  m_encoder.SetVelocityConversionFactor((1.0 / 60.0) * 360);
   m_encoder.SetInverted(true);
 
   m_controller.SetFeedbackDevice(m_encoder);
@@ -76,7 +75,8 @@ bool ArmSubsystem::AtTarget() const {
 }
 
 bool ArmSubsystem::IsAt(units::degree_t val) const {
-  return hb::InRange(GetAngle().value(), val.value(), ArmConstants::Setpoint::kTollerance.value());
+  return hb::InRange(GetAngle().value(), val.value(),
+                     ArmConstants::Setpoint::kTollerance.value());
 }
 
 void ArmSubsystem::SetTarget(units::degree_t target) {
@@ -119,8 +119,8 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 void ArmSubsystem::ControlLoop() {
   units::degree_t target = !m_tuning ? m_target : units::degree_t(Setpoint);
 
-  m_controller.SetReference(target.value(), rev::CANSparkMax::ControlType::kPosition);
-
+  m_controller.SetReference(target.value(),
+                            rev::CANSparkMax::ControlType::kPosition);
 }
 
 void ArmSubsystem::CheckState() {

@@ -23,25 +23,21 @@
 // 1 NEO (Vortex?) Motor
 class ArmSubsystem : public frc2::SubsystemBase {
  public:
-  enum class State { kStow, kAmp, kTargeting, kSwitching };
-
-  ArmSubsystem(/** std::function<frc::Pose2d()> poseFunction **/);
+  ArmSubsystem();
 
   void Periodic() override;
 
   units::degree_t GetAngle() const;
+  units::degrees_per_second_t GetVelocity() const;
 
   bool AtTarget() const;
 
-  State GetCurrentState() const;
-  State GetTargetState() const;
-
-  void SetState(State state);
-
-  [[nodiscard]]
-  frc2::CommandPtr SetStateCMD(State state);
+  void SetTarget(units::degree_t target);
 
   frc2::Trigger AtTargetTrigger();
+
+  [[nodiscard]]
+  frc2::CommandPtr SetTargetCMD(units::degree_t target);
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 
@@ -49,28 +45,17 @@ class ArmSubsystem : public frc2::SubsystemBase {
   void ControlLoop();
   void CheckState();
 
-  units::degree_t ToAngle(State state) const;
-  units::degree_t StageAngle() const;
-
-  std::string ToStr(State state) const;
-
   rev::CANSparkMax m_motor;
 
   rev::SparkAbsoluteEncoder m_encoder;
 
   rev::SparkPIDController m_controller;
 
-  // VisionSubsystem& m_vision;
+  units::degree_t m_target;
 
-  State m_actual;
-  State m_target;
+  bool m_atTarget;
 
-  // std::function<frc::Pose2d()> m_pose;
-
-  // placeholder regression
-  hb::Linear m_angleFunction;
-
-  bool m_tuning = true;
+  bool m_tuning = false;
 
   double kP = ArmConstants::kP;
   double kI = ArmConstants::kI;

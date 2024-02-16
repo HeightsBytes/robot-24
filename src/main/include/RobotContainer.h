@@ -20,7 +20,7 @@
 #include "subsystems/ArmSubsystem.h"
 #include "subsystems/ClimbSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
-#include "subsystems/IntakerSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
 
@@ -47,7 +47,7 @@ class RobotContainer {
 
   ShooterSubsystem m_shooter;
   ArmSubsystem m_arm;
-  IntakerSubsystem m_intake;
+  IntakeSubsystem m_intake;
 
   frc::SendableChooser<std::string> m_chooser;
 

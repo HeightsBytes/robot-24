@@ -8,9 +8,9 @@
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkFlex.h>
 
-class IntakerSubsystem : public frc2::SubsystemBase {
+class IntakeSubsystem : public frc2::SubsystemBase {
  public:
-  IntakerSubsystem();
+  IntakeSubsystem();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.

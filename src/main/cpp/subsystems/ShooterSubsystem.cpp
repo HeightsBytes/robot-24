@@ -75,8 +75,10 @@ void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
 #define LAMBDA(x) [this] { return x; }
 
-  builder.AddStringProperty("Actual State 0", LAMBDA(ToStr(m_actual0)), nullptr);
-  builder.AddStringProperty("Actual State 1", LAMBDA(ToStr(m_actual1)), nullptr);
+  builder.AddStringProperty("Actual State 0", LAMBDA(ToStr(m_actual0)),
+                            nullptr);
+  builder.AddStringProperty("Actual State 1", LAMBDA(ToStr(m_actual1)),
+                            nullptr);
   builder.AddStringProperty("Target State", LAMBDA(ToStr(m_target)), nullptr);
 
   builder.AddDoubleProperty("Velocity 0", LAMBDA(GetSpeed0().value()), nullptr);

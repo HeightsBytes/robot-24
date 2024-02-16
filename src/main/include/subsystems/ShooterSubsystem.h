@@ -27,7 +27,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
   inline bool ShooterReady() const {
-    return (GetActualState0() == GetTargetState()) && (GetActualState1() == GetTargetState());
+    return (GetActualState0() == GetTargetState()) &&
+           (GetActualState1() == GetTargetState());
   }
 
   inline units::revolutions_per_minute_t GetSpeed0() const {

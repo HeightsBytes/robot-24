@@ -66,7 +66,8 @@ void RobotContainer::ConfigureDriverButtons() {
 void RobotContainer::ConfigureOperatorButtons() {}
 
 void RobotContainer::ConfigureTriggers() {
-    frc2::RobotModeTriggers::Teleop().OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
+  frc2::RobotModeTriggers::Teleop().OnTrue(
+      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

@@ -17,9 +17,6 @@
 #include "commands/DefaultDrive.h"
 
 RobotContainer::RobotContainer() {
-  // frc::SmartDashboard::PutData("PDP", &m_pdp);
-  // frc::SmartDashboard::PutData("Command Scheduler",
-  //                              &frc2::CommandScheduler::GetInstance());
 
   // frc::SmartDashboard::PutData("Shooter", &m_shooter);
   frc::SmartDashboard::PutData("Arm", &m_arm);

@@ -43,7 +43,7 @@ class RobotContainer {
   //   frc2::CommandXboxController m_operatorController{
   //       OIConstants::kOperatorControllerPort};
 
-  frc::PowerDistribution m_pdp{0, frc::PowerDistribution::ModuleType::kCTRE};
+  frc::PowerDistribution m_pdh{0, frc::PowerDistribution::ModuleType::kRev};
 
   ShooterSubsystem m_shooter;
   ArmSubsystem m_arm;

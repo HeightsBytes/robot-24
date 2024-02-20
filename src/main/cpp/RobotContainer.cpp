@@ -18,12 +18,12 @@
 
 RobotContainer::RobotContainer() {
   // frc::SmartDashboard::PutData("PDP", &m_pdp);
-  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   // frc::SmartDashboard::PutData("Command Scheduler",
   //                              &frc2::CommandScheduler::GetInstance());
 
   // frc::SmartDashboard::PutData("Shooter", &m_shooter);
   frc::SmartDashboard::PutData("Arm", &m_arm);
+  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   // frc::SmartDashboard::PutData("Drive", &m_drive);
 
   // Configure the button bindings

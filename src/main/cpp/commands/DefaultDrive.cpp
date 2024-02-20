@@ -48,7 +48,7 @@ void DefaultDrive::Execute() {
   double rotationMagnitude = -frc::ApplyDeadband(z * z * z, 0.03);
 
   double magnitude =
-      std::pow(frc::ApplyDeadband(hb::hypot(x, y), 0.01), 2) * maxSpeed;
+      std::pow(frc::ApplyDeadband(std::clamp(hb::hypot(x, y), 0.0, 1.0), 0.01), 2) * maxSpeed;
 
   // Determining the angle itself. If y==0 then we can simply multiply pi/2 by
   // the sign of x

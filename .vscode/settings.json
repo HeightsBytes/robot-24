@@ -93,6 +93,9 @@
     "fstream": "cpp",
     "future": "cpp",
     "typeindex": "cpp",
-    "cstdbool": "cpp"
+    "cstdbool": "cpp",
+    "xstddef": "cpp",
+    "xtr1common": "cpp",
+    "xutility": "cpp"
   }
 }

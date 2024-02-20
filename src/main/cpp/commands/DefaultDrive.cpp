@@ -33,14 +33,18 @@ void DefaultDrive::Initialize() {}
 void DefaultDrive::Execute() {
   // when the trigger is held down, the speed is decreased to a minimum of 3/8
   // speed
-  double maxSpeed =
-      DriveConstants::kMaxChassisSpeed.value() * (1 - m_triggerAxis() * 0.625);
+  // double maxSpeed =
+  //     DriveConstants::kMaxChassisSpeed.value() * (1 - m_triggerAxis() *
+  //     0.625);
+  double maxSpeed = 4.5;
 
   // Note: x is forwards, y is side to side.
   // This means 'x' is the traditional y direction
   // 'y' is the tradtional x
-  double x = -m_leftX();
-  double y = m_leftY();
+  // double x = -m_leftX();
+  // double y = m_leftY();
+  double x = -m_leftY();
+  double y = m_leftX();
   double rotationMagnitude = -frc::ApplyDeadband(m_rightX(), 0.03);
 
   double magnitude =

@@ -5,8 +5,8 @@
 #include "subsystems/IntakeSubsystem.h"
 
 IntakeSubsystem::IntakeSubsystem()
-    : m_intake(1, rev::CANSparkFlex::MotorType::kBrushless),
-      m_pivot(6, rev::CANSparkFlex::MotorType::kBrushless) {}
+    : m_intake(20, rev::CANSparkFlex::MotorType::kBrushless),
+      m_pivot(21, rev::CANSparkMax::MotorType::kBrushless) {}
 
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {}

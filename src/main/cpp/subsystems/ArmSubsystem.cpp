@@ -22,7 +22,7 @@ ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
       m_atTarget(false) {
   // m_motor.RestoreFactoryDefaults();
 
-  m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+  m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   // m_motor.SetSmartCurrentLimit(ArmConstants::kCurrentLimit.value());
 
   // m_encoder.SetPositionConversionFactor(ArmConstants::kConversionFactor);
@@ -37,6 +37,7 @@ ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
   m_controller.SetP(ArmConstants::kP);
   m_controller.SetI(ArmConstants::kI);
   m_controller.SetD(ArmConstants::kD);
+  m_controller.SetIZone(1.0);
 
   m_controller.SetPositionPIDWrappingEnabled(true);
   m_controller.SetPositionPIDWrappingMaxInput(0);

@@ -59,12 +59,12 @@ void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_poseEstimator.Update(GetHeading(), GetModulePositions());
 
-  if (m_vision) {
-    std::vector<PosePacket> CamPose = m_visionSystem.GetPose();
-    for (PosePacket i : CamPose) {
-      m_poseEstimator.AddVisionMeasurement(i.pose, i.timestamp);
-    }
-  }
+  // if (m_vision) {
+  //   std::vector<PosePacket> CamPose = m_visionSystem.GetPose();
+  //   for (PosePacket i : CamPose) {
+  //     m_poseEstimator.AddVisionMeasurement(i.pose, i.timestamp);
+  //   }
+  // }
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
 }
@@ -157,6 +157,9 @@ void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
       "Velocity",
       LAMBDA(hb::hypot(GetVelocity().vx.value(), GetVelocity().vy.value())),
       nullptr);
+
+  builder.AddDoubleProperty("Rear Right Angle",
+                            LAMBDA(m_rearRight.GetCoderAngle()), nullptr);
 
 #undef LAMBDA
 }

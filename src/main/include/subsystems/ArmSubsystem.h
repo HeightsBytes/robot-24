@@ -18,7 +18,7 @@
 
 #include "Constants.h"
 #include "VisionSubsystem.h"
-#include "utils/regressions/Linear.h"
+#include "utils/regressions/Logarithmic.h"
 
 // 1 NEO (Vortex?) Motor
 class ArmSubsystem : public frc2::SubsystemBase {
@@ -62,4 +62,6 @@ class ArmSubsystem : public frc2::SubsystemBase {
   double kI = ArmConstants::kI;
   double kD = ArmConstants::kD;
   double Setpoint = 0;  // degrees
+
+  hb::Logarithmic m_reg{117.035, -16.9294};
 };

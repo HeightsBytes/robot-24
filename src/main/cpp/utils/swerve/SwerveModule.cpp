@@ -24,8 +24,10 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
       m_dController(m_driveMotor.GetPIDController()),
       m_turningEncoder(turningEncoderPorts, offset),
       m_id(turningEncoderPorts) {
-  // m_driveMotor.RestoreFactoryDefaults();
-  // m_turningMotor.RestoreFactoryDefaults();
+  m_driveMotor.RestoreFactoryDefaults();
+  m_turningMotor.RestoreFactoryDefaults();
+
+  m_driveMotor.SetSmartCurrentLimit(60);
 
   // make motors default to break mode
   m_driveMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);

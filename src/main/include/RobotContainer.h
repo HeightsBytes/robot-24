@@ -48,6 +48,7 @@ class RobotContainer {
   ShooterSubsystem m_shooter;
   ArmSubsystem m_arm;
   IntakeSubsystem m_intake;
+  DriveSubsystem m_drive;
 
   frc::SendableChooser<std::string> m_chooser;
 

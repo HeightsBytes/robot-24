@@ -7,6 +7,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkFlex.h>
+#include <rev/CANSparkMax.h>
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
@@ -29,5 +30,5 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
  private:
   rev::CANSparkFlex m_intake;
-  rev::CANSparkFlex m_pivot;
+  rev::CANSparkMax m_pivot;
 };

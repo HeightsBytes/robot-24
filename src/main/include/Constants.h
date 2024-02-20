@@ -36,29 +36,29 @@ namespace DriveConstants {
 
   namespace CanIds {
 
-    inline constexpr int kFrontLeftDriveMotorPort = 1;
-    inline constexpr int kRearLeftDriveMotorPort = 3;
-    inline constexpr int kFrontRightDriveMotorPort = 6;
-    inline constexpr int kRearRightDriveMotorPort = 8;
+    inline constexpr int kFrontLeftDriveMotorPort = 3;   // 1
+    inline constexpr int kRearLeftDriveMotorPort = 8;    // 3
+    inline constexpr int kFrontRightDriveMotorPort = 1;  // 2
+    inline constexpr int kRearRightDriveMotorPort = 2;   // 8
 
-    inline constexpr int kFrontLeftTurningMotorPort = 5;
-    inline constexpr int kRearLeftTurningMotorPort = 7;
-    inline constexpr int kFrontRightTurningMotorPort = 2;
-    inline constexpr int kRearRightTurningMotorPort = 4;
+    inline constexpr int kFrontLeftTurningMotorPort = 7;   // 5
+    inline constexpr int kRearLeftTurningMotorPort = 4;    // 7
+    inline constexpr int kFrontRightTurningMotorPort = 5;  // 6
+    inline constexpr int kRearRightTurningMotorPort = 6;   // 4
 
-    inline constexpr int kFrontLeftTurningEncoderPorts = 2;
-    inline constexpr int kRearLeftTurningEncoderPorts = 1;
-    inline constexpr int kFrontRightTurningEncoderPorts = 3;
-    inline constexpr int kRearRightTurningEncoderPorts = 4;
+    inline constexpr int kFrontLeftTurningEncoderPorts = 1;   // 2
+    inline constexpr int kRearLeftTurningEncoderPorts = 4;    // 1
+    inline constexpr int kFrontRightTurningEncoderPorts = 2;  // 3
+    inline constexpr int kRearRightTurningEncoderPorts = 3;   // 4
 
     inline constexpr int kPidgeonID = 0;
 
   }  // namespace CanIds
 
-  inline constexpr double kFrontLeftOffset = 41.31 - 180.0;    // encoder 2
-  inline constexpr double kRearLeftOffset = -42.71 + 180.0;    // encoder 1
-  inline constexpr double kFrontRightOffset = 107.48 - 180.0;  // encoder 3
-  inline constexpr double kRearRightOffset = -168.75 + 180.0;  // encoder 4
+  inline constexpr double kFrontRightOffset = 131.75 - 180;  // encoder 2
+  inline constexpr double kFrontLeftOffset = 47.37 - 180;    // encoder 1
+  inline constexpr double kRearRightOffset = 197.40;         // encoder 3
+  inline constexpr double kRearLeftOffset = -78.05 - 180;    // encoder 4
 
   inline constexpr auto kMaxChassisSpeed = 4.25_mps;
   inline constexpr auto kMaxAngularSpeed =
@@ -183,10 +183,10 @@ namespace ClimbConstants {
 namespace ArmConstants {
   // TODO: find constants
 
-  inline constexpr int kMotorID = 7;
+  inline constexpr int kMotorID = 11;
 
   inline constexpr double kP = 0.02;
-  inline constexpr double kI = 0;
+  inline constexpr double kI = 0.0001;
   inline constexpr double kD = 0;
   inline constexpr double kG = 0;
 
@@ -201,7 +201,11 @@ namespace ArmConstants {
   namespace Setpoint {
     inline constexpr auto kStow = 0_deg;
     inline constexpr auto kAmp = 0_deg;
+    inline constexpr auto kCloseShot = 57.5_deg;      // 35 In
+    inline constexpr auto kBlackLineShot = 42.5_deg;  // 74 In
+    inline constexpr auto kBlueLineShot = 37_deg;     // 120 In
     inline constexpr auto kTollerance = 0.375_deg;
+    inline constexpr auto kHandoff = 60_deg;
   }  // namespace Setpoint
 
 }  // namespace ArmConstants
@@ -209,9 +213,9 @@ namespace ArmConstants {
 namespace ShooterConstants {
   // TODO: find constants
 
-  inline constexpr int kLeftFlywheelID = 4;
-  inline constexpr int kRightFlywheelID = 2;
-  inline constexpr int kLeftFeederID = 8;
+  inline constexpr int kLeftFlywheelID = 12;
+  inline constexpr int kRightFlywheelID = 13;
+  inline constexpr int kLeftFeederID = 10;
   inline constexpr int kRightFeederID = 9;
   inline constexpr int kBeamBreakPort = 0;
 
@@ -227,7 +231,7 @@ namespace ShooterConstants {
     inline constexpr auto kIdle = 300_rpm;
     inline constexpr auto kShooting0 = 5500_rpm;
     inline constexpr auto kShooting1 = 3000_rpm;
-    inline constexpr auto kTrapAmp = 2000_rpm;
+    inline constexpr auto kTrapAmp = 500_rpm;
   }  // namespace Setpoint
   inline constexpr auto kTollerance = 100_rpm;
 

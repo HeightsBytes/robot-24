@@ -14,19 +14,28 @@
 #include <memory>
 #include <utility>
 
-RobotContainer::RobotContainer() {
-  frc::SmartDashboard::PutData("PDP", &m_pdp);
-  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
-  frc::SmartDashboard::PutData("Command Scheduler",
-                               &frc2::CommandScheduler::GetInstance());
+#include "commands/DefaultDrive.h"
 
-  frc::SmartDashboard::PutData("Shooter", &m_shooter);
+RobotContainer::RobotContainer() {
+  // frc::SmartDashboard::PutData("PDP", &m_pdp);
+  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  // frc::SmartDashboard::PutData("Command Scheduler",
+  //                              &frc2::CommandScheduler::GetInstance());
+
+  // frc::SmartDashboard::PutData("Shooter", &m_shooter);
   frc::SmartDashboard::PutData("Arm", &m_arm);
+  // frc::SmartDashboard::PutData("Drive", &m_drive);
 
   // Configure the button bindings
   ConfigureDriverButtons();
   ConfigureOperatorButtons();
   ConfigureTriggers();
+
+  m_drive.SetDefaultCommand(DefaultDrive(
+      &m_drive, [this] { return m_driverController.GetLeftY(); },
+      [this] { return m_driverController.GetLeftX(); },
+      [this] { return m_driverController.GetRightX(); },
+      [this] { return 0.0; }));
 }
 
 void RobotContainer::ConfigureDriverButtons() {
@@ -39,26 +48,27 @@ void RobotContainer::ConfigureDriverButtons() {
       .OnFalse(m_shooter.SetFeederCMD(0));
 
   m_driverController.Y()
-      .OnTrue(
-          m_shooter.SetFeederCMD(-0.25).AlongWith(m_intake.SetIntake(-0.25)))
+      .OnTrue(m_shooter.SetFeederCMD(-0.25).AlongWith(m_intake.SetIntake(0.25)))
       .OnFalse(m_shooter.SetFeederCMD(0).AlongWith(m_intake.SetIntake(0)));
   m_driverController.B().OnTrue(m_arm.SetTargetCMD(0_deg));
-  m_driverController.X().OnTrue(m_arm.SetTargetCMD(60_deg));
+  m_driverController.X().OnTrue(
+      m_arm.SetTargetCMD(ArmConstants::Setpoint::kHandoff));
+  // m_driverController.Y().OnTrue(m_arm.SetTargetCMD(ArmConstants::Setpoint::kBlackLineShot));
   m_driverController.A()
-      .OnTrue(m_intake.SetIntake(0.25))
+      .OnTrue(m_intake.SetIntake(-1))
       .OnFalse(m_intake.SetIntake(0));
 
-  m_dleftTrigger.OnTrue(m_intake.SetPivot(0.5)).OnFalse(m_intake.SetPivot(0));
+  m_dleftTrigger.OnTrue(m_intake.SetPivot(0.3)).OnFalse(m_intake.SetPivot(0));
   m_driverController.LeftBumper()
-      .OnTrue(m_intake.SetPivot(-0.5))
+      .OnTrue(m_intake.SetPivot(-0.3))
       .OnFalse(m_intake.SetPivot(0));
 }
 
 void RobotContainer::ConfigureOperatorButtons() {}
 
 void RobotContainer::ConfigureTriggers() {
-  frc2::RobotModeTriggers::Teleop().OnTrue(
-      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
+  // frc2::RobotModeTriggers::Teleop().OnTrue(
+  //     m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

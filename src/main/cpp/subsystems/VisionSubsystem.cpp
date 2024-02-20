@@ -28,7 +28,7 @@ VisionSubsystem::VisionSubsystem()
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
-  UpdatePacket();
+  // UpdatePacket();
 }
 
 VisionSubsystem& VisionSubsystem::GetInstance() {

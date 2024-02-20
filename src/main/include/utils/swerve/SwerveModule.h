@@ -29,6 +29,8 @@ class SwerveModule {
 
   frc::SwerveModulePosition GetPosition() const;
 
+  double GetCoderAngle() { return m_turningEncoder.Get().value(); };
+
   void SetDesiredState(const frc::SwerveModuleState& state);
 
   void ResetEncoders();

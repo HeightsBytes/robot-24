@@ -40,8 +40,8 @@ class RobotContainer {
  private:
   frc2::CommandXboxController m_driverController{
       OIConstants::kDriverControllerPort};
-  //   frc2::CommandXboxController m_operatorController{
-  //       OIConstants::kOperatorControllerPort};
+  frc2::CommandXboxController m_operatorController{
+      OIConstants::kOperatorControllerPort};
 
   frc::PowerDistribution m_pdh{0, frc::PowerDistribution::ModuleType::kRev};
 

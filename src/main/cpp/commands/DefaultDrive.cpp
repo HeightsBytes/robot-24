@@ -31,11 +31,9 @@ void DefaultDrive::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void DefaultDrive::Execute() {
-  // when the trigger is held down, the speed is decreased to a minimum of 3/8
-  // speed
   double maxSpeed =
-      DriveConstants::kMaxChassisSpeed.value() * (1 - m_triggerAxis() *
-      0.625);
+      DriveConstants::kMaxChassisSpeed.value() * (0.625 + m_triggerAxis() * 0.375);
+  
 
   // Note: x is forwards, y is side to side.
   // This means 'x' is the traditional y direction

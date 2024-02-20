@@ -32,13 +32,11 @@ RobotContainer::RobotContainer() {
       &m_drive, [this] { return m_driverController.GetLeftY(); },
       [this] { return m_driverController.GetLeftX(); },
       [this] { return m_driverController.GetRightX(); },
-      [this] { return 0.0; }));
+      [this] { return m_driverController.GetLeftTriggerAxis(); }));
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  m_drightTrigger
-      .OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kSpeaker))
-      .OnFalse(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
+
 
   m_driverController.RightBumper()
       .OnTrue(m_shooter.SetFeederCMD(-1))

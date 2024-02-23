@@ -18,7 +18,6 @@
 #include "commands/DriveAndTrack.h"
 
 RobotContainer::RobotContainer() {
-
   // frc::SmartDashboard::PutData("Shooter", &m_shooter);
   frc::SmartDashboard::PutData("Arm", &m_arm);
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
@@ -37,17 +36,15 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-
   using enum ShooterSubsystem::State;
 
   m_driverController.LeftBumper()
-    .OnTrue(frc2::cmd::Parallel({m_shooter.SetTargetStateCMD(kSpeaker)}))
-    .WhileTrue(DriveAndTrack(&m_drive, 
-        [this] { return m_driverController.GetLeftY(); },
-        [this] { return m_driverController.GetLeftX(); }).ToPtr())
-    .OnFalse(frc2::cmd::Parallel({m_shooter.SetTargetStateCMD(kIdle)}));
-
-
+      .OnTrue(m_shooter.SetTargetStateCMD(kSpeaker))
+      .WhileTrue(DriveAndTrack(
+                     &m_drive, [this] { return m_driverController.GetLeftY(); },
+                     [this] { return m_driverController.GetLeftX(); })
+                     .ToPtr())
+      .OnFalse(m_shooter.SetTargetStateCMD(kIdle));
 
   // m_driverController.Y()
   //     .OnTrue(m_shooter.SetFeederCMD(-0.25).AlongWith(m_intake.SetIntake(0.25)))
@@ -65,9 +62,7 @@ void RobotContainer::ConfigureDriverButtons() {
   //     .OnFalse(m_intake.SetPivot(0));
 }
 
-void RobotContainer::ConfigureOperatorButtons() {
-  
-}
+void RobotContainer::ConfigureOperatorButtons() {}
 
 void RobotContainer::ConfigureTriggers() {
   using enum ShooterSubsystem::State;

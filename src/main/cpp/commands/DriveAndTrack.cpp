@@ -6,13 +6,19 @@
 
 #include <frc/DriverStation.h>
 #include <frc/geometry/Transform2d.h>
+
 #include <cmath>
 
 #include "Constants.h"
 #include "utils/Util.h"
 
-DriveAndTrack::DriveAndTrack(DriveSubsystem* drive, std::function<double()> leftY, std::function<double()> leftX)
-  : m_drive(drive), m_vision(VisionSubsystem::GetInstance()), m_leftY(std::move(leftY)), m_leftX(std::move(leftX)) {
+DriveAndTrack::DriveAndTrack(DriveSubsystem* drive,
+                             std::function<double()> leftY,
+                             std::function<double()> leftX)
+    : m_drive(drive),
+      m_vision(VisionSubsystem::GetInstance()),
+      m_leftY(std::move(leftY)),
+      m_leftX(std::move(leftX)) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);
 }
@@ -36,31 +42,31 @@ void DriveAndTrack::Execute() {
 
   frc::Pose2d targetPose = m_vision.GetTagPose(id)->ToPose2d();
   frc::Pose2d currentPose = m_drive->GetPose();
-  frc::Translation2d targetTranlation = targetPose.Translation();
-  frc::Translation2d currentTranslation = currentPose.Translation();
 
   auto target = currentPose.RelativeTo(targetPose);
 
   double maxSpeed = DriveConstants::kMaxChassisSpeed.value();
   double x = -m_leftY();
   double y = m_leftX();
-  double magnitude = 
-      std::pow(frc::ApplyDeadband(std::clamp(hb::hypot(x, y), 0.0, 1.0), 0.01), 2) * maxSpeed;
+  double magnitude =
+      std::pow(frc::ApplyDeadband(std::clamp(hb::hypot(x, y), 0.0, 1.0), 0.01),
+               2) *
+      maxSpeed;
 
-  double angle = y == 0 ? hb::sgn(x) * std::numbers::pi / 2 : std::atan(x/y);
+  double angle = y == 0 ? hb::sgn(x) * std::numbers::pi / 2 : std::atan(x / y);
 
   if (y < 0)
     angle += std::numbers::pi;
 
-  auto xComponent = 
-    units::meters_per_second_t(magnitude * std::sin(angle));
-  auto yComponent = 
-    units::meters_per_second_t(magnitude * std::cos(angle));
-  
-  double rotationOut = m_controller.Calculate(m_drive->GetHeading().Degrees().value(), target.Rotation().RotateBy(180_deg).Degrees().value());
-  
-  m_drive->Drive(xComponent, yComponent, units::radians_per_second_t(rotationOut), true);
+  auto xComponent = units::meters_per_second_t(magnitude * std::sin(angle));
+  auto yComponent = units::meters_per_second_t(magnitude * std::cos(angle));
 
+  double rotationOut = m_controller.Calculate(
+      m_drive->GetHeading().Degrees().value(),
+      target.Rotation().RotateBy(180_deg).Degrees().value());
+
+  m_drive->Drive(xComponent, yComponent,
+                 units::radians_per_second_t(rotationOut), true);
 }
 
 // Called once the command ends or is interrupted.

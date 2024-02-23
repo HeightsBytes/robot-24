@@ -31,9 +31,8 @@ void DefaultDrive::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void DefaultDrive::Execute() {
-  double maxSpeed =
-      DriveConstants::kMaxChassisSpeed.value() * (0.625 + m_triggerAxis() * 0.375);
-  
+  double maxSpeed = DriveConstants::kMaxChassisSpeed.value() *
+                    (0.625 + m_triggerAxis() * 0.375);
 
   // Note: x is forwards, y is side to side.
   // This means 'x' is the traditional y direction
@@ -46,7 +45,9 @@ void DefaultDrive::Execute() {
   double rotationMagnitude = -frc::ApplyDeadband(z * z * z, 0.03);
 
   double magnitude =
-      std::pow(frc::ApplyDeadband(std::clamp(hb::hypot(x, y), 0.0, 1.0), 0.01), 2) * maxSpeed;
+      std::pow(frc::ApplyDeadband(std::clamp(hb::hypot(x, y), 0.0, 1.0), 0.01),
+               2) *
+      maxSpeed;
 
   // Determining the angle itself. If y==0 then we can simply multiply pi/2 by
   // the sign of x

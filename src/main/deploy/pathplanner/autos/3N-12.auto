@@ -1,0 +1,167 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3,
+      "y": 7.0
+    },
+    "rotation": -123.29916710636172
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "rev_shooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "aim_arm"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot_note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "idle_shooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Step 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_note"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Step 2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "handoff"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "align_robot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rev_shooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "aim_arm"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot_note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "idle_shooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Step 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "handoff"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "align_robot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "aim_arm"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rev_shooter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot_note"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

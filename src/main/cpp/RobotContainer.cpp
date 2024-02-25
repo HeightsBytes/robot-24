@@ -16,12 +16,19 @@
 
 #include "commands/DefaultDrive.h"
 #include "commands/DriveAndTrack.h"
+#include "commands/SetRPMAwait.h"
+
+using pathplanner::NamedCommands;
 
 RobotContainer::RobotContainer() {
   // frc::SmartDashboard::PutData("Shooter", &m_shooter);
   frc::SmartDashboard::PutData("Arm", &m_arm);
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   // frc::SmartDashboard::PutData("Drive", &m_drive);
+
+  NamedCommands::registerCommand("rev_shooter", SetRPMAwait(&m_shooter, ShooterSubsystem::State::kSpeaker).ToPtr());
+  NamedCommands::registerCommand("idle_shooter", m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kIdle));
+
 
   // Configure the button bindings
   ConfigureDriverButtons();
@@ -70,5 +77,5 @@ void RobotContainer::ConfigureTriggers() {
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::None();
+  return pathplanner::PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
 }

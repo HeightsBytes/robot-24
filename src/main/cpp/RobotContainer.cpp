@@ -73,7 +73,7 @@ void RobotContainer::ConfigureOperatorButtons() {}
 
 void RobotContainer::ConfigureTriggers() {
   using enum ShooterSubsystem::State;
-  frc2::RobotModeTriggers::Teleop().OnTrue(m_shooter.SetTargetStateCMD(kIdle));
+  // frc2::RobotModeTriggers::Teleop().OnTrue(m_shooter.SetTargetStateCMD(kIdle));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

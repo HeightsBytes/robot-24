@@ -153,30 +153,9 @@ namespace IntakeConstants {
 }  // namespace IntakeConstants
 
 namespace ClimbConstants {
-  // TODO: find constants
 
   inline constexpr int kMotorLeftID = 0;
   inline constexpr int kMotorRightID = 0;
-
-  inline constexpr double kP = 0;
-  inline constexpr double kI = 0;
-  inline constexpr double kD = 0;
-  inline constexpr double kFF = 0;
-
-  inline constexpr double kPositionConversion = 1;
-
-  inline constexpr double kMinPower = -1;
-  inline constexpr double kMaxPower = 1;
-
-  inline constexpr auto kZeroingCurrentThreshold = 0_A;
-
-  inline constexpr auto kPositionTollerance = 0.05_m;
-
-  namespace Positions {
-    inline constexpr auto kStow = 0_m;
-    inline constexpr auto kMax = 0_m;
-    inline constexpr auto kTrap = 0_m;
-  }  // namespace Positions
 
 }  // namespace ClimbConstants
 

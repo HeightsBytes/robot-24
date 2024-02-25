@@ -4,78 +4,28 @@
 
 #pragma once
 
-#include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/CommandPtr.h>
 #include <rev/CANSparkMax.h>
-#include <rev/SparkPIDController.h>
-#include <rev/SparkRelativeEncoder.h>
-#include <units/length.h>
-#include <wpi/sendable/SendableBuilder.h>
 
-#include <iostream>
-
-// 2 NEO Motor
-// No absolute encoder
-// Independent control
-// Assume zero upon startup
 class ClimbSubsystem : public frc2::SubsystemBase {
-  // Friend zero climber because it is a "special" command
-  friend class ZeroClimber;
-
  public:
-  enum class Behavior { kSync, kAsync };
-
   ClimbSubsystem();
 
+  /**
+   * Will be called periodically whenever the CommandScheduler runs.
+   */
   void Periodic() override;
 
-  units::meter_t GetLeftHeight() const;
-  units::meter_t GetRightHeight() const;
+  void SetLeftMotor(double set) { m_leftMotor.Set(set); }
+  void SetRightMotor(double set) { m_rightMotor.Set(set); }
 
-  void SetSyncBehavior(Behavior behavior);
-  void SetSyncTarget(units::meter_t target);
-  void SetLeftTarget(units::meter_t target);
-  void SetRightTarget(units::meter_t target);
-
-  bool IsZeroed() const;
-  bool AtLeftTarget() const;
-  bool AtRightTarget() const;
-  bool AtTargets() const;
-
-  // Commands -- [[nodiscard]] added because they need to be scheduled to work
   [[nodiscard]]
-  frc2::CommandPtr SetSyncBehaviorCMD(Behavior behavior);
+  frc2::CommandPtr SetLeftMotorCMD(double set);
   [[nodiscard]]
-  frc2::CommandPtr SetSyncTargetCMD(units::meter_t target);
-  [[nodiscard]]
-  frc2::CommandPtr SetLeftTargetCMD(units::meter_t target);
-  [[nodiscard]]
-  frc2::CommandPtr SetRightTargetCMD(units::meter_t target);
-
-  void InitSendable(wpi::SendableBuilder& builder) override;
+  frc2::CommandPtr SetRightMotorCMD(double set);
 
  private:
-  void ClimbSync();
-  void ClimbLeft();
-  void ClimbRight();
-  void ArmControl();
-
-  // left and right relative to the back of the robot
-  rev::CANSparkMax m_motorLeft;
-  rev::CANSparkMax m_motorRight;
-
-  rev::SparkRelativeEncoder m_encoderLeft;
-  rev::SparkRelativeEncoder m_encoderRight;
-
-  rev::SparkPIDController m_controllerLeft;
-  rev::SparkPIDController m_controllerRight;
-
-  Behavior m_behavior;
-
-  units::meter_t m_syncTarget;
-  units::meter_t m_leftTarget;
-  units::meter_t m_rightTarget;
-
-  bool m_zeroed;
-  bool m_manual;
+  rev::CANSparkMax m_leftMotor;
+  rev::CANSparkMax m_rightMotor;
 };

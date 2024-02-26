@@ -13,12 +13,13 @@
 #include "Constants.h"
 #include "utils/Util.h"
 
-ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
+ArmSubsystem::ArmSubsystem(std::function<frc::Pose2d()> poseFunction)
     : m_motor(ArmConstants::kMotorID, rev::CANSparkMax::MotorType::kBrushless),
       m_encoder(m_motor.GetAbsoluteEncoder(
           rev::SparkAbsoluteEncoder::Type::kDutyCycle)),
       m_controller(m_motor.GetPIDController()),
-      m_target(ArmConstants::Setpoint::kStow),
+      m_target(State::kInFrame),
+      m_actual(State::kSwitching),
       m_atTarget(false) {
   // m_motor.RestoreFactoryDefaults();
 
@@ -52,15 +53,6 @@ ArmSubsystem::ArmSubsystem(/**std::function<frc::Pose2d()> poseFunction**/)
 void ArmSubsystem::Periodic() {
   CheckState();
   ControlLoop();
-  if (m_tuning) {
-    m_controller.SetP(kP);
-    m_controller.SetI(kI);
-    m_controller.SetD(kD);
-  } else {
-    kP = m_controller.GetP();
-    kI = m_controller.GetI();
-    kD = m_controller.GetD();
-  }
 }
 
 units::degree_t ArmSubsystem::GetAngle() const {
@@ -71,25 +63,8 @@ units::degrees_per_second_t ArmSubsystem::GetVelocity() const {
   return units::degrees_per_second_t(m_encoder.GetVelocity());
 }
 
-bool ArmSubsystem::AtTarget() const {
-  return m_atTarget;
-}
-
-bool ArmSubsystem::IsAt(units::degree_t val) const {
-  return hb::InRange(GetAngle().value(), val.value(),
-                     ArmConstants::Setpoint::kTollerance.value());
-}
-
-void ArmSubsystem::SetTarget(units::degree_t target) {
-  m_target = target;
-}
-
-frc2::Trigger ArmSubsystem::AtTargetTrigger() {
-  return frc2::Trigger([this] { return AtTarget(); });
-}
-
-frc2::CommandPtr ArmSubsystem::SetTargetCMD(units::degree_t target) {
-  return this->RunOnce([this, target] { SetTarget(target); });
+frc2::CommandPtr ArmSubsystem::SetTargetStateCMD(State state) {
+  return this->RunOnce([this, state] { SetTargetState(state); });
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
@@ -99,32 +74,96 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   builder.AddDoubleProperty("Angle", LAMBDA(GetAngle().value()), nullptr);
   builder.AddDoubleProperty("Velocity", LAMBDA(GetVelocity().value()), nullptr);
-  builder.AddDoubleProperty("Setpoint", LAMBDA(m_target.value()), nullptr);
-
+  builder.AddStringProperty("Actual", LAMBDA(ToStr(m_actual)), nullptr);
+  builder.AddStringProperty("Target", LAMBDA(ToStr(m_target)), nullptr);
   builder.AddBooleanProperty("At Target", LAMBDA(AtTarget()), nullptr);
-
-  builder.AddDoubleProperty("Tuning Setpoint", LAMBDA(Setpoint),
-                            [this](double newval) { Setpoint = newval; });
-  builder.AddDoubleProperty("kP", LAMBDA(kP),
-                            [this](double value) { kP = value; });
-  builder.AddDoubleProperty("kI", LAMBDA(kI),
-                            [this](double value) { kI = value; });
-  builder.AddDoubleProperty("kD", LAMBDA(kD),
-                            [this](double value) { kD = value; });
-  builder.AddBooleanProperty("Tuning", LAMBDA(m_tuning),
-                             [this](bool tune) { m_tuning = tune; });
+  builder.AddDoubleProperty("Angle Target", LAMBDA(ToSetpoint(m_target).value()), nullptr);
 
 #undef LAMBDA
 }
 
 void ArmSubsystem::ControlLoop() {
-  units::degree_t target = !m_tuning ? m_target : units::degree_t(Setpoint);
-
-  m_controller.SetReference(target.value(),
+  m_controller.SetReference(ToSetpoint(m_target).value(),
                             rev::CANSparkMax::ControlType::kPosition);
 }
 
+units::degree_t ArmSubsystem::TargettingAngle() const {
+  return 0_deg;
+}
+
 void ArmSubsystem::CheckState() {
-  m_atTarget = hb::InRange(m_target.value(), GetAngle().value(),
-                           ArmConstants::Setpoint::kTollerance.value());
+  using namespace ArmConstants;
+  using enum State;
+  auto angle = GetAngle();
+
+
+  // Check Handoff
+  if (frc::IsNear(Setpoint::kHandoff, angle, Setpoint::kTollerance)) {
+    m_actual = kHandoff;
+    return;
+  }
+
+  // Check Targetting
+  if (frc::IsNear(TargettingAngle(), angle, Setpoint::kTollerance)) {
+    m_actual = kTargetting;
+    return;
+  }
+
+  if (frc::IsNear(Setpoint::kInFrame, angle, Setpoint::kTollerance)) {
+    m_actual = kInFrame;
+    return;
+  }
+
+  if (frc::IsNear(Setpoint::kStow, angle, Setpoint::kTollerance)) {
+    m_actual = kStow;
+    return;
+  }
+
+  m_actual = kSwitching;
+
+}
+
+std::string ArmSubsystem::ToStr(State state) const {
+  using enum State;
+  switch (state) {
+    case kSwitching:
+      return "Switching";
+    break;
+    case kHandoff:
+      return "Handoff";
+    break;
+    case kTargetting:
+      return "Targetting";
+    break;
+    case kInFrame:
+      return "In Frame";
+    break;
+    case kStow:
+      return "Stow";
+    break;
+  }
+  return "FAIL";
+}
+
+units::degree_t ArmSubsystem::ToSetpoint(State state) const {
+  using enum State;
+  switch (state) {
+    case kSwitching:
+      return 0_deg;
+    break;
+    case kHandoff:
+      return ArmConstants::Setpoint::kHandoff;
+    break;
+    case kTargetting:
+      return TargettingAngle();
+    break;
+    case kInFrame:
+      return ArmConstants::Setpoint::kInFrame;
+    break;
+    case kStow:
+      return ArmConstants::Setpoint::kStow;
+    break;
+  }
+  printf("[WARNING] ArmSubsystem::ToSetpoint Failed!");
+  return 0_deg;
 }

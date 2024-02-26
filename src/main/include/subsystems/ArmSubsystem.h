@@ -23,22 +23,25 @@
 // 1 NEO (Vortex?) Motor
 class ArmSubsystem : public frc2::SubsystemBase {
  public:
-  ArmSubsystem();
+
+  enum class State { kInFrame, kStow, kHandoff, kTargetting, kSwitching };
+
+  ArmSubsystem(std::function<frc::Pose2d()> poseFunc = nullptr);
 
   void Periodic() override;
 
   units::degree_t GetAngle() const;
   units::degrees_per_second_t GetVelocity() const;
 
-  bool AtTarget() const;
-  bool IsAt(units::degree_t value) const;
+  inline bool AtTarget() const { return m_target == m_actual; }
 
-  void SetTarget(units::degree_t target);
+  inline State GetTargetState() const { return m_target; }
+  inline State GetActualState() const { return m_actual; }
 
-  frc2::Trigger AtTargetTrigger();
-
+  inline void SetTargetState(State state) { m_target = state; }
+  
   [[nodiscard]]
-  frc2::CommandPtr SetTargetCMD(units::degree_t target);
+  frc2::CommandPtr SetTargetStateCMD(State state);
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 
@@ -46,22 +49,20 @@ class ArmSubsystem : public frc2::SubsystemBase {
   void ControlLoop();
   void CheckState();
 
+  std::string ToStr(State state) const;
+  units::degree_t ToSetpoint(State state) const;
+  units::degree_t TargettingAngle() const;
+
   rev::CANSparkMax m_motor;
 
   rev::SparkAbsoluteEncoder m_encoder;
 
   rev::SparkPIDController m_controller;
 
-  units::degree_t m_target;
+  State m_target;
+  State m_actual;
 
   bool m_atTarget;
-
-  bool m_tuning = false;
-
-  double kP = ArmConstants::kP;
-  double kI = ArmConstants::kI;
-  double kD = ArmConstants::kD;
-  double Setpoint = 0;  // degrees
 
   hb::Logarithmic m_reg{117.035, -16.9294};
 };

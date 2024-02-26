@@ -185,6 +185,7 @@ namespace ArmConstants {
     inline constexpr auto kBlueLineShot = 37_deg;     // 120 In
     inline constexpr auto kTollerance = 0.375_deg;
     inline constexpr auto kHandoff = 60_deg;
+    inline constexpr auto kInFrame = -30_deg;
   }  // namespace Setpoint
 
 }  // namespace ArmConstants

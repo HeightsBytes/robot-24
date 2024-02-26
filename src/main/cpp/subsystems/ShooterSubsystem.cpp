@@ -57,6 +57,8 @@ void ShooterSubsystem::Periodic() {
     m_controller1.SetReference(ToRPM1(m_target).value(),
                                rev::CANSparkFlex::ControlType::kVelocity);
   }
+  CheckState0();
+  CheckState1();
 }
 
 void ShooterSubsystem::SetFeeder(double setpoint) {

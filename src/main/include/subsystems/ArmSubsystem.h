@@ -23,10 +23,9 @@
 // 1 NEO (Vortex?) Motor
 class ArmSubsystem : public frc2::SubsystemBase {
  public:
-
   enum class State { kInFrame, kStow, kHandoff, kTargetting, kSwitching };
 
-  ArmSubsystem(std::function<frc::Pose2d()> poseFunc = nullptr);
+  explicit ArmSubsystem(std::function<frc::Pose2d()> poseFunc = nullptr);
 
   void Periodic() override;
 
@@ -39,7 +38,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
   inline State GetActualState() const { return m_actual; }
 
   inline void SetTargetState(State state) { m_target = state; }
-  
+
   [[nodiscard]]
   frc2::CommandPtr SetTargetStateCMD(State state);
 

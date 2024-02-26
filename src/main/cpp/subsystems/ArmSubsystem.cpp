@@ -77,7 +77,8 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddStringProperty("Actual", LAMBDA(ToStr(m_actual)), nullptr);
   builder.AddStringProperty("Target", LAMBDA(ToStr(m_target)), nullptr);
   builder.AddBooleanProperty("At Target", LAMBDA(AtTarget()), nullptr);
-  builder.AddDoubleProperty("Angle Target", LAMBDA(ToSetpoint(m_target).value()), nullptr);
+  builder.AddDoubleProperty("Angle Target",
+                            LAMBDA(ToSetpoint(m_target).value()), nullptr);
 
 #undef LAMBDA
 }
@@ -95,7 +96,6 @@ void ArmSubsystem::CheckState() {
   using namespace ArmConstants;
   using enum State;
   auto angle = GetAngle();
-
 
   // Check Handoff
   if (frc::IsNear(Setpoint::kHandoff, angle, Setpoint::kTollerance)) {
@@ -120,7 +120,6 @@ void ArmSubsystem::CheckState() {
   }
 
   m_actual = kSwitching;
-
 }
 
 std::string ArmSubsystem::ToStr(State state) const {
@@ -128,19 +127,19 @@ std::string ArmSubsystem::ToStr(State state) const {
   switch (state) {
     case kSwitching:
       return "Switching";
-    break;
+      break;
     case kHandoff:
       return "Handoff";
-    break;
+      break;
     case kTargetting:
       return "Targetting";
-    break;
+      break;
     case kInFrame:
       return "In Frame";
-    break;
+      break;
     case kStow:
       return "Stow";
-    break;
+      break;
   }
   return "FAIL";
 }
@@ -150,20 +149,20 @@ units::degree_t ArmSubsystem::ToSetpoint(State state) const {
   switch (state) {
     case kSwitching:
       return 0_deg;
-    break;
+      break;
     case kHandoff:
       return ArmConstants::Setpoint::kHandoff;
-    break;
+      break;
     case kTargetting:
       return TargettingAngle();
-    break;
+      break;
     case kInFrame:
       return ArmConstants::Setpoint::kInFrame;
-    break;
+      break;
     case kStow:
       return ArmConstants::Setpoint::kStow;
-    break;
+      break;
   }
-  printf("[WARNING] ArmSubsystem::ToSetpoint Failed!");
+  std::printf("[WARNING] ArmSubsystem::ToSetpoint Failed!");
   return 0_deg;
 }

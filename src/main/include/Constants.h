@@ -154,8 +154,8 @@ namespace IntakeConstants {
 
 namespace ClimbConstants {
 
-  inline constexpr int kMotorLeftID = 0;
-  inline constexpr int kMotorRightID = 0;
+  inline constexpr int kMotorLeftID = 30;
+  inline constexpr int kMotorRightID = 31;
 
 }  // namespace ClimbConstants
 

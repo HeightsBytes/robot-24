@@ -22,12 +22,12 @@ using pathplanner::NamedCommands;
 
 RobotContainer::RobotContainer() {
   // frc::SmartDashboard::PutData("Shooter", &m_shooter);
-  frc::SmartDashboard::PutData("Arm", &m_arm);
-  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  // frc::SmartDashboard::PutData("Arm", &m_arm);
+  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   // frc::SmartDashboard::PutData("Drive", &m_drive);
 
-  NamedCommands::registerCommand("rev_shooter", SetRPMAwait(&m_shooter, ShooterSubsystem::State::kSpeaker).ToPtr());
-  NamedCommands::registerCommand("idle_shooter", m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kIdle));
+  // NamedCommands::registerCommand("rev_shooter", SetRPMAwait(&m_shooter, ShooterSubsystem::State::kSpeaker).ToPtr());
+  // NamedCommands::registerCommand("idle_shooter", m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kIdle));
 
 
   // Configure the button bindings
@@ -35,23 +35,23 @@ RobotContainer::RobotContainer() {
   ConfigureOperatorButtons();
   ConfigureTriggers();
 
-  m_drive.SetDefaultCommand(DefaultDrive(
-      &m_drive, [this] { return m_driverController.GetLeftY(); },
-      [this] { return m_driverController.GetLeftX(); },
-      [this] { return m_driverController.GetRightX(); },
-      [this] { return m_driverController.GetLeftTriggerAxis(); }));
+  // m_drive.SetDefaultCommand(DefaultDrive(
+  //     &m_drive, [this] { return m_driverController.GetLeftY(); },
+  //     [this] { return m_driverController.GetLeftX(); },
+  //     [this] { return m_driverController.GetRightX(); },
+  //     [this] { return m_driverController.GetLeftTriggerAxis(); }));
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  using enum ShooterSubsystem::State;
+  // using enum ShooterSubsystem::State;
 
-  m_driverController.LeftBumper()
-      .OnTrue(m_shooter.SetTargetStateCMD(kSpeaker))
-      .WhileTrue(DriveAndTrack(
-                     &m_drive, [this] { return m_driverController.GetLeftY(); },
-                     [this] { return m_driverController.GetLeftX(); })
-                     .ToPtr())
-      .OnFalse(m_shooter.SetTargetStateCMD(kIdle));
+  // m_driverController.LeftBumper()
+  //     .OnTrue(m_shooter.SetTargetStateCMD(kSpeaker))
+  //     .WhileTrue(DriveAndTrack(
+  //                    &m_drive, [this] { return m_driverController.GetLeftY(); },
+  //                    [this] { return m_driverController.GetLeftX(); })
+  //                    .ToPtr())
+  //     .OnFalse(m_shooter.SetTargetStateCMD(kIdle));
 
   // m_driverController.Y()
   //     .OnTrue(m_shooter.SetFeederCMD(-0.25).AlongWith(m_intake.SetIntake(0.25)))
@@ -67,6 +67,12 @@ void RobotContainer::ConfigureDriverButtons() {
   // m_driverController.LeftBumper()
   //     .OnTrue(m_intake.SetPivot(-0.3))
   //     .OnFalse(m_intake.SetPivot(0));
+
+  m_driverController.A().OnTrue(m_climber.SetMotorsCMD(0.5))
+    .OnFalse(m_climber.SetMotorsCMD(0.0));
+
+  m_driverController.Y().OnTrue(m_climber.SetMotorsCMD(-0.5))
+    .OnFalse(m_climber.SetMotorsCMD(0.0));
 }
 
 void RobotContainer::ConfigureOperatorButtons() {}
@@ -77,5 +83,5 @@ void RobotContainer::ConfigureTriggers() {
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return pathplanner::PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
+  return frc2::cmd::None();
 }

@@ -25,6 +25,11 @@ class ClimbSubsystem : public frc2::SubsystemBase {
   [[nodiscard]]
   frc2::CommandPtr SetRightMotorCMD(double set);
 
+  [[nodiscard]]
+  frc2::CommandPtr SetMotorsCMD(double set) {
+    return this->RunOnce([this, set] {m_leftMotor.Set(set); m_rightMotor.Set(-set);});
+  }
+
  private:
   rev::CANSparkMax m_leftMotor;
   rev::CANSparkMax m_rightMotor;

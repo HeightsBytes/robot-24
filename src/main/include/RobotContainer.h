@@ -18,7 +18,7 @@
 
 #include "Constants.h"
 #include "subsystems/ArmSubsystem.h"
-// #include "subsystems/ClimbSubsystem.h"
+#include "subsystems/ClimbSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
@@ -40,15 +40,16 @@ class RobotContainer {
  private:
   frc2::CommandXboxController m_driverController{
       OIConstants::kDriverControllerPort};
-  frc2::CommandXboxController m_operatorController{
-      OIConstants::kOperatorControllerPort};
+//   frc2::CommandXboxController m_operatorController{
+//       OIConstants::kOperatorControllerPort};
 
-  frc::PowerDistribution m_pdh{0, frc::PowerDistribution::ModuleType::kRev};
+//   frc::PowerDistribution m_pdh{0, frc::PowerDistribution::ModuleType::kRev};
 
-  ShooterSubsystem m_shooter;
-  ArmSubsystem m_arm;
-  IntakeSubsystem m_intake;
-  DriveSubsystem m_drive;
+//   ShooterSubsystem m_shooter;
+//   ArmSubsystem m_arm;
+//   IntakeSubsystem m_intake;
+//   DriveSubsystem m_drive;
+  ClimbSubsystem m_climber;
 
   frc::SendableChooser<std::string> m_chooser;
 

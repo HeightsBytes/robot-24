@@ -13,10 +13,8 @@ ShooterSubsystem::ShooterSubsystem()
                      rev::CANSparkFlex::MotorType::kBrushless),
       m_rightFlywheel(ShooterConstants::kRightFlywheelID,
                       rev::CANSparkFlex::MotorType::kBrushless),
-      m_encoder0(m_leftFlywheel.GetEncoder(
-          rev::SparkRelativeEncoder::Type::kHallSensor)),
-      m_encoder1(m_rightFlywheel.GetEncoder(
-          rev::SparkRelativeEncoder::Type::kHallSensor)),
+      m_encoder0(m_leftFlywheel.GetEncoder()),
+      m_encoder1(m_rightFlywheel.GetEncoder()),
       m_controller0(m_leftFlywheel.GetPIDController()),
       m_controller1(m_rightFlywheel.GetPIDController()),
       m_leftFeeder(ShooterConstants::kLeftFeederID,

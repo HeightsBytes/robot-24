@@ -4,7 +4,9 @@
 
 #include "commands/SetRPMAwait.h"
 
-SetRPMAwait::SetRPMAwait(ShooterSubsystem* shooter, ShooterSubsystem::State target) : m_shooter(shooter), m_target(target) {
+SetRPMAwait::SetRPMAwait(ShooterSubsystem* shooter,
+                         ShooterSubsystem::State target)
+    : m_shooter(shooter), m_target(target) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(shooter);
 }

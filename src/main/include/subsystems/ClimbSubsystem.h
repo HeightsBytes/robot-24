@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 
 class ClimbSubsystem : public frc2::SubsystemBase {
@@ -27,7 +27,10 @@ class ClimbSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]]
   frc2::CommandPtr SetMotorsCMD(double set) {
-    return this->RunOnce([this, set] {m_leftMotor.Set(set); m_rightMotor.Set(-set);});
+    return this->RunOnce([this, set] {
+      m_leftMotor.Set(set);
+      m_rightMotor.Set(-set);
+    });
   }
 
  private:

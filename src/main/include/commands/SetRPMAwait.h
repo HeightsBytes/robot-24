@@ -16,8 +16,7 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class SetRPMAwait
-    : public frc2::CommandHelper<frc2::Command, SetRPMAwait> {
+class SetRPMAwait : public frc2::CommandHelper<frc2::Command, SetRPMAwait> {
  public:
   SetRPMAwait(ShooterSubsystem* shooter, ShooterSubsystem::State target);
 
@@ -28,6 +27,7 @@ class SetRPMAwait
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+
  private:
   ShooterSubsystem* m_shooter;
   ShooterSubsystem::State m_target;

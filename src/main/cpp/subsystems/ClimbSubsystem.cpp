@@ -6,16 +6,17 @@
 
 #include "Constants.h"
 
-ClimbSubsystem::ClimbSubsystem() 
-  : m_leftMotor(ClimbConstants::kMotorLeftID, rev::CANSparkMax::MotorType::kBrushless),
-    m_rightMotor(ClimbConstants::kMotorRightID, rev::CANSparkMax::MotorType::kBrushless) 
-    {
-      m_leftMotor.RestoreFactoryDefaults();
-      m_rightMotor.RestoreFactoryDefaults();
+ClimbSubsystem::ClimbSubsystem()
+    : m_leftMotor(ClimbConstants::kMotorLeftID,
+                  rev::CANSparkMax::MotorType::kBrushless),
+      m_rightMotor(ClimbConstants::kMotorRightID,
+                   rev::CANSparkMax::MotorType::kBrushless) {
+  m_leftMotor.RestoreFactoryDefaults();
+  m_rightMotor.RestoreFactoryDefaults();
 
-      m_leftMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-      m_rightMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    }
+  m_leftMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_rightMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+}
 
 // This method will be called once per scheduler run
 void ClimbSubsystem::Periodic() {}

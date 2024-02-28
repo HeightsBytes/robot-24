@@ -15,7 +15,6 @@
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
-
   enum class PivotState { kDeployed, kHandoff, kStow, kSwitching };
   enum class IntakeState { kIntaking, kHandoff, kStopped };
 
@@ -26,10 +25,12 @@ class IntakeSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  units::degree_t GetAngle() const { return units::degree_t(m_pivotEncoder.GetPosition()); }
+  units::degree_t GetAngle() const {
+    return units::degree_t(m_pivotEncoder.GetPosition());
+  }
 
   bool AtPivotTarget() const { return m_pivotTarget == m_pivotActual; }
-  
+
   PivotState GetTargetState() const { return m_pivotTarget; }
   PivotState GetActualState() const { return m_pivotActual; }
 
@@ -43,7 +44,6 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void InitSendable(wpi::SendableBuilder& builder);
 
  private:
-
   double StateToOutput(IntakeState state) const;
   units::degree_t StateToOutput(PivotState state) const;
 
@@ -62,5 +62,4 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   PivotState m_pivotTarget;
 
   IntakeState m_intakeTarget;
-
 };

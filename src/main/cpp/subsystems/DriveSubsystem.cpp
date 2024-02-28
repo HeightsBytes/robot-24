@@ -140,7 +140,6 @@ frc2::CommandPtr DriveSubsystem::SetGyro(units::degree_t angle) {
 }
 
 void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
-
   if constexpr (!Telemetry::kDrive) {
     return;
   }

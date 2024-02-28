@@ -33,12 +33,12 @@
  */
 
 namespace Telemetry {
-  inline constinit const bool kIntake  = true;
-  inline constinit const bool kDrive   = false;
+  inline constinit const bool kIntake = true;
+  inline constinit const bool kDrive = false;
   inline constinit const bool kShooter = true;
-  inline constinit const bool kArm     = true;
-  inline constinit const bool kClimb   = false;
-}
+  inline constinit const bool kArm = true;
+  inline constinit const bool kClimb = false;
+}  // namespace Telemetry
 
 namespace DriveConstants {
 
@@ -137,7 +137,7 @@ namespace IntakeConstants {
   inline constexpr double kP = 0;
   inline constexpr double kI = 0;
   inline constexpr double kD = 0;
-  
+
   inline constexpr double kPositionConversion = 360;
   inline constexpr double kZeroOffset = 0;
 

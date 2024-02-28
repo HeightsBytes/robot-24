@@ -32,6 +32,14 @@
  * they are needed.
  */
 
+namespace Telemetry {
+  inline constinit const bool kIntake  = true;
+  inline constinit const bool kDrive   = false;
+  inline constinit const bool kShooter = true;
+  inline constinit const bool kArm     = true;
+  inline constinit const bool kClimb   = false;
+}
+
 namespace DriveConstants {
 
   namespace CanIds {
@@ -123,31 +131,27 @@ namespace VisionConstants {
 namespace IntakeConstants {
   // TODO: find constants
 
-  inline constexpr int kPivotMotorID = 0;
-  inline constexpr int kIntakeMotorID = 0;
+  inline constexpr int kPivotMotorID = 21;
+  inline constexpr int kIntakeMotorID = 20;
 
   inline constexpr double kP = 0;
   inline constexpr double kI = 0;
   inline constexpr double kD = 0;
-
-  inline constexpr int kLimitID = 0;
-
+  
   inline constexpr double kPositionConversion = 360;
   inline constexpr double kZeroOffset = 0;
 
-  inline constexpr auto kIntakeLimit = 0_A;
-  inline constexpr auto kPivotLimit = 0_A;
-
   namespace Positions {
-    inline constexpr auto kGround = 0_deg;
+    inline constexpr auto kDeployed = 0_deg;
     inline constexpr auto kStow = 0_deg;
+    inline constexpr auto kHandoff = -60_deg;
     inline constexpr auto kTollerance = 3_deg;
   }  // namespace Positions
 
   namespace Speeds {
-    inline constexpr double kEject = 0;
-    inline constexpr double kIntake = 0;
-    inline constexpr double kFeedShooter = 0;
+    inline constexpr double kIntake = 0.7;
+    inline constexpr double kHandoff = -0.3;
+    inline constexpr double kStopped = 0;
   }  // namespace Speeds
 
 }  // namespace IntakeConstants

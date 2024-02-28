@@ -68,6 +68,10 @@ frc2::CommandPtr ArmSubsystem::SetTargetStateCMD(State state) {
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
+  if constexpr (!Telemetry::kArm) {
+    return;
+  }
+
   builder.SetSmartDashboardType("Arm");
 
 #define LAMBDA(x) [this] { return x; }

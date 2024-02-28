@@ -21,11 +21,6 @@ class ClimbSubsystem : public frc2::SubsystemBase {
   void SetRightMotor(double set) { m_rightMotor.Set(set); }
 
   [[nodiscard]]
-  frc2::CommandPtr SetLeftMotorCMD(double set);
-  [[nodiscard]]
-  frc2::CommandPtr SetRightMotorCMD(double set);
-
-  [[nodiscard]]
   frc2::CommandPtr SetMotorsCMD(double set) {
     return this->RunOnce([this, set] {
       m_leftMotor.Set(set);

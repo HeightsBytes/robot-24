@@ -20,11 +20,3 @@ ClimbSubsystem::ClimbSubsystem()
 
 // This method will be called once per scheduler run
 void ClimbSubsystem::Periodic() {}
-
-frc2::CommandPtr ClimbSubsystem::SetLeftMotorCMD(double set) {
-  return this->RunOnce([this, set] { SetLeftMotor(set); });
-}
-
-frc2::CommandPtr ClimbSubsystem::SetRightMotorCMD(double set) {
-  return this->RunOnce([this, set] { SetRightMotor(set); });
-}

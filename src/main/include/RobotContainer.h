@@ -40,13 +40,13 @@ class RobotContainer {
  private:
   frc2::CommandXboxController m_driverController{
       OIConstants::kDriverControllerPort};
-  //   frc2::CommandXboxController m_operatorController{
-  //       OIConstants::kOperatorControllerPort};
+  frc2::CommandXboxController m_operatorController{
+      OIConstants::kOperatorControllerPort};
 
-  //   ShooterSubsystem m_shooter;
-  //   ArmSubsystem m_arm;
-  //   IntakeSubsystem m_intake;
-  //   DriveSubsystem m_drive;
+  ShooterSubsystem m_shooter;
+  ArmSubsystem m_arm;
+  IntakeSubsystem m_intake;
+  DriveSubsystem m_drive;
   ClimbSubsystem m_climber;
 
   frc::SendableChooser<std::string> m_chooser;
@@ -58,9 +58,12 @@ class RobotContainer {
   frc2::Trigger m_drightTrigger{
       [this] { return m_driverController.GetRightTriggerAxis() > 0.3; }};
 
+  frc2::Trigger m_oleftTrigger{
+      [this] { return m_operatorController.GetLeftTriggerAxis() > 0.3; }};
+  frc2::Trigger m_orightTrigger{
+      [this] { return m_operatorController.GetRightTriggerAxis() > 0.3; }};
+
   void ConfigureDriverButtons();
 
   void ConfigureOperatorButtons();
-
-  void ConfigureTriggers();
 };

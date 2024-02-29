@@ -6,11 +6,8 @@
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
-#include <frc2/command/button/CommandXboxController.h>
 
-#include <functional>
-
-#include "subsystems/DriveSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
 
 /**
  * An example command.
@@ -19,10 +16,9 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class DefaultDrive : public frc2::CommandHelper<frc2::Command, DefaultDrive> {
+class SetArmAwait : public frc2::CommandHelper<frc2::Command, SetArmAwait> {
  public:
-  DefaultDrive(DriveSubsystem* drive, std::function<double()> leftY,
-               std::function<double()> leftX, std::function<double()> rightX);
+  SetArmAwait(ArmSubsystem* arm, ArmSubsystem::State target);
 
   void Initialize() override;
 
@@ -33,8 +29,6 @@ class DefaultDrive : public frc2::CommandHelper<frc2::Command, DefaultDrive> {
   bool IsFinished() override;
 
  private:
-  DriveSubsystem* m_drive;
-  std::function<double()> m_leftY;
-  std::function<double()> m_leftX;
-  std::function<double()> m_rightX;
+  ArmSubsystem* m_arm;
+  ArmSubsystem::State m_target;
 };

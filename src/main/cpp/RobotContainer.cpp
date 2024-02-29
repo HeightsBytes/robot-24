@@ -16,74 +16,62 @@
 
 #include "commands/DefaultDrive.h"
 #include "commands/DriveAndTrack.h"
+#include "commands/SetArmAwait.h"
 #include "commands/SetRPMAwait.h"
 
 using pathplanner::NamedCommands;
 
 RobotContainer::RobotContainer() {
-  // frc::SmartDashboard::PutData("Shooter", &m_shooter);
-  // frc::SmartDashboard::PutData("Arm", &m_arm);
-  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
-  // frc::SmartDashboard::PutData("Drive", &m_drive);
+  frc::SmartDashboard::PutData("Shooter", &m_shooter);
+  frc::SmartDashboard::PutData("Arm", &m_arm);
+  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  frc::SmartDashboard::PutData("Drive", &m_drive);
+  frc::SmartDashboard::PutData("Intake", &m_intake);
 
-  // NamedCommands::registerCommand("rev_shooter", SetRPMAwait(&m_shooter,
-  // ShooterSubsystem::State::kSpeaker).ToPtr());
-  // NamedCommands::registerCommand("idle_shooter",
-  // m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kIdle));
+  NamedCommands::registerCommand(
+      "rev_shooter",
+      SetRPMAwait(&m_shooter, ShooterSubsystem::State::kSpeaker).ToPtr());
+  NamedCommands::registerCommand(
+      "idle_shooter",
+      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kIdle));
+  NamedCommands::registerCommand(
+      "aim_arm", SetArmAwait(&m_arm, ArmSubsystem::State::kTargetting).ToPtr());
+  NamedCommands::registerCommand(
+      "stow_arm", SetArmAwait(&m_arm, ArmSubsystem::State::kStow).ToPtr());
 
   // Configure the button bindings
   ConfigureDriverButtons();
   ConfigureOperatorButtons();
-  ConfigureTriggers();
 
-  // m_drive.SetDefaultCommand(DefaultDrive(
-  //     &m_drive, [this] { return m_driverController.GetLeftY(); },
-  //     [this] { return m_driverController.GetLeftX(); },
-  //     [this] { return m_driverController.GetRightX(); },
-  //     [this] { return m_driverController.GetLeftTriggerAxis(); }));
+  m_drive.SetDefaultCommand(DefaultDrive(
+      &m_drive, [this] { return m_driverController.GetLeftY(); },
+      [this] { return m_driverController.GetLeftX(); },
+      [this] { return m_driverController.GetRightX(); }));
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  // using enum ShooterSubsystem::State;
+  m_dleftTrigger
+      .WhileTrue(DriveAndTrack(
+                     &m_drive, [this] { return m_driverController.GetLeftY(); },
+                     [this] { return m_driverController.GetLeftX(); })
+                     .ToPtr())
+      .OnTrue(m_arm.SetTargetStateCMD(ArmSubsystem::State::kTargetting)
+                  .AlongWith(m_shooter.SetTargetStateCMD(
+                      ShooterSubsystem::State::kSpeaker)))
+      .OnFalse(
+          m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped)
+              .AlongWith(m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)));
 
-  // m_driverController.LeftBumper()
-  //     .OnTrue(m_shooter.SetTargetStateCMD(kSpeaker))
-  //     .WhileTrue(DriveAndTrack(
-  //                    &m_drive, [this] { return m_driverController.GetLeftY();
-  //                    }, [this] { return m_driverController.GetLeftX(); })
-  //                    .ToPtr())
-  //     .OnFalse(m_shooter.SetTargetStateCMD(kIdle));
+  m_drightTrigger.OnTrue(m_shooter.SetFeederCMD(1.0))
+      .OnFalse(
+          m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped)
+              .AlongWith(m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)
+                             .AndThen(m_shooter.SetFeederCMD(0))));
 
-  // m_driverController.Y()
-  //     .OnTrue(m_shooter.SetFeederCMD(-0.25).AlongWith(m_intake.SetIntake(0.25)))
-  //     .OnFalse(m_shooter.SetFeederCMD(0).AlongWith(m_intake.SetIntake(0)));
-  // m_driverController.B().OnTrue(m_arm.SetTargetCMD(0_deg));
-  // m_driverController.X().OnTrue(
-  // m_arm.SetTargetCMD(ArmConstants::Setpoint::kHandoff));
-  // m_driverController.A()
-  //     .OnTrue(m_intake.SetIntake(-1))
-  //     .OnFalse(m_intake.SetIntake(0));
-
-  // m_dleftTrigger.OnTrue(m_intake.SetPivot(0.3)).OnFalse(m_intake.SetPivot(0));
-  // m_driverController.LeftBumper()
-  //     .OnTrue(m_intake.SetPivot(-0.3))
-  //     .OnFalse(m_intake.SetPivot(0));
-
-  m_driverController.A()
-      .OnTrue(m_climber.SetMotorsCMD(0.5))
-      .OnFalse(m_climber.SetMotorsCMD(0.0));
-
-  m_driverController.Y()
-      .OnTrue(m_climber.SetMotorsCMD(-0.5))
-      .OnFalse(m_climber.SetMotorsCMD(0.0));
+  
 }
 
 void RobotContainer::ConfigureOperatorButtons() {}
-
-void RobotContainer::ConfigureTriggers() {
-  using enum ShooterSubsystem::State;
-  // frc2::RobotModeTriggers::Teleop().OnTrue(m_shooter.SetTargetStateCMD(kIdle));
-}
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   return frc2::cmd::None();

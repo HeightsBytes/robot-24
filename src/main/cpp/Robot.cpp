@@ -5,8 +5,11 @@
 #include "Robot.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <frc/DriverStation.h>
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() {
+  frc::DriverStation::SilenceJoystickConnectionWarning(true);
+}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();

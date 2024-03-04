@@ -33,7 +33,7 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
 
   std::this_thread::sleep_for(500ms);
 
-  m_driveMotor.SetSmartCurrentLimit(60);
+  m_driveMotor.SetSmartCurrentLimit(50);
   m_turningMotor.SetSmartCurrentLimit(30);
 
   // make motors default to break mode

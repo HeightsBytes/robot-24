@@ -85,7 +85,8 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty("Angle Target",
                             LAMBDA(ToSetpoint(m_target).value()), nullptr);
 
-  builder.AddDoubleProperty("Tune Target", LAMBDA(m_targetVal), [this](double set) {m_targetVal = set;});
+  builder.AddDoubleProperty("Tune Target", LAMBDA(m_targetVal),
+                            [this](double set) { m_targetVal = set; });
 
 #undef LAMBDA
 }
@@ -96,7 +97,8 @@ void ArmSubsystem::ControlLoop() {
 }
 
 units::degree_t ArmSubsystem::TargettingAngle() const {
-  return units::degree_t(std::clamp(m_regLin.Calculate(hb::LimeLight::GetY()), 0.0, 57.5));
+  return units::degree_t(
+      std::clamp(m_regLin.Calculate(hb::LimeLight::GetY()), 0.0, 57.5));
 }
 
 void ArmSubsystem::CheckState() {

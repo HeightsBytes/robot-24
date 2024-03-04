@@ -65,7 +65,7 @@ namespace DriveConstants {
 
   inline constexpr double kFrontRightOffset = 131.75 - 180;  // encoder 2
   inline constexpr double kFrontLeftOffset = 47.37 - 180;    // encoder 1
-  inline constexpr double kRearRightOffset = 197.40 - 180;         // encoder 3
+  inline constexpr double kRearRightOffset = 197.40 - 180;   // encoder 3
   inline constexpr double kRearLeftOffset = -78.05 - 180;    // encoder 4
 
   inline constexpr auto kMaxChassisSpeed = 4.25_mps;
@@ -195,8 +195,8 @@ namespace ArmConstants {
   namespace LLS {
     inline constexpr auto kClose = 18.5_deg;
     inline constexpr auto kBlackLine = 5.81_deg;
-    inline constexpr auto kBlueLine = 0.75_deg; 
-  }
+    inline constexpr auto kBlueLine = 0.75_deg;
+  }  // namespace LLS
 
 }  // namespace ArmConstants
 

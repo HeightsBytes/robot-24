@@ -4,7 +4,9 @@
 
 #include "commands/SetIntakeAwait.h"
 
-SetIntakeAwait::SetIntakeAwait(IntakeSubsystem* intake, IntakeSubsystem::PivotState state) : m_intake(intake), m_state(state) {
+SetIntakeAwait::SetIntakeAwait(IntakeSubsystem* intake,
+                               IntakeSubsystem::PivotState state)
+    : m_intake(intake), m_state(state) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(intake);
 }

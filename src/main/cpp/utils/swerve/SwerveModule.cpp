@@ -7,8 +7,8 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include <numbers>
 #include <chrono>
+#include <numbers>
 #include <thread>
 
 #include "Constants.h"
@@ -18,8 +18,10 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
     : m_driveMotor(driveMotorChannel, rev::CANSparkMax::MotorType::kBrushless),
       m_turningMotor(turningMotorChannel,
                      rev::CANSparkMax::MotorType::kBrushless),
-      m_sparkDriveEncoder(m_driveMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
-      m_sparkTurnEncoder(m_turningMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
+      m_sparkDriveEncoder(m_driveMotor.GetEncoder(
+          rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
+      m_sparkTurnEncoder(m_turningMotor.GetEncoder(
+          rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
       m_tController(m_turningMotor.GetPIDController()),
       m_dController(m_driveMotor.GetPIDController()),
       m_turningEncoder(turningEncoderPorts, offset),

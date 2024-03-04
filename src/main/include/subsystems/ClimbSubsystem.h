@@ -30,16 +30,12 @@ class ClimbSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]]
   frc2::CommandPtr SetLeftMotorCMD(double set) {
-    return this->RunOnce([this, set] {
-      SetLeftMotor(set);
-    });
+    return this->RunOnce([this, set] { SetLeftMotor(set); });
   }
 
   [[nodiscard]]
   frc2::CommandPtr SetRightMotorCMD(double set) {
-    return this->RunOnce([this, set] {
-      SetRightMotor(set);
-    });
+    return this->RunOnce([this, set] { SetRightMotor(set); });
   }
 
  private:

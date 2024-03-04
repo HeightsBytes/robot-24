@@ -18,8 +18,8 @@
 
 #include "Constants.h"
 #include "VisionSubsystem.h"
-#include "utils/regressions/Logarithmic.h"
 #include "utils/regressions/Linear.h"
+#include "utils/regressions/Logarithmic.h"
 #include "utils/regressions/SquareRoot.h"
 
 // 1 NEO (Vortex?) Motor

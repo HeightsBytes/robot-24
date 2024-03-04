@@ -77,7 +77,6 @@ std::optional<PosePacket> LimeLight::GetPose() {
                 .GetTable("limelight")
                 ->GetNumberArray("botpose_wpiblue", std::span<const double>());
 
-
   frc::Translation2d translation{units::meter_t(results[0]),
                                  units::meter_t(results[1])};
   frc::Rotation2d rotation{units::degree_t(results[5])};

@@ -111,9 +111,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   [[nodiscard]]
   frc2::CommandPtr SetGyro(units::degree_t angle);
 
-  units::degree_t GetCompassHeading() {
-    return m_gyro.GetCompassHeading();
-  }
+  units::degree_t GetCompassHeading() { return m_gyro.GetCompassHeading(); }
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 

@@ -5,9 +5,12 @@
 #include "commands/LLTrack.h"
 
 #include <utility>
+
 #include "utils/cams/Limelight.h"
 
-LLTrack::LLTrack(DriveSubsystem* drive, std::function<double()> leftY, std::function<double()> leftX) : m_drive(drive), m_leftY(std::move(leftY)), m_leftX(std::move(leftX)) {
+LLTrack::LLTrack(DriveSubsystem* drive, std::function<double()> leftY,
+                 std::function<double()> leftX)
+    : m_drive(drive), m_leftY(std::move(leftY)), m_leftX(std::move(leftX)) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);
   m_angle = 0_deg;
@@ -53,11 +56,10 @@ void LLTrack::Execute() {
     m_angle = units::degree_t(hb::LimeLight::GetX());
   }
 
-  m_drive->Drive(xComponent, yComponent, 
-    units::radians_per_second_t(m_controller.Calculate(m_angle.value() , 0)),
-    true);
-  
-
+  m_drive->Drive(
+      xComponent, yComponent,
+      units::radians_per_second_t(m_controller.Calculate(m_angle.value(), 0)),
+      true);
 }
 
 // Called once the command ends or is interrupted.
@@ -65,6 +67,8 @@ void LLTrack::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool LLTrack::IsFinished() {
-  if (!m_hasTarget) return true;
-  return hb::InRange(m_angle.value(), m_drive->GetHeading().Degrees().value() - 180, 2);
+  if (!m_hasTarget)
+    return true;
+  return hb::InRange(m_angle.value(),
+                     m_drive->GetHeading().Degrees().value() - 180, 2);
 }

@@ -4,13 +4,13 @@
 
 #pragma once
 
+#include <frc/controller/PIDController.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
 #include <functional>
 
 #include "subsystems/DriveSubsystem.h"
-#include <frc/controller/PIDController.h>
 
 /**
  * An example command.
@@ -19,10 +19,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class LLTrack
-    : public frc2::CommandHelper<frc2::Command, LLTrack> {
+class LLTrack : public frc2::CommandHelper<frc2::Command, LLTrack> {
  public:
-  LLTrack(DriveSubsystem* drive, std::function<double()> leftY, std::function<double()> leftX);
+  LLTrack(DriveSubsystem* drive, std::function<double()> leftY,
+          std::function<double()> leftX);
 
   void Initialize() override;
 
@@ -32,13 +32,13 @@ class LLTrack
 
   bool IsFinished() override;
 
-  private:
-    DriveSubsystem* m_drive;
-    std::function<double()> m_leftY;
-    std::function<double()> m_leftX;
+ private:
+  DriveSubsystem* m_drive;
+  std::function<double()> m_leftY;
+  std::function<double()> m_leftX;
 
-    frc::PIDController m_controller{0.05, 0, 0};
+  frc::PIDController m_controller{0.05, 0, 0};
 
-    bool m_hasTarget;
-    units::degree_t m_angle;
+  bool m_hasTarget;
+  units::degree_t m_angle;
 };

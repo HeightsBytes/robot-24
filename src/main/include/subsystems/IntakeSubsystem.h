@@ -4,16 +4,17 @@
 
 #pragma once
 
+#include <frc/DutyCycleEncoder.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkFlex.h>
 #include <rev/CANSparkMax.h>
 #include <units/angle.h>
 #include <wpi/sendable/SendableBuilder.h>
-#include <frc/DutyCycleEncoder.h>
-#include "Constants.h"
 
 #include <string>
+
+#include "Constants.h"
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
@@ -40,31 +41,23 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void SetIntakeTarget(IntakeState state) { m_intakeTarget = state; }
 
   frc2::CommandPtr DeployIntakeCMD() {
-    return this->RunOnce(
-      [this] { 
-        SetPivotTarget(PivotState::kDeployed);
-        SetIntakeTarget(IntakeState::kIntaking);
-      }
-    );
+    return this->RunOnce([this] {
+      SetPivotTarget(PivotState::kDeployed);
+      SetIntakeTarget(IntakeState::kIntaking);
+    });
   }
   frc2::CommandPtr SetPivotTargetCMD(PivotState state) {
-    return this->RunOnce(
-      [this, state] { SetPivotTarget(state); }
-    );
+    return this->RunOnce([this, state] { SetPivotTarget(state); });
   }
   frc2::CommandPtr StowIntakeCMD() {
-    return this->RunOnce(
-      [this] {
-        SetPivotTarget(PivotState::kStow);
-        SetIntakeTarget(IntakeState::kStopped);        
-      }
-    );
+    return this->RunOnce([this] {
+      SetPivotTarget(PivotState::kStow);
+      SetIntakeTarget(IntakeState::kStopped);
+    });
   }
 
   frc2::CommandPtr SetIntakeTargetCMD(IntakeState state) {
-    return this->RunOnce(
-      [this, state] { SetIntakeTarget(state); }
-    );
+    return this->RunOnce([this, state] { SetIntakeTarget(state); });
   }
 
   void InitSendable(wpi::SendableBuilder& builder);
@@ -95,5 +88,4 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   double kI = IntakeConstants::kI;
   double kD = IntakeConstants::kD;
   double target = 0;
-
 };

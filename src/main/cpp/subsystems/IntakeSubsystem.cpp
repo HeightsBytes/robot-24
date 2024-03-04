@@ -5,8 +5,9 @@
 #include "subsystems/IntakeSubsystem.h"
 
 #include <frc/MathUtil.h>
-#include <thread>
+
 #include <chrono>
+#include <thread>
 
 #include "Constants.h"
 
@@ -15,7 +16,8 @@ IntakeSubsystem::IntakeSubsystem()
                rev::CANSparkFlex::MotorType::kBrushless),
       m_pivot(IntakeConstants::kPivotMotorID,
               rev::CANSparkMax::MotorType::kBrushless),
-      m_pivotEncoder(m_pivot.GetAbsoluteEncoder(rev::SparkAbsoluteEncoder::Type::kDutyCycle)),
+      m_pivotEncoder(m_pivot.GetAbsoluteEncoder(
+          rev::SparkAbsoluteEncoder::Type::kDutyCycle)),
       m_pivotController(m_pivot.GetPIDController()),
       m_pivotActual(PivotState::kSwitching),
       m_pivotTarget(PivotState::kStow),
@@ -35,7 +37,6 @@ IntakeSubsystem::IntakeSubsystem()
   m_pivotController.SetD(IntakeConstants::kD);
   m_pivotController.SetPositionPIDWrappingEnabled(false);
 
-
   // m_pivotEncoder.SetPosition(GetAngle().value());
 
   m_pivotController.SetOutputRange(-0.5, 0.5);
@@ -46,7 +47,6 @@ IntakeSubsystem::IntakeSubsystem()
 
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
-
   if (tuning) {
     m_pivotController.SetP(kP);
     m_pivotController.SetI(kI);
@@ -61,7 +61,6 @@ void IntakeSubsystem::Periodic() {
   // m_pivot.Set(target);
 
   m_intake.SetVoltage(units::volt_t(StateToOutput(m_intakeTarget)));
-
 }
 
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
@@ -82,12 +81,17 @@ void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   builder.AddDoubleProperty("Pivot Angle", LAMBDA(GetAngle().value()), nullptr);
 
-  builder.AddDoubleProperty("Angle", LAMBDA(m_pivotEncoder.GetPosition()), nullptr);
+  builder.AddDoubleProperty("Angle", LAMBDA(m_pivotEncoder.GetPosition()),
+                            nullptr);
 
-  builder.AddDoubleProperty("P", LAMBDA(kP), [this](double newval) { kP = newval; });
-  builder.AddDoubleProperty("I", LAMBDA(kI), [this](double newval) { kI = newval; });
-  builder.AddDoubleProperty("D", LAMBDA(kD), [this](double newval) { kD = newval; });
-  builder.AddDoubleProperty("Target", LAMBDA(target), [this](double newval) { target = newval; });
+  builder.AddDoubleProperty("P", LAMBDA(kP),
+                            [this](double newval) { kP = newval; });
+  builder.AddDoubleProperty("I", LAMBDA(kI),
+                            [this](double newval) { kI = newval; });
+  builder.AddDoubleProperty("D", LAMBDA(kD),
+                            [this](double newval) { kD = newval; });
+  builder.AddDoubleProperty("Target", LAMBDA(target),
+                            [this](double newval) { target = newval; });
 
 #undef LAMBDA
 }

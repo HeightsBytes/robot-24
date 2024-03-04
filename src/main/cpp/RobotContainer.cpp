@@ -21,6 +21,7 @@
 #include "commands/SetRPMAwait.h"
 #include "commands/SetIntakeAwait.h"
 #include "commands/LLTrack.h"
+#include "commands/Commands.h"
 
 using pathplanner::NamedCommands;
 
@@ -33,7 +34,7 @@ RobotContainer::RobotContainer() {
 
   NamedCommands::registerCommand(
       "rev_shooter",
-      SetRPMAwait(&m_shooter, ShooterSubsystem::State::kSpeaker).ToPtr().WithTimeout(1.75_s));
+      Commands::RevShooter(&m_shooter));
 
   NamedCommands::registerCommand(
       "aim_arm",
@@ -41,29 +42,9 @@ RobotContainer::RobotContainer() {
 
   NamedCommands::registerCommand("flip_gyro", m_drive.SetGyro(180_deg));
   
-  NamedCommands::registerCommand("shoot_note",
-    frc2::cmd::Sequence(
-      m_shooter.SetFeederCMD(-1),
-      frc2::cmd::Wait(0.5_s),
-      m_shooter.SetFeederCMD(0),
-      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped)));
+  NamedCommands::registerCommand("shoot_note", Commands::ShootNote(&m_shooter));
 
-  NamedCommands::registerCommand("handoff",
-    frc2::cmd::Sequence(
-      SetArmAwait(&m_arm, ArmSubsystem::State::kHandoff).ToPtr(),
-      SetIntakeAwait(&m_intake, IntakeSubsystem::PivotState::kHandoff).ToPtr(),
-      frc2::cmd::Wait(0.5_s),
-      m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kHandoff),
-      m_shooter.SetFeederCMD(-0.5),
-      frc2::cmd::Wait(1_s),
-      m_shooter.SetFeederCMD(0),
-      m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped),
-      SetIntakeAwait(&m_intake, IntakeSubsystem::PivotState::kStow).ToPtr(),
-      m_shooter.SetFeederCMD(0.1),
-      frc2::cmd::Wait(0.1_s),
-      m_shooter.SetFeederCMD(0.0),
-      m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)
-    ));
+  NamedCommands::registerCommand("handoff", Commands::Handoff(&m_arm, &m_intake, &m_shooter));
 
   NamedCommands::registerCommand("deploy_intake", m_intake.DeployIntakeCMD());
   NamedCommands::registerCommand("stow_intake", m_intake.StowIntakeCMD());
@@ -80,30 +61,12 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureDriverButtons() {
 
-
-  m_driverController.Y().OnTrue(m_arm.SetTargetStateCMD(ArmSubsystem::State::kHandoff).AlongWith(m_intake.SetPivotTargetCMD(IntakeSubsystem::PivotState::kHandoff)));
   
   m_driverController.A().OnTrue(m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow));
 
   m_driverController.RightBumper().OnTrue(m_intake.DeployIntakeCMD()).OnFalse(m_intake.StowIntakeCMD());
-  m_driverController.LeftBumper().OnTrue(    
-    frc2::cmd::Sequence(
-      SetArmAwait(&m_arm, ArmSubsystem::State::kHandoff).ToPtr(),
-      SetIntakeAwait(&m_intake, IntakeSubsystem::PivotState::kHandoff).ToPtr(),
-      frc2::cmd::Wait(0.5_s),
-      m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kHandoff),
-      m_shooter.SetFeederCMD(-0.5),
-      frc2::cmd::Wait(1_s),
-      m_shooter.SetFeederCMD(0),
-      m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped),
-      SetIntakeAwait(&m_intake, IntakeSubsystem::PivotState::kStow).ToPtr(),
-      m_shooter.SetFeederCMD(0.1),
-      frc2::cmd::Wait(0.1_s),
-      m_shooter.SetFeederCMD(0.0),
-      m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)
-    ));
-  m_driverController.B().OnTrue(m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kHandoff)).OnFalse(m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped));
-  m_driverController.X().OnTrue(m_arm.SetTargetStateCMD(ArmSubsystem::State::kHandoff));
+
+  m_driverController.LeftBumper().OnTrue(Commands::Handoff(&m_arm, &m_intake, &m_shooter));
 
   m_dleftTrigger.OnTrue(m_arm.SetTargetStateCMD(ArmSubsystem::State::kTargetting)
     .AlongWith(LLTrack(&m_drive, [this] {return m_driverController.GetLeftY();}, [this] {return m_driverController.GetLeftX();}).ToPtr()))
@@ -113,14 +76,7 @@ void RobotContainer::ConfigureDriverButtons() {
       [this] { return m_driverController.GetLeftX(); },
       [this] { return m_driverController.GetRightX(); }).ToPtr()
     ));
-  m_drightTrigger.OnTrue(
-    frc2::cmd::Sequence(
-      SetRPMAwait(&m_shooter, ShooterSubsystem::State::kSpeaker).ToPtr().WithTimeout(1.75_s),
-      m_shooter.SetFeederCMD(-1),
-      frc2::cmd::Wait(0.5_s),
-      m_shooter.SetFeederCMD(0),
-      m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped)
-    ));
+  m_drightTrigger.OnTrue(Commands::RevShooter(&m_shooter).AndThen(Commands::ShootNote(&m_shooter)));
 
   // m_drightTrigger.OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kSpeaker)).OnFalse(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
 
@@ -132,23 +88,6 @@ void RobotContainer::ConfigureOperatorButtons() {
 
   m_operatorController.Y().OnTrue(m_climber.SetRightMotorCMD(0.5)).OnFalse(m_climber.SetRightMotorCMD(0));
   m_operatorController.A().OnTrue(m_climber.SetRightMotorCMD(-0.5)).OnFalse(m_climber.SetRightMotorCMD(0));
-
-  m_operatorController.X().OnTrue(
-    frc2::cmd::Sequence(
-      SetArmAwait(&m_arm, ArmSubsystem::State::kHandoff).ToPtr(),
-      SetIntakeAwait(&m_intake, IntakeSubsystem::PivotState::kHandoff).ToPtr(),
-      frc2::cmd::Wait(0.5_s),
-      m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kHandoff),
-      m_shooter.SetFeederCMD(-0.5),
-      frc2::cmd::Wait(1_s),
-      m_shooter.SetFeederCMD(0),
-      m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped),
-      SetIntakeAwait(&m_intake, IntakeSubsystem::PivotState::kStow).ToPtr(),
-      m_shooter.SetFeederCMD(0.075),
-      frc2::cmd::Wait(0.1_s),
-      m_shooter.SetFeederCMD(0.0)
-    )
-  );
 
 }
 

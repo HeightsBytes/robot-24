@@ -65,7 +65,7 @@ namespace DriveConstants {
 
   inline constexpr double kFrontRightOffset = 131.75 - 180;  // encoder 2
   inline constexpr double kFrontLeftOffset = 47.37 - 180;    // encoder 1
-  inline constexpr double kRearRightOffset = 197.40;         // encoder 3
+  inline constexpr double kRearRightOffset = 197.40 - 180;         // encoder 3
   inline constexpr double kRearLeftOffset = -78.05 - 180;    // encoder 4
 
   inline constexpr auto kMaxChassisSpeed = 4.25_mps;
@@ -132,25 +132,25 @@ namespace IntakeConstants {
   // TODO: find constants
 
   inline constexpr int kPivotMotorID = 21;
-  inline constexpr int kIntakeMotorID = 20;
+  inline constexpr int kIntakeMotorID = 50;
 
-  inline constexpr double kP = 0;
+  inline constexpr double kP = 0.02;
   inline constexpr double kI = 0;
-  inline constexpr double kD = 0;
+  inline constexpr double kD = 0.02;
 
   inline constexpr double kPositionConversion = 360;
   inline constexpr double kZeroOffset = 0;
 
   namespace Positions {
-    inline constexpr auto kDeployed = 0_deg;
+    inline constexpr auto kDeployed = 130_deg;
     inline constexpr auto kStow = 0_deg;
-    inline constexpr auto kHandoff = -60_deg;
-    inline constexpr auto kTollerance = 3_deg;
+    inline constexpr auto kHandoff = -74_deg;
+    inline constexpr auto kTollerance = 0.375_deg;
   }  // namespace Positions
 
   namespace Speeds {
-    inline constexpr double kIntake = 0.7;
-    inline constexpr double kHandoff = -0.3;
+    inline constexpr double kIntake = 0.3 * 12;
+    inline constexpr double kHandoff = -0.3 * 12;
     inline constexpr double kStopped = 0;
   }  // namespace Speeds
 
@@ -188,23 +188,30 @@ namespace ArmConstants {
     inline constexpr auto kBlackLineShot = 42.5_deg;  // 74 In
     inline constexpr auto kBlueLineShot = 37_deg;     // 120 In
     inline constexpr auto kTollerance = 0.375_deg;
-    inline constexpr auto kHandoff = 60_deg;
-    inline constexpr auto kInFrame = -30_deg;
+    inline constexpr auto kHandoff = 45_deg;
+    inline constexpr auto kInFrame = -70_deg;
   }  // namespace Setpoint
+
+  namespace LLS {
+    inline constexpr auto kClose = 18.5_deg;
+    inline constexpr auto kBlackLine = 5.81_deg;
+    inline constexpr auto kBlueLine = 0.75_deg; 
+  }
 
 }  // namespace ArmConstants
 
 namespace ShooterConstants {
   // TODO: find constants
 
-  inline constexpr int kLeftFlywheelID = 12;
-  inline constexpr int kRightFlywheelID = 13;
+  inline constexpr int kLeftFlywheelID = 20;
+  inline constexpr int kRightFlywheelID = 22;
   inline constexpr int kLeftFeederID = 10;
   inline constexpr int kRightFeederID = 9;
   inline constexpr int kBeamBreakPort = 0;
 
   // Done experimentally
   inline constexpr double kP = 0.0001;
+  // inline constexpr double kI = 0.0000002;
   inline constexpr double kI = 0;
   inline constexpr double kD = 0.0002;
   inline constexpr double kFF = 0.00015;
@@ -229,7 +236,7 @@ namespace ShooterConstants {
 
 namespace AutoConstants {
 
-  inline constexpr auto kMaxSpeed = 3_mps;
+  inline constexpr auto kMaxSpeed = 1_mps;
   inline constexpr auto kMaxAcceleration = 3_mps_sq;
   inline constexpr auto kMaxAngularSpeed =
       units::radians_per_second_t(std::numbers::pi);

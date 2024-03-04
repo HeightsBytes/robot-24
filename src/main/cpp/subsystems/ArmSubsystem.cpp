@@ -12,15 +12,17 @@
 
 #include "Constants.h"
 #include "utils/Util.h"
+#include "utils/cams/Limelight.h"
 
 ArmSubsystem::ArmSubsystem(std::function<frc::Pose2d()> poseFunction)
     : m_motor(ArmConstants::kMotorID, rev::CANSparkMax::MotorType::kBrushless),
       m_encoder(m_motor.GetAbsoluteEncoder(
           rev::SparkAbsoluteEncoder::Type::kDutyCycle)),
       m_controller(m_motor.GetPIDController()),
-      m_target(State::kInFrame),
+      m_target(State::kStow),
       m_actual(State::kSwitching),
-      m_atTarget(false) {
+      m_atTarget(false),
+      m_targetVal(0) {
   // m_motor.RestoreFactoryDefaults();
 
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
@@ -30,9 +32,8 @@ ArmSubsystem::ArmSubsystem(std::function<frc::Pose2d()> poseFunction)
   // m_encoder.SetInverted(ArmConstants::kEncoderInverted);
   // m_encoder.SetZeroOffset(ArmConstants::kOffset.value());
 
+  m_motor.SetInverted(true);
   m_encoder.SetPositionConversionFactor(360);
-  m_encoder.SetVelocityConversionFactor((1.0 / 60.0) * 360);
-  m_encoder.SetInverted(true);
 
   m_controller.SetFeedbackDevice(m_encoder);
   m_controller.SetP(ArmConstants::kP);
@@ -41,12 +42,12 @@ ArmSubsystem::ArmSubsystem(std::function<frc::Pose2d()> poseFunction)
   m_controller.SetIZone(1.0);
 
   m_controller.SetPositionPIDWrappingEnabled(true);
-  m_controller.SetPositionPIDWrappingMaxInput(0);
+  m_controller.SetPositionPIDWrappingMinInput(0);
   m_controller.SetPositionPIDWrappingMaxInput(360);
 
-  m_controller.SetOutputRange(-1, 1);
+  m_controller.SetOutputRange(-0.5, 0.5);
 
-  // m_motor.BurnFlash();
+  m_motor.BurnFlash();
 }
 
 // This method will be called once per scheduler run
@@ -68,9 +69,9 @@ frc2::CommandPtr ArmSubsystem::SetTargetStateCMD(State state) {
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
-  if constexpr (!Telemetry::kArm) {
-    return;
-  }
+  // if constexpr (!Telemetry::kArm) {
+  //   return;
+  // }
 
   builder.SetSmartDashboardType("Arm");
 
@@ -84,6 +85,8 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty("Angle Target",
                             LAMBDA(ToSetpoint(m_target).value()), nullptr);
 
+  builder.AddDoubleProperty("Tune Target", LAMBDA(m_targetVal), [this](double set) {m_targetVal = set;});
+
 #undef LAMBDA
 }
 
@@ -93,7 +96,7 @@ void ArmSubsystem::ControlLoop() {
 }
 
 units::degree_t ArmSubsystem::TargettingAngle() const {
-  return 0_deg;
+  return units::degree_t(std::clamp(m_regLin.Calculate(hb::LimeLight::GetY()), 0.0, 57.5));
 }
 
 void ArmSubsystem::CheckState() {

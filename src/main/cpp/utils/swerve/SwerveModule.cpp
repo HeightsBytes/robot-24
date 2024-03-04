@@ -8,6 +8,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 #include <numbers>
+#include <chrono>
+#include <thread>
 
 #include "Constants.h"
 
@@ -16,8 +18,8 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
     : m_driveMotor(driveMotorChannel, rev::CANSparkMax::MotorType::kBrushless),
       m_turningMotor(turningMotorChannel,
                      rev::CANSparkMax::MotorType::kBrushless),
-      m_sparkDriveEncoder(m_driveMotor.GetEncoder()),
-      m_sparkTurnEncoder(m_turningMotor.GetEncoder()),
+      m_sparkDriveEncoder(m_driveMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
+      m_sparkTurnEncoder(m_turningMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
       m_tController(m_turningMotor.GetPIDController()),
       m_dController(m_driveMotor.GetPIDController()),
       m_turningEncoder(turningEncoderPorts, offset),
@@ -25,11 +27,16 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   m_driveMotor.RestoreFactoryDefaults();
   m_turningMotor.RestoreFactoryDefaults();
 
+  using namespace std::chrono_literals;
+
+  std::this_thread::sleep_for(500ms);
+
   m_driveMotor.SetSmartCurrentLimit(60);
+  m_turningMotor.SetSmartCurrentLimit(30);
 
   // make motors default to break mode
   m_driveMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
   m_turningMotor.SetInverted(true);
 
   // m_driveMotor.SetClosedLoopRampRate(0.5);
@@ -37,6 +44,9 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   // set the turn conversion factors
   m_sparkTurnEncoder.SetPositionConversionFactor(
       ModuleConstants::kTurnEncoderRatio);
+  // if (res != rev::REVLibError::kOk) {
+  //   throw std::runtime_error("Conversion factor failed");
+  // }
   m_sparkTurnEncoder.SetPosition(m_turningEncoder.Get().value());
 
   // set the drive conversion factor
@@ -62,8 +72,8 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   m_dController.SetFF(ModuleConstants::kFFDrive * 1 / 12);
   m_dController.SetOutputRange(-1, 1);
 
-  // m_driveMotor.BurnFlash();
-  // m_turningMotor.BurnFlash();
+  m_driveMotor.BurnFlash();
+  m_turningMotor.BurnFlash();
 }
 
 frc::SwerveModuleState SwerveModule::GetState() const {

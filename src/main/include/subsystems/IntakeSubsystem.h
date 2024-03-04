@@ -10,6 +10,8 @@
 #include <rev/CANSparkMax.h>
 #include <units/angle.h>
 #include <wpi/sendable/SendableBuilder.h>
+#include <frc/DutyCycleEncoder.h>
+#include "Constants.h"
 
 #include <string>
 
@@ -26,7 +28,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
   units::degree_t GetAngle() const {
-    return units::degree_t(m_pivotEncoder.GetPosition());
+    return units::degree_t(m_pivotEncoder.GetPosition() - 90.5);
   }
 
   bool AtPivotTarget() const { return m_pivotTarget == m_pivotActual; }
@@ -37,9 +39,33 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void SetPivotTarget(PivotState state) { m_pivotTarget = state; }
   void SetIntakeTarget(IntakeState state) { m_intakeTarget = state; }
 
-  frc2::CommandPtr DeployIntakeCMD();
-  frc2::CommandPtr SetPivotTargetCMD();
-  frc2::CommandPtr StowIntakeCMD();
+  frc2::CommandPtr DeployIntakeCMD() {
+    return this->RunOnce(
+      [this] { 
+        SetPivotTarget(PivotState::kDeployed);
+        SetIntakeTarget(IntakeState::kIntaking);
+      }
+    );
+  }
+  frc2::CommandPtr SetPivotTargetCMD(PivotState state) {
+    return this->RunOnce(
+      [this, state] { SetPivotTarget(state); }
+    );
+  }
+  frc2::CommandPtr StowIntakeCMD() {
+    return this->RunOnce(
+      [this] {
+        SetPivotTarget(PivotState::kStow);
+        SetIntakeTarget(IntakeState::kStopped);        
+      }
+    );
+  }
+
+  frc2::CommandPtr SetIntakeTargetCMD(IntakeState state) {
+    return this->RunOnce(
+      [this, state] { SetIntakeTarget(state); }
+    );
+  }
 
   void InitSendable(wpi::SendableBuilder& builder);
 
@@ -62,4 +88,12 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   PivotState m_pivotTarget;
 
   IntakeState m_intakeTarget;
+
+  bool tuning = true;
+
+  double kP = IntakeConstants::kP;
+  double kI = IntakeConstants::kI;
+  double kD = IntakeConstants::kD;
+  double target = 0;
+
 };

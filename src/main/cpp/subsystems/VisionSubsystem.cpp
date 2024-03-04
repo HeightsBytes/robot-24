@@ -28,7 +28,7 @@ VisionSubsystem::VisionSubsystem()
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
-  // UpdatePacket();
+  UpdatePacket();
 }
 
 VisionSubsystem& VisionSubsystem::GetInstance() {
@@ -84,21 +84,21 @@ void VisionSubsystem::UpdatePacket() {
     packets.emplace_back(llPose.value());
   }
 
-  std::optional<photonlib::EstimatedRobotPose> estl = m_leftEst.Update();
-  if (estl) {
-    if (estl->strategy ==
-        photonlib::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR) {
-      packets.emplace_back(PhotonToPosePacket(estl).value());
-    }
-  }
+  // std::optional<photonlib::EstimatedRobotPose> estl = m_leftEst.Update();
+  // if (estl) {
+  //   if (estl->strategy ==
+  //       photonlib::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR) {
+  //     packets.emplace_back(PhotonToPosePacket(estl).value());
+  //   }
+  // }
 
-  std::optional<photonlib::EstimatedRobotPose> estr = m_rightEst.Update();
-  if (estr) {
-    if (estr->strategy ==
-        photonlib::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR) {
-      packets.emplace_back(PhotonToPosePacket(estr).value());
-    }
-  }
+  // std::optional<photonlib::EstimatedRobotPose> estr = m_rightEst.Update();
+  // if (estr) {
+  //   if (estr->strategy ==
+  //       photonlib::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR) {
+  //     packets.emplace_back(PhotonToPosePacket(estr).value());
+  //   }
+  // }
 
   m_packets = packets;
 }

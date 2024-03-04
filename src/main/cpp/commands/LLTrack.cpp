@@ -2,52 +2,36 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "commands/DefaultDrive.h"
-
-#include <frc/MathUtil.h>
-#include <frc/smartdashboard/SmartDashboard.h>
+#include "commands/LLTrack.h"
 
 #include <utility>
+#include "utils/cams/Limelight.h"
 
-#include "Constants.h"
-#include "units/velocity.h"
-#include "utils/Util.h"
-
-DefaultDrive::DefaultDrive(DriveSubsystem* drive, std::function<double()> leftY,
-                           std::function<double()> leftX,
-                           std::function<double()> rightX)
-    : m_drive(drive),
-      m_leftY(std::move(leftY)),
-      m_leftX(std::move(leftX)),
-      m_rightX(std::move(rightX)) {
+LLTrack::LLTrack(DriveSubsystem* drive, std::function<double()> leftY, std::function<double()> leftX) : m_drive(drive), m_leftY(std::move(leftY)), m_leftX(std::move(leftX)) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);
+  m_angle = 0_deg;
+  m_hasTarget = false;
+  m_controller.EnableContinuousInput(-180.0, 180.0);
 }
 
 // Called when the command is initially scheduled.
-void DefaultDrive::Initialize() {}
+void LLTrack::Initialize() {
+  m_hasTarget = hb::LimeLight::HasTarget();
+  m_angle = units::degree_t(hb::LimeLight::GetX());
+}
 
 // Called repeatedly when this Command is scheduled to run
-void DefaultDrive::Execute() {
-  double maxSpeed = DriveConstants::kMaxChassisSpeed.value();
-
-  // Note: x is forwards, y is side to side.
-  // This means 'x' is the traditional y direction
-  // 'y' is the tradtional x
-  // double x = -m_leftX();
-  // double y = m_leftY();
+void LLTrack::Execute() {
+  double maxSpeed = 1.5;
   double x = -m_leftY();
   double y = m_leftX();
-  double z = m_rightX();
-  double rotationMagnitude = -frc::ApplyDeadband(z * z * z, 0.1);
 
   double magnitude =
       std::pow(frc::ApplyDeadband(std::clamp(hb::hypot(x, y), 0.0, 1.0), 0.1),
                2) *
       maxSpeed;
 
-  // Determining the angle itself. If y==0 then we can simply multiply pi/2 by
-  // the sign of x
   double angle = y == 0 ? hb::sgn(x) * std::numbers::pi / 2 : std::atan(x / y);
   // Below we have to consider quadrants. Because arctan is limited to -pi/2 to
   // pi/2 Check second quadrant
@@ -64,16 +48,23 @@ void DefaultDrive::Execute() {
       units::meters_per_second_t(magnitude * std::sin(angle));
   units::meters_per_second_t yComponent =
       -units::meters_per_second_t(magnitude * std::cos(angle));
-  units::radians_per_second_t rotation = units::radians_per_second_t(
-      rotationMagnitude * DriveConstants::kMaxAngularSpeed.value());
 
-  m_drive->Drive(xComponent, yComponent, rotation, true);
+  if (hb::LimeLight::HasTarget()) {
+    m_angle = units::degree_t(hb::LimeLight::GetX());
+  }
+
+  m_drive->Drive(xComponent, yComponent, 
+    units::radians_per_second_t(m_controller.Calculate(m_angle.value() , 0)),
+    true);
+  
+
 }
 
 // Called once the command ends or is interrupted.
-void DefaultDrive::End(bool interrupted) {}
+void LLTrack::End(bool interrupted) {}
 
 // Returns true when the command should end.
-bool DefaultDrive::IsFinished() {
-  return false;
+bool LLTrack::IsFinished() {
+  if (!m_hasTarget) return true;
+  return hb::InRange(m_angle.value(), m_drive->GetHeading().Degrees().value() - 180, 2);
 }

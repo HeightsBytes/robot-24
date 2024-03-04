@@ -77,18 +77,6 @@ std::optional<PosePacket> LimeLight::GetPose() {
                 .GetTable("limelight")
                 ->GetNumberArray("botpose_wpiblue", std::span<const double>());
 
-  // if (frc::DriverStation::GetAlliance() !=
-  //     frc::DriverStation::Alliance::kBlue) {
-  //   results =
-  //       nt::NetworkTableInstance::GetDefault()
-  //           .GetTable("limelight")
-  //           ->GetNumberArray("botpose_wpiblue", std::span<const double>());
-  // } else {
-  //   results = nt::NetworkTableInstance::GetDefault()
-  //                 .GetTable("limelight")
-  //                 ->GetNumberArray("botpose_wpired", std::span<const
-  //                 double>());
-  // }
 
   frc::Translation2d translation{units::meter_t(results[0]),
                                  units::meter_t(results[1])};

@@ -5,6 +5,8 @@
 #include "subsystems/IntakeSubsystem.h"
 
 #include <frc/MathUtil.h>
+#include <thread>
+#include <chrono>
 
 #include "Constants.h"
 
@@ -13,7 +15,7 @@ IntakeSubsystem::IntakeSubsystem()
                rev::CANSparkFlex::MotorType::kBrushless),
       m_pivot(IntakeConstants::kPivotMotorID,
               rev::CANSparkMax::MotorType::kBrushless),
-      m_pivotEncoder(m_pivot.GetAbsoluteEncoder()),
+      m_pivotEncoder(m_pivot.GetAbsoluteEncoder(rev::SparkAbsoluteEncoder::Type::kDutyCycle)),
       m_pivotController(m_pivot.GetPIDController()),
       m_pivotActual(PivotState::kSwitching),
       m_pivotTarget(PivotState::kStow),
@@ -23,14 +25,20 @@ IntakeSubsystem::IntakeSubsystem()
 
   m_pivot.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_intake.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
+  m_pivot.SetInverted(true);
 
   m_pivotEncoder.SetPositionConversionFactor(360);
-  m_pivotEncoder.SetVelocityConversionFactor(360.0 * 1.0 / 60.0);
 
   m_pivotController.SetFeedbackDevice(m_pivotEncoder);
   m_pivotController.SetP(IntakeConstants::kP);
   m_pivotController.SetI(IntakeConstants::kI);
   m_pivotController.SetD(IntakeConstants::kD);
+  m_pivotController.SetPositionPIDWrappingEnabled(false);
+
+
+  // m_pivotEncoder.SetPosition(GetAngle().value());
+
+  m_pivotController.SetOutputRange(-0.5, 0.5);
 
   m_pivot.BurnFlash();
   m_intake.BurnFlash();
@@ -38,12 +46,22 @@ IntakeSubsystem::IntakeSubsystem()
 
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
-  m_pivotController.SetReference(StateToOutput(m_pivotTarget).value(),
+
+  if (tuning) {
+    m_pivotController.SetP(kP);
+    m_pivotController.SetI(kI);
+    m_pivotController.SetD(kD);
+  }
+
+  CheckState();
+
+  m_pivotController.SetReference(StateToOutput(m_pivotTarget).value() + 90.5,
                                  rev::CANSparkMax::ControlType::kPosition);
+
+  // m_pivot.Set(target);
 
   m_intake.SetVoltage(units::volt_t(StateToOutput(m_intakeTarget)));
 
-  CheckState();
 }
 
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
@@ -55,14 +73,21 @@ void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
 #define LAMBDA(x) [this] { return x; }
 
-  builder.AddStringProperty("Pivot Actual", LAMBDA(ToStr(m_pivotActual)),
-                            nullptr);
-  builder.AddStringProperty("Pivot Target", LAMBDA(ToStr(m_pivotTarget)),
-                            nullptr);
-  builder.AddStringProperty("Intake Target", LAMBDA(ToStr(m_intakeTarget)),
-                            nullptr);
+  // builder.AddStringProperty("Pivot Actual", LAMBDA(ToStr(m_pivotActual)),
+  //                           nullptr);
+  // builder.AddStringProperty("Pivot Target", LAMBDA(ToStr(m_pivotTarget)),
+  //                           nullptr);
+  // builder.AddStringProperty("Intake Target", LAMBDA(ToStr(m_intakeTarget)),
+  //                           nullptr);
 
   builder.AddDoubleProperty("Pivot Angle", LAMBDA(GetAngle().value()), nullptr);
+
+  builder.AddDoubleProperty("Angle", LAMBDA(m_pivotEncoder.GetPosition()), nullptr);
+
+  builder.AddDoubleProperty("P", LAMBDA(kP), [this](double newval) { kP = newval; });
+  builder.AddDoubleProperty("I", LAMBDA(kI), [this](double newval) { kI = newval; });
+  builder.AddDoubleProperty("D", LAMBDA(kD), [this](double newval) { kD = newval; });
+  builder.AddDoubleProperty("Target", LAMBDA(target), [this](double newval) { target = newval; });
 
 #undef LAMBDA
 }

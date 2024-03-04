@@ -18,6 +18,7 @@
 #include <units/temperature.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
+#include "utils/Util.h"
 
 #include "utils/swerve/CANCoder.h"
 
@@ -38,6 +39,10 @@ class SwerveModule {
   void ZeroTurnEncoder();
 
   void StopMotors();
+
+  double turnOut() {
+    return m_turningMotor.GetAppliedOutput();
+  }
 
  private:
   rev::CANSparkMax m_driveMotor;

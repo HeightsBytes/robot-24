@@ -24,7 +24,8 @@ ShooterSubsystem::ShooterSubsystem()
       m_actual0(State::kStopped),
       m_actual1(State::kStopped),
       m_target(State::kStopped) {
-  m_rightFlywheel.SetInverted(true);
+  m_rightFlywheel.SetInverted(false);
+  m_leftFlywheel.SetInverted(true);
 
   m_leftFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
   m_rightFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
@@ -33,11 +34,13 @@ ShooterSubsystem::ShooterSubsystem()
   m_controller0.SetI(ShooterConstants::kI);
   m_controller0.SetD(ShooterConstants::kD);
   m_controller0.SetFF(ShooterConstants::kFF);
+  m_controller0.SetIZone(150);
 
   m_controller1.SetP(ShooterConstants::kP);
   m_controller1.SetI(ShooterConstants::kI);
   m_controller1.SetD(ShooterConstants::kD);
   m_controller1.SetFF(ShooterConstants::kFF);
+  m_controller1.SetIZone(150);
 
   m_leftFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_rightFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);

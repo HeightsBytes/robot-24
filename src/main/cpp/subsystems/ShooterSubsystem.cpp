@@ -26,10 +26,9 @@ ShooterSubsystem::ShooterSubsystem()
       m_actual0(State::kStopped),
       m_actual1(State::kStopped),
       m_target(State::kStopped) {
-
   m_leftFlywheel.RestoreFactoryDefaults();
   m_rightFlywheel.RestoreFactoryDefaults();
-  
+
   m_rightFlywheel.SetInverted(false);
   m_leftFlywheel.SetInverted(true);
 
@@ -85,18 +84,19 @@ void ShooterSubsystem::Periodic() {
   //   m_leftFlywheel.Set(0);
   // } else {
   //   if (last0 != RPMSetpoint0) {
-  //     m_controller0.SetReference(RPMSetpoint0, rev::CANSparkFlex::ControlType::kVelocity);
+  //     m_controller0.SetReference(RPMSetpoint0,
+  //     rev::CANSparkFlex::ControlType::kVelocity);
   //   }
   // }
 
   // if (hb::InRange(RPMSetpoint1, 0, 10)) {
   //   m_rightFlywheel.Set(0);
   // } else {
-  //   m_controller1.SetReference(RPMSetpoint1, rev::CANSparkFlex::ControlType::kVelocity);
+  //   m_controller1.SetReference(RPMSetpoint1,
+  //   rev::CANSparkFlex::ControlType::kVelocity);
   // }
 
   // last0 = RPMSetpoint0;
-  
 }
 
 void ShooterSubsystem::SetFeeder(double setpoint) {
@@ -125,8 +125,10 @@ void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty("Velocity 0", LAMBDA(GetSpeed0().value()), nullptr);
   builder.AddDoubleProperty("Velocity 1", LAMBDA(GetSpeed1().value()), nullptr);
 
-  builder.AddDoubleProperty("RPM Setpoint 0", LAMBDA(RPMSetpoint0), [this](double set) {RPMSetpoint0 = set;});
-  builder.AddDoubleProperty("RPM Setpoint 1", LAMBDA(RPMSetpoint1), [this](double set){RPMSetpoint1 = set;});
+  builder.AddDoubleProperty("RPM Setpoint 0", LAMBDA(RPMSetpoint0),
+                            [this](double set) { RPMSetpoint0 = set; });
+  builder.AddDoubleProperty("RPM Setpoint 1", LAMBDA(RPMSetpoint1),
+                            [this](double set) { RPMSetpoint1 = set; });
 
 #undef LAMBDA
 }

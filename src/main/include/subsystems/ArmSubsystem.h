@@ -18,15 +18,22 @@
 
 #include "Constants.h"
 #include "VisionSubsystem.h"
+#include "utils/regressions/Exponential.h"
 #include "utils/regressions/Linear.h"
 #include "utils/regressions/Logarithmic.h"
 #include "utils/regressions/SquareRoot.h"
-#include "utils/regressions/Exponential.h"
 
 // 1 NEO (Vortex?) Motor
 class ArmSubsystem : public frc2::SubsystemBase {
  public:
-  enum class State { kInFrame, kStow, kHandoff, kTargetting, kSwitching, kTrap };
+  enum class State {
+    kInFrame,
+    kStow,
+    kHandoff,
+    kTargetting,
+    kSwitching,
+    kTrap
+  };
 
   explicit ArmSubsystem(std::function<frc::Pose2d()> poseFunc = nullptr);
 

@@ -41,7 +41,7 @@ DriveSubsystem::DriveSubsystem()
       m_vision(true) {
   frc::SmartDashboard::PutData("Field", &m_field);
   AutoBuilder::configureHolonomic(
-      [this] { return GetPose(); }, [this](frc::Pose2d pose) { SetPose(pose);  },
+      [this] { return GetPose(); }, [this](frc::Pose2d pose) { SetPose(pose); },
       [this] { return GetVelocity(); },
       [this](frc::ChassisSpeeds speeds) { DriveRobotRelative(speeds); },
       AutoConstants::kConfig,

@@ -94,14 +94,14 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 void ArmSubsystem::ControlLoop() {
   m_controller.SetReference(ToSetpoint(m_target).value(),
                             rev::CANSparkMax::ControlType::kPosition);
-  // m_controller.SetReference(m_targetVal, rev::CANSparkMax::ControlType::kPosition);
+  // m_controller.SetReference(m_targetVal,
+  // rev::CANSparkMax::ControlType::kPosition);
 }
 
 units::degree_t ArmSubsystem::TargettingAngle() const {
-  
   if (hb::LimeLight::HasTarget()) {
     m_lastLLAngle = hb::LimeLight::GetY();
-  } 
+  }
 
   return units::degree_t(
       std::clamp(m_regLin.Calculate(m_lastLLAngle), 0.0, 57.5));

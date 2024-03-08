@@ -43,7 +43,7 @@ class RobotContainer {
   frc2::CommandXboxController m_operatorController{
       OIConstants::kOperatorControllerPort};
 
-//   VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
+  //   VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
   ShooterSubsystem m_shooter;
   ArmSubsystem m_arm;
   IntakeSubsystem m_intake;

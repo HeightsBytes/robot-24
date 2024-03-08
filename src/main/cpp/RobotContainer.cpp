@@ -17,7 +17,6 @@
 
 #include "commands/Commands.h"
 #include "commands/DefaultDrive.h"
-#include "commands/DriveAndTrack.h"
 #include "commands/LLTrack.h"
 #include "commands/SetArmAwait.h"
 #include "commands/SetIntakeAwait.h"
@@ -26,14 +25,21 @@
 using pathplanner::NamedCommands;
 
 RobotContainer::RobotContainer() {
-  frc::SmartDashboard::PutData("Shooter", &m_shooter);
-  frc::SmartDashboard::PutData("Arm", &m_arm);
-  //   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
-  frc::SmartDashboard::PutData("Drive", &m_drive);
-  frc::SmartDashboard::PutData("Intake", &m_intake);
+
+  m_chooser.AddOption("None", "None");
+  m_chooser.AddOption("2N-2", "2N-2");
+  m_chooser.AddOption("2N-F5", "2N-F5");
+  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+//   frc::SmartDashboard::PutData("Shooter", &m_shooter);
+  // frc::SmartDashboard::PutData("Arm", &m_arm);
+//   frc::SmartDashboard::PutData("Intake", &m_intake);
 
   NamedCommands::registerCommand("rev_shooter",
                                  Commands::RevShooter(&m_shooter));
+
+  NamedCommands::registerCommand("flip_gyro_2N1", m_drive.SetGyro(-120_deg));
+
+//   NamedCommands::registerCommand("flip_gyro_2N-5F", m_drive.SetGyro());
 
   NamedCommands::registerCommand(
       "aim_arm", m_arm.SetTargetStateCMD(ArmSubsystem::State::kTargetting));
@@ -47,6 +53,8 @@ RobotContainer::RobotContainer() {
 
   NamedCommands::registerCommand("deploy_intake", m_intake.DeployIntakeCMD());
   NamedCommands::registerCommand("stow_intake", m_intake.StowIntakeCMD());
+  NamedCommands::registerCommand("stow_arm", m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow));
+  NamedCommands::registerCommand("aim_robot", LLTrack(&m_drive, [] {return 0.0;}, [] {return 0.0;}).ToPtr());
 
   // Configure the button bindings
   ConfigureDriverButtons();
@@ -61,6 +69,12 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureDriverButtons() {
   m_driverController.A().OnTrue(
       m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow));
+
+  m_driverController.Y().OnTrue(m_shooter.SetFeederCMD(-0.1)).OnFalse(m_shooter.SetFeederCMD(0));
+  m_driverController.Back().OnTrue(m_shooter.SetFeederCMD(0.1)).OnFalse(m_shooter.SetFeederCMD(0));
+
+  m_driverController.B().OnTrue(m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kIntaking)).OnFalse(m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped));
+  m_driverController.X().OnTrue(m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kHandoff)).OnFalse(m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped));
 
   m_driverController.RightBumper()
       .OnTrue(m_intake.DeployIntakeCMD())
@@ -88,7 +102,6 @@ void RobotContainer::ConfigureDriverButtons() {
   m_drightTrigger.OnTrue(Commands::RevShooter(&m_shooter)
                              .AndThen(Commands::ShootNote(&m_shooter)));
 
-  // m_drightTrigger.OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kSpeaker)).OnFalse(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped));
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
@@ -108,5 +121,10 @@ void RobotContainer::ConfigureOperatorButtons() {
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return pathplanner::PathPlannerAuto("2N-2").ToPtr();
+  auto selected = m_chooser.GetSelected();
+  if (selected == "None") {
+    return frc2::cmd::None();
+  } else {
+    return pathplanner::PathPlannerAuto(selected).ToPtr();
+  }
 }

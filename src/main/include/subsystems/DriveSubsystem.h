@@ -111,6 +111,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   [[nodiscard]]
   frc2::CommandPtr SetGyro(units::degree_t angle);
 
+  void SetGyro0(units::degree_t angle);
+
   units::degree_t GetCompassHeading() { return m_gyro.GetCompassHeading(); }
 
   void InitSendable(wpi::SendableBuilder& builder) override;
@@ -130,7 +132,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   frc::Field2d m_field;
 
-  VisionSubsystem& m_visionSystem;
+  // VisionSubsystem& m_visionSystem;
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 

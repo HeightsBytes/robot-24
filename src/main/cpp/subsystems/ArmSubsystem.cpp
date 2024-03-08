@@ -94,11 +94,17 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 void ArmSubsystem::ControlLoop() {
   m_controller.SetReference(ToSetpoint(m_target).value(),
                             rev::CANSparkMax::ControlType::kPosition);
+  // m_controller.SetReference(m_targetVal, rev::CANSparkMax::ControlType::kPosition);
 }
 
 units::degree_t ArmSubsystem::TargettingAngle() const {
+  
+  if (hb::LimeLight::HasTarget()) {
+    m_lastLLAngle = hb::LimeLight::GetY();
+  } 
+
   return units::degree_t(
-      std::clamp(m_regLin.Calculate(hb::LimeLight::GetY()), 0.0, 57.5));
+      std::clamp(m_regLin.Calculate(m_lastLLAngle), 0.0, 57.5));
 }
 
 void ArmSubsystem::CheckState() {
@@ -149,6 +155,9 @@ std::string ArmSubsystem::ToStr(State state) const {
     case kStow:
       return "Stow";
       break;
+    case kTrap:
+      return "Trap";
+      break;
   }
   return "FAIL";
 }
@@ -170,6 +179,9 @@ units::degree_t ArmSubsystem::ToSetpoint(State state) const {
       break;
     case kStow:
       return ArmConstants::Setpoint::kStow;
+      break;
+    case kTrap:
+      return ArmConstants::Setpoint::kTrap;
       break;
   }
   std::printf("[WARNING] ArmSubsystem::ToSetpoint Failed!");

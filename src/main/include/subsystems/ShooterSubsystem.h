@@ -86,10 +86,12 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   /***TUNING***/
 
-  // bool m_tuning = false;
-  // double kP = ShooterConstants::kP;
-  // double kI = ShooterConstants::kI;
-  // double kD = ShooterConstants::kD;
-  // double kFF = ShooterConstants::kFF;
-  // double RPMSetpoint = ShooterConstants::Setpoint::kShooting.value();
+  bool m_tuning = false;
+  double kP = ShooterConstants::kP;
+  double kI = ShooterConstants::kI;
+  double kD = ShooterConstants::kD;
+  double kFF = ShooterConstants::kFF;
+  double RPMSetpoint0 = 5;
+  double RPMSetpoint1 = 5;
+  double last0 = 0;
 };

@@ -1,0 +1,56 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7527079419641067,
+      "y": 4.425519186063752
+    },
+    "rotation": 119.43541636139263
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "aim_arm"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rev_shooter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot_note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow_arm"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "step-1_2N-F5"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

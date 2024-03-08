@@ -85,3 +85,7 @@ std::optional<PosePacket> LimeLight::GetPose() {
 
   return PosePacket(pose, timestamp);
 }
+
+int LimeLight::GetID() {
+  return GETVAL("tid");
+}

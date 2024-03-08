@@ -5,8 +5,10 @@
 #include "subsystems/ShooterSubsystem.h"
 
 #include <frc/MathUtil.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "Constants.h"
+#include "utils/Util.h"
 
 ShooterSubsystem::ShooterSubsystem()
     : m_leftFlywheel(ShooterConstants::kLeftFlywheelID,
@@ -24,29 +26,39 @@ ShooterSubsystem::ShooterSubsystem()
       m_actual0(State::kStopped),
       m_actual1(State::kStopped),
       m_target(State::kStopped) {
+
+  m_leftFlywheel.RestoreFactoryDefaults();
+  m_rightFlywheel.RestoreFactoryDefaults();
+  
   m_rightFlywheel.SetInverted(false);
   m_leftFlywheel.SetInverted(true);
 
   m_leftFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
   m_rightFlywheel.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
 
+  // m_rightFlywheel.SetSmartCurrentLimit(40);
+  // m_leftFlywheel.SetSmartCurrentLimit(40);
+
   m_controller0.SetP(ShooterConstants::kP);
   m_controller0.SetI(ShooterConstants::kI);
   m_controller0.SetD(ShooterConstants::kD);
   m_controller0.SetFF(ShooterConstants::kFF);
-  m_controller0.SetIZone(150);
+  m_controller0.SetIZone(400);
 
   m_controller1.SetP(ShooterConstants::kP);
   m_controller1.SetI(ShooterConstants::kI);
   m_controller1.SetD(ShooterConstants::kD);
   m_controller1.SetFF(ShooterConstants::kFF);
-  m_controller1.SetIZone(150);
+  m_controller1.SetIZone(400);
 
   m_leftFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_rightFeeder.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
-  m_leftFlywheel.SetClosedLoopRampRate(1.25);
-  m_rightFlywheel.SetClosedLoopRampRate(1.25);
+  m_leftFlywheel.SetClosedLoopRampRate(0.5);
+  m_rightFlywheel.SetClosedLoopRampRate(0.5);
+
+  // m_leftFlywheel.BurnFlash();
+  // m_rightFlywheel.BurnFlash();
 }
 
 // This method will be called once per scheduler run
@@ -62,6 +74,29 @@ void ShooterSubsystem::Periodic() {
   }
   CheckState0();
   CheckState1();
+
+  // if (m_target != State::kStopped) {
+  //   m_leftFlywheel.Set(0);
+  // } else {
+  //   m_leftFlywheel.Set(0.5);
+  // }
+
+  // if (hb::InRange(RPMSetpoint0, 0, 10)) {
+  //   m_leftFlywheel.Set(0);
+  // } else {
+  //   if (last0 != RPMSetpoint0) {
+  //     m_controller0.SetReference(RPMSetpoint0, rev::CANSparkFlex::ControlType::kVelocity);
+  //   }
+  // }
+
+  // if (hb::InRange(RPMSetpoint1, 0, 10)) {
+  //   m_rightFlywheel.Set(0);
+  // } else {
+  //   m_controller1.SetReference(RPMSetpoint1, rev::CANSparkFlex::ControlType::kVelocity);
+  // }
+
+  // last0 = RPMSetpoint0;
+  
 }
 
 void ShooterSubsystem::SetFeeder(double setpoint) {
@@ -90,6 +125,9 @@ void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty("Velocity 0", LAMBDA(GetSpeed0().value()), nullptr);
   builder.AddDoubleProperty("Velocity 1", LAMBDA(GetSpeed1().value()), nullptr);
 
+  builder.AddDoubleProperty("RPM Setpoint 0", LAMBDA(RPMSetpoint0), [this](double set) {RPMSetpoint0 = set;});
+  builder.AddDoubleProperty("RPM Setpoint 1", LAMBDA(RPMSetpoint1), [this](double set){RPMSetpoint1 = set;});
+
 #undef LAMBDA
 }
 
@@ -110,7 +148,7 @@ void ShooterSubsystem::CheckState0() {
   }
 
   // Check Trap Amp
-  if (frc::IsNear(ShooterConstants::Setpoint::kTrapAmp, average,
+  if (frc::IsNear(ShooterConstants::Setpoint::kTrapAmp0, average,
                   ShooterConstants::kTollerance)) {
     m_actual0 = State::kIdle;
     return;
@@ -137,13 +175,6 @@ void ShooterSubsystem::CheckState1() {
 
   // Check Idle
   if (frc::IsNear(ShooterConstants::Setpoint::kIdle, average,
-                  ShooterConstants::kTollerance)) {
-    m_actual1 = State::kIdle;
-    return;
-  }
-
-  // Check Trap Amp
-  if (frc::IsNear(ShooterConstants::Setpoint::kTrapAmp, average,
                   ShooterConstants::kTollerance)) {
     m_actual1 = State::kIdle;
     return;
@@ -201,7 +232,7 @@ units::revolutions_per_minute_t ShooterSubsystem::ToRPM0(State state) const {
       break;
 
     case State::kTrapAmp:
-      return ShooterConstants::Setpoint::kTrapAmp;
+      return ShooterConstants::Setpoint::kTrapAmp0;
       break;
   }
 }
@@ -223,7 +254,7 @@ units::revolutions_per_minute_t ShooterSubsystem::ToRPM1(State state) const {
       break;
 
     case State::kTrapAmp:
-      return ShooterConstants::Setpoint::kTrapAmp;
+      return ShooterConstants::Setpoint::kTrapAmp1;
       break;
   }
 }

@@ -21,11 +21,12 @@
 #include "utils/regressions/Linear.h"
 #include "utils/regressions/Logarithmic.h"
 #include "utils/regressions/SquareRoot.h"
+#include "utils/regressions/Exponential.h"
 
 // 1 NEO (Vortex?) Motor
 class ArmSubsystem : public frc2::SubsystemBase {
  public:
-  enum class State { kInFrame, kStow, kHandoff, kTargetting, kSwitching };
+  enum class State { kInFrame, kStow, kHandoff, kTargetting, kSwitching, kTrap };
 
   explicit ArmSubsystem(std::function<frc::Pose2d()> poseFunc = nullptr);
 
@@ -66,7 +67,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
   bool m_atTarget;
 
   hb::Logarithmic m_reg{117.035, -16.9294};
-  hb::SquareRoot m_regLin{-11.115, -1.7112, -88.4067, 141.609};
+  // hb::SquareRoot m_regLin{-11.115, -1.7112, -88.4067, 141.609};
+  hb::Exponential m_regLin{36.2199, 1.02622};
 
   double m_targetVal;
+
+  mutable double m_lastLLAngle = 0;
 };

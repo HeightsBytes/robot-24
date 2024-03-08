@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3,
-      "y": 5.55
+      "x": 0.7193706976246435,
+      "y": 6.7674606009110505
     },
-    "rotation": 180.0
+    "rotation": -119.18080605249986
   },
   "command": {
     "type": "sequential",
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "step-1_2N-2"
+            "pathName": "step1-2N1"
           }
         },
         {
@@ -60,13 +60,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "rev_shooter"
+                  "name": "aim_arm"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "aim_arm"
+                  "name": "rev_shooter"
                 }
               }
             ]
@@ -76,6 +76,12 @@
           "type": "named",
           "data": {
             "name": "shoot_note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "flip_gyro_2N1"
           }
         }
       ]

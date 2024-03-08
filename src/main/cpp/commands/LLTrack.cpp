@@ -70,5 +70,5 @@ bool LLTrack::IsFinished() {
   if (!m_hasTarget)
     return true;
   return hb::InRange(m_angle.value(),
-                     m_drive->GetHeading().Degrees().value() - 180, 2);
+                     m_drive->GetHeading().Degrees().value() - 180, 0.5);
 }

@@ -80,6 +80,8 @@ namespace hb {
      */
     static void SetPipeline(Pipeline);
 
+    static int GetID();
+
     /**
      * @brief Get the current Pipeline
      *

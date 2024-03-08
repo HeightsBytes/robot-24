@@ -9,7 +9,6 @@
 #include "subsystems/ShooterSubsystem.h"
 
 #include "commands/DefaultDrive.h"
-#include "commands/DriveAndTrack.h"
 #include "commands/LLTrack.h"
 #include "commands/SetArmAwait.h"
 #include "commands/SetIntakeAwait.h"
@@ -20,10 +19,9 @@ namespace Commands {
     return frc2::cmd::Sequence(
     SetArmAwait(arm, ArmSubsystem::State::kHandoff).ToPtr(),
     SetIntakeAwait(intake, IntakeSubsystem::PivotState::kHandoff).ToPtr(),
-    frc2::cmd::Wait(0.3_s),
     intake->SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kHandoff),
     shooter->SetFeederCMD(-0.5),
-    frc2::cmd::Wait(0.5_s),
+    frc2::cmd::Wait(1_s),
     shooter->SetFeederCMD(0),
     intake->SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped),
     SetIntakeAwait(intake, IntakeSubsystem::PivotState::kStow).Until([intake] {return intake->GetAngle() > -50_deg;}),
@@ -36,12 +34,12 @@ namespace Commands {
   frc2::CommandPtr ShootNote(ShooterSubsystem* shooter) {
     return frc2::cmd::Sequence(
       shooter->SetFeederCMD(-1),
-      frc2::cmd::Wait(0.5_s),
+      frc2::cmd::Wait(1_s),
       shooter->SetFeederCMD(0),
       shooter->SetTargetStateCMD(ShooterSubsystem::State::kStopped));
   }
 
   frc2::CommandPtr RevShooter(ShooterSubsystem* shooter) {
-    return SetRPMAwait(shooter, ShooterSubsystem::State::kSpeaker).ToPtr().WithTimeout(2_s);
+    return SetRPMAwait(shooter, ShooterSubsystem::State::kSpeaker).ToPtr().AndThen(frc2::cmd::Wait(0.25_s));
   }
 }

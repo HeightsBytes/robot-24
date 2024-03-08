@@ -24,7 +24,7 @@
  * To update the Orange Pi:                                                   *
  * 1. Download the latest photonvision .jar file                              *
  * 2. Go into bash (windows subsystem for linux required)                     *
- * 3. sch [photonvision jar].jar orangepi@[module name]:~/                    *
+ * 3. scp [photonvision jar].jar orangepi@[module name]:~/                    *
  * 4. ssh orangepi@[module name]                                              *
  * 5. sudo mv [photonvision jar].jar /opt/photonvision/photonvision.jar       *
  * 6. sudo systemctl restart photonvision.service                             *
@@ -35,7 +35,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
  public:
   void Periodic() override;
 
-  static VisionSubsystem& GetInstance();
+//   static VisionSubsystem& GetInstance();
 
   std::vector<PosePacket> GetPose();
 

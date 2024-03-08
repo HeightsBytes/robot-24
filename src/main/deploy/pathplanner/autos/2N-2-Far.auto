@@ -77,6 +77,36 @@
           "data": {
             "name": "shoot_note"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow_arm"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "step-far_2N-2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy_intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow_intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "flip_gyro"
+          }
         }
       ]
     }

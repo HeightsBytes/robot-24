@@ -18,7 +18,7 @@ VisionSubsystem::VisionSubsystem()
           VisionConstants::RightTransform),
       m_leftEst(
           m_layout, photonlib::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
-          std::move(photonlib::PhotonCamera("Arducam_OV9281_USB_Camera_Left")),
+          std::move(photonlib::PhotonCamera("Arducam_OV9281_USB_Camera_Intake")),
           VisionConstants::LeftTransform) {
   m_leftEst.SetMultiTagFallbackStrategy(
       photonlib::PoseStrategy::LOWEST_AMBIGUITY);
@@ -31,10 +31,10 @@ void VisionSubsystem::Periodic() {
   UpdatePacket();
 }
 
-VisionSubsystem& VisionSubsystem::GetInstance() {
-  static VisionSubsystem inst;
-  return inst;
-}
+// VisionSubsystem& VisionSubsystem::GetInstance() {
+//   static VisionSubsystem inst;
+//   return inst;
+// }
 
 std::vector<PosePacket> VisionSubsystem::GetPose() {
   return m_packets;

@@ -68,6 +68,12 @@
                 "data": {
                   "name": "aim_arm"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "deploy_intake"
+                }
               }
             ]
           }
@@ -76,6 +82,31 @@
           "type": "named",
           "data": {
             "name": "shoot_note"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "step-up_2N-2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow_intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "flip_gyro"
           }
         }
       ]

@@ -35,13 +35,13 @@ DriveSubsystem::DriveSubsystem()
                   kRearRightTurningEncoderPorts, kRearRightOffset},
 
       m_gyro(DriveConstants::CanIds::kPidgeonID),
-      m_visionSystem(VisionSubsystem::GetInstance()),
+      // m_visionSystem(VisionSubsystem::GetInstance()),
       m_poseEstimator(kDriveKinematics, GetHeading(), GetModulePositions(),
                       frc::Pose2d()),
       m_vision(true) {
   frc::SmartDashboard::PutData("Field", &m_field);
   AutoBuilder::configureHolonomic(
-      [this] { return GetPose(); }, [this](frc::Pose2d pose) { SetPose(pose); },
+      [this] { return GetPose(); }, [this](frc::Pose2d pose) { SetPose(pose);  },
       [this] { return GetVelocity(); },
       [this](frc::ChassisSpeeds speeds) { DriveRobotRelative(speeds); },
       AutoConstants::kConfig,
@@ -130,6 +130,7 @@ frc::Pose2d DriveSubsystem::GetPose() const {
 }
 
 void DriveSubsystem::SetPose(frc::Pose2d pose) {
+  SetOffset(pose.Rotation().Degrees());
   m_poseEstimator.ResetPosition(GetHeading(), GetModulePositions(), pose);
 }
 

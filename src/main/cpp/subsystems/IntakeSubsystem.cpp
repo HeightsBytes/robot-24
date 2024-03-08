@@ -28,6 +28,7 @@ IntakeSubsystem::IntakeSubsystem()
   m_pivot.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_intake.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
   m_pivot.SetInverted(true);
+  m_pivot.SetSmartCurrentLimit(30);
 
   m_pivotEncoder.SetPositionConversionFactor(360);
 
@@ -39,7 +40,7 @@ IntakeSubsystem::IntakeSubsystem()
 
   // m_pivotEncoder.SetPosition(GetAngle().value());
 
-  m_pivotController.SetOutputRange(-0.5, 0.5);
+  m_pivotController.SetOutputRange(-1, 1);
 
   m_pivot.BurnFlash();
   m_intake.BurnFlash();

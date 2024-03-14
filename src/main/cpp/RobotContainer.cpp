@@ -25,9 +25,10 @@
 using pathplanner::NamedCommands;
 
 RobotContainer::RobotContainer() {
-  m_chooser.AddOption("None", "None");
+  m_chooser.SetDefaultOption("None", "None");
   m_chooser.AddOption("2N-2", "2N-2");
   m_chooser.AddOption("2N-F5", "2N-F5");
+  m_chooser.AddOption("1N-Top", "1N-Top");
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   //   frc::SmartDashboard::PutData("Shooter", &m_shooter);
   // frc::SmartDashboard::PutData("Arm", &m_arm);

@@ -37,14 +37,11 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
   m_turningMotor.SetInverted(true);
 
-  // m_driveMotor.SetClosedLoopRampRate(0.5);
 
   // set the turn conversion factors
   m_sparkTurnEncoder.SetPositionConversionFactor(
       ModuleConstants::kTurnEncoderRatio);
-  // if (res != rev::REVLibError::kOk) {
-  //   throw std::runtime_error("Conversion factor failed");
-  // }
+
   m_sparkTurnEncoder.SetPosition(m_turningEncoder.Get().value());
 
   // set the drive conversion factor

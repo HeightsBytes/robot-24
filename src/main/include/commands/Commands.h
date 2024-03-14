@@ -43,6 +43,6 @@ namespace Commands {
   frc2::CommandPtr RevShooter(ShooterSubsystem* shooter) {
     return SetRPMAwait(shooter, ShooterSubsystem::State::kSpeaker)
         .ToPtr()
-        .AndThen(frc2::cmd::Wait(0.25_s));
+        .AndThen(frc2::cmd::Wait(0.5_s));
   }
 }  // namespace Commands

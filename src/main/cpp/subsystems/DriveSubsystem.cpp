@@ -65,6 +65,8 @@ void DriveSubsystem::Periodic() {
   // }
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
+
+  frc::SmartDashboard::PutNumber("Back left Encoder", m_rearLeft.GetPosition().angle.Degrees().value());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -130,7 +132,12 @@ frc::Pose2d DriveSubsystem::GetPose() const {
 }
 
 void DriveSubsystem::SetPose(frc::Pose2d pose) {
-  SetOffset(pose.Rotation().Degrees());
+
+  if (frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
+    SetOffset(pose.Rotation().Degrees() + 180_deg);
+  } else {
+    SetOffset(pose.Rotation().Degrees());
+  }
   m_poseEstimator.ResetPosition(GetHeading(), GetModulePositions(), pose);
 }
 

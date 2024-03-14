@@ -5,8 +5,9 @@
   "pathFolders": [
     "2N-1",
     "2N-2",
+    "2N-F5",
     "3N-12",
-    "2N-F5"
+    "1N-Top"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.25,

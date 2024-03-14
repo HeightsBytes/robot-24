@@ -11,6 +11,7 @@
 #include <rev/CANSparkMax.h>
 #include <units/angle.h>
 #include <wpi/sendable/SendableBuilder.h>
+#include <frc/DigitalInput.h>
 
 #include <string>
 
@@ -39,6 +40,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   void SetPivotTarget(PivotState state) { m_pivotTarget = state; }
   void SetIntakeTarget(IntakeState state) { m_intakeTarget = state; }
+
+  bool GetLimitSwitch() const { return m_limitSwitch.Get();}
 
   frc2::CommandPtr DeployIntakeCMD() {
     return this->RunOnce([this] {
@@ -81,6 +84,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   PivotState m_pivotTarget;
 
   IntakeState m_intakeTarget;
+
+  frc::DigitalInput m_limitSwitch{0};
 
   bool tuning = true;
 

@@ -29,6 +29,7 @@ RobotContainer::RobotContainer() {
   m_chooser.AddOption("2N-2", "2N-2");
   m_chooser.AddOption("2N-F5", "2N-F5");
   m_chooser.AddOption("1N-Top", "1N-Top");
+  m_chooser.AddOption("2N-Top", "2N-Top");
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   //   frc::SmartDashboard::PutData("Shooter", &m_shooter);
   // frc::SmartDashboard::PutData("Arm", &m_arm);
@@ -117,6 +118,17 @@ void RobotContainer::ConfigureDriverButtons() {
                              .ToPtr()));
   m_drightTrigger.OnTrue(Commands::RevShooter(&m_shooter)
                              .AndThen(Commands::ShootNote(&m_shooter)));
+
+  m_driverController.Back().OnTrue(m_intake.SetPivotTargetCMD(IntakeSubsystem::PivotState::kHandoff));
+
+  frc2::POVButton(&m_driverController, 0).OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kTrapAmp)
+    .AlongWith(m_arm.SetTargetStateCMD(ArmSubsystem::State::kTrap)));
+
+  frc2::POVButton(&m_driverController, 90).OnTrue(Commands::ShootNote(&m_shooter));
+
+  frc2::POVButton(&m_driverController, 180).OnTrue(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped)
+    .AlongWith(m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)));
+  
 }
 
 void RobotContainer::ConfigureOperatorButtons() {

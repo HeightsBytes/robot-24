@@ -5,6 +5,7 @@
 #include "subsystems/IntakeSubsystem.h"
 
 #include <frc/MathUtil.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include <chrono>
 #include <thread>
@@ -22,6 +23,7 @@ IntakeSubsystem::IntakeSubsystem()
       m_pivotActual(PivotState::kSwitching),
       m_pivotTarget(PivotState::kStow),
       m_intakeTarget(IntakeState::kStopped) {
+
   m_pivot.RestoreFactoryDefaults();
   m_intake.RestoreFactoryDefaults();
 
@@ -62,6 +64,8 @@ void IntakeSubsystem::Periodic() {
   // m_pivot.Set(target);
 
   m_intake.SetVoltage(units::volt_t(StateToOutput(m_intakeTarget)));
+
+  frc::SmartDashboard::PutBoolean("Limit Switch", GetLimitSwitch());
 }
 
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
@@ -144,6 +148,11 @@ void IntakeSubsystem::CheckState() {
   namespace IP = IntakeConstants::Positions;
 
   auto angle = GetAngle();
+
+  if (GetLimitSwitch()) {
+    m_pivotActual = kHandoff;
+    return;
+  }
 
   if (frc::IsNear(IP::kDeployed, angle, IP::kTollerance)) {
     m_pivotActual = kDeployed;

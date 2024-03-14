@@ -85,6 +85,37 @@
               }
             ]
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "rev_shooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "aim_arm"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "aim_robot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot_note"
+          }
         }
       ]
     }

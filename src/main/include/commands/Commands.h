@@ -29,7 +29,7 @@ namespace Commands {
         intake->SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kStopped),
         SetIntakeAwait(intake, IntakeSubsystem::PivotState::kStow)
             .Until([intake] { return intake->GetAngle() > -50_deg; }),
-        shooter->SetFeederCMD(0.1), frc2::cmd::Wait(0.1_s),
+        shooter->SetFeederCMD(0.1), frc2::cmd::Wait(0.075_s),
         shooter->SetFeederCMD(0.0));
   }
 

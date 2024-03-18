@@ -149,10 +149,10 @@ void IntakeSubsystem::CheckState() {
 
   auto angle = GetAngle();
 
-  if (GetLimitSwitch()) {
-    m_pivotActual = kHandoff;
-    return;
-  }
+  // if (GetLimitSwitch()) {
+  //   m_pivotActual = kHandoff;
+  //   return;
+  // }
 
   if (frc::IsNear(IP::kDeployed, angle, IP::kTollerance)) {
     m_pivotActual = kDeployed;

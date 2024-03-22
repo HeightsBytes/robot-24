@@ -79,7 +79,6 @@ void ShooterSubsystem::Periodic() {
   // if (m_target != State::kStopped) {
   //   m_leftFlywheel.Set(0);
   // } else {
-  // hi nate
   //   m_leftFlywheel.Set(0.5);
   // }
 

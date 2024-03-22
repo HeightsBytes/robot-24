@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc/DigitalInput.h>
 #include <frc/DutyCycleEncoder.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
@@ -11,7 +12,6 @@
 #include <rev/CANSparkMax.h>
 #include <units/angle.h>
 #include <wpi/sendable/SendableBuilder.h>
-#include <frc/DigitalInput.h>
 
 #include <string>
 
@@ -41,7 +41,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void SetPivotTarget(PivotState state) { m_pivotTarget = state; }
   void SetIntakeTarget(IntakeState state) { m_intakeTarget = state; }
 
-  bool GetLimitSwitch() const { return m_limitSwitch.Get();}
+  bool GetLimitSwitch() const { return m_limitSwitch.Get(); }
 
   frc2::CommandPtr DeployIntakeCMD() {
     return this->RunOnce([this] {

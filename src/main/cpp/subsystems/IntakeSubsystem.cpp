@@ -23,7 +23,6 @@ IntakeSubsystem::IntakeSubsystem()
       m_pivotActual(PivotState::kSwitching),
       m_pivotTarget(PivotState::kStow),
       m_intakeTarget(IntakeState::kStopped) {
-
   m_pivot.RestoreFactoryDefaults();
   m_intake.RestoreFactoryDefaults();
 

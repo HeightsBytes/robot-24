@@ -37,7 +37,6 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
   m_turningMotor.SetInverted(true);
 
-
   // set the turn conversion factors
   m_sparkTurnEncoder.SetPositionConversionFactor(
       ModuleConstants::kTurnEncoderRatio);

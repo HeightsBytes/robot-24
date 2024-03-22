@@ -107,7 +107,8 @@ void RobotContainer::ConfigureDriverButtons() {
                              &m_drive,
                              [this] { return m_driverController.GetLeftY(); },
                              [this] { return m_driverController.GetLeftX(); })
-                             .ToPtr()))
+                             .ToPtr())
+              .AlongWith(Commands::RevShooter(&m_shooter)))
       .OnFalse(
           m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)
               .AlongWith(DefaultDrive(
@@ -115,9 +116,9 @@ void RobotContainer::ConfigureDriverButtons() {
                              [this] { return m_driverController.GetLeftY(); },
                              [this] { return m_driverController.GetLeftX(); },
                              [this] { return m_driverController.GetRightX(); })
-                             .ToPtr()));
-  m_drightTrigger.OnTrue(Commands::RevShooter(&m_shooter)
-                             .AndThen(Commands::ShootNote(&m_shooter)));
+                             .ToPtr())
+                .AlongWith(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped)));
+  m_drightTrigger.OnTrue(Commands::ShootNote(&m_shooter));
 
   m_driverController.Back().OnTrue(
       m_intake.SetPivotTargetCMD(IntakeSubsystem::PivotState::kHandoff));

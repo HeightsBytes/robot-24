@@ -41,4 +41,5 @@ class LLTrack : public frc2::CommandHelper<frc2::Command, LLTrack> {
 
   bool m_hasTarget;
   units::degree_t m_angle;
+  units::degree_t m_lastRobotAngle;
 };

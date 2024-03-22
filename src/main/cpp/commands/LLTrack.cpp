@@ -14,6 +14,7 @@ LLTrack::LLTrack(DriveSubsystem* drive, std::function<double()> leftY,
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);
   m_angle = 0_deg;
+  m_lastRobotAngle = 0_deg;
   m_hasTarget = false;
   m_controller.EnableContinuousInput(-180.0, 180.0);
 }
@@ -22,6 +23,7 @@ LLTrack::LLTrack(DriveSubsystem* drive, std::function<double()> leftY,
 void LLTrack::Initialize() {
   m_hasTarget = hb::LimeLight::HasTarget();
   m_angle = units::degree_t(hb::LimeLight::GetX());
+  m_lastRobotAngle = m_drive->GetCompassHeading();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -54,11 +56,11 @@ void LLTrack::Execute() {
 
   if (hb::LimeLight::HasTarget()) {
     m_angle = units::degree_t(hb::LimeLight::GetX());
+    m_lastRobotAngle = m_drive->GetCompassHeading();
   }
-
   m_drive->Drive(
       xComponent, yComponent,
-      units::radians_per_second_t(m_controller.Calculate(m_angle.value(), 0)),
+      units::radians_per_second_t(m_controller.Calculate(m_angle.value(), (m_drive->GetCompassHeading() - m_lastRobotAngle).value())),
       true);
 }
 

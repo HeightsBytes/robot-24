@@ -74,9 +74,12 @@ void ShooterSubsystem::Periodic() {
   CheckState0();
   CheckState1();
 
+  frc::SmartDashboard::PutBoolean("Shooter Ready", GetActualState0() == State::kSpeaker && GetActualState1() == State::kSpeaker);
+
   // if (m_target != State::kStopped) {
   //   m_leftFlywheel.Set(0);
   // } else {
+  // hi nate
   //   m_leftFlywheel.Set(0.5);
   // }
 

@@ -69,8 +69,9 @@ void LLTrack::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool LLTrack::IsFinished() {
-  if (!m_hasTarget)
-    return true;
-  return hb::InRange(m_angle.value(),
-                     m_drive->GetHeading().Degrees().value() - 180, 0.5);
+  // if (!m_hasTarget)
+  //   return true;
+  // return hb::InRange(m_angle.value(),
+  //                    m_drive->GetHeading().Degrees().value() - 180, 0.5);
+  return false;
 }

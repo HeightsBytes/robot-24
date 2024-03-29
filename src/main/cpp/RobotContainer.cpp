@@ -115,9 +115,8 @@ void RobotContainer::ConfigureDriverButtons() {
               .AlongWith(m_shooter.SetTargetStateCMD(
                   ShooterSubsystem::State::kStopped))));
   (m_shooter.ShooterReadyToFireTrigger() && m_arm.AtSpeakerTargetTrigger() &&
-   m_drightTrigger)
+   m_robotAimedAtSpeaker && m_drightTrigger)
       .OnTrue(Commands::ShootNote(&m_shooter));
-  // m_drightTrigger.OnTrue(Commands::RevShooter(&m_shooter).AndThen(Commands::ShootNote(&m_shooter)));
 
   m_driverController.Back().OnTrue(
       m_intake.SetPivotTargetCMD(IntakeSubsystem::PivotState::kHandoff));

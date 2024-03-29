@@ -22,6 +22,8 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
+#include "utils/cams/Limelight.h"
+#include "utils/Util.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -61,6 +63,13 @@ class RobotContainer {
       [this] { return m_operatorController.GetLeftTriggerAxis() > 0.3; }};
   frc2::Trigger m_orightTrigger{
       [this] { return m_operatorController.GetRightTriggerAxis() > 0.3; }};
+
+  frc2::Trigger m_robotAimedAtSpeaker{
+      [this] { 
+        if (hb::LimeLight::HasTarget()) {
+          return hb::InRange(0, hb::LimeLight::GetX(), 1.0);
+        } else return true;
+      }};
 
   void ConfigureDriverButtons();
 

@@ -15,11 +15,13 @@
 
 DefaultDrive::DefaultDrive(DriveSubsystem* drive, std::function<double()> leftY,
                            std::function<double()> leftX,
-                           std::function<double()> rightX)
+                           std::function<double()> rightX,
+                           std::function<bool()> slowMode)
     : m_drive(drive),
       m_leftY(std::move(leftY)),
       m_leftX(std::move(leftX)),
-      m_rightX(std::move(rightX)) {
+      m_rightX(std::move(rightX)),
+      m_slowMode(std::move(slowMode)) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);
 }
@@ -29,13 +31,11 @@ void DefaultDrive::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void DefaultDrive::Execute() {
-  double maxSpeed = DriveConstants::kMaxChassisSpeed.value();
+  double maxSpeed = m_slowMode() ? DriveConstants::kSlowChassisSpeed.value() : DriveConstants::kMaxChassisSpeed.value();
 
   // Note: x is forwards, y is side to side.
   // This means 'x' is the traditional y direction
   // 'y' is the tradtional x
-  // double x = -m_leftX();
-  // double y = m_leftY();
   double x = -m_leftY();
   double y = m_leftX();
   double z = m_rightX();

@@ -23,7 +23,8 @@
 class DefaultDrive : public frc2::CommandHelper<frc2::Command, DefaultDrive> {
  public:
   DefaultDrive(DriveSubsystem* drive, std::function<double()> leftY,
-               std::function<double()> leftX, std::function<double()> rightX);
+               std::function<double()> leftX, std::function<double()> rightX,
+               std::function<bool()> slowMode = [] {return false;});
 
   void Initialize() override;
 
@@ -38,4 +39,5 @@ class DefaultDrive : public frc2::CommandHelper<frc2::Command, DefaultDrive> {
   std::function<double()> m_leftY;
   std::function<double()> m_leftX;
   std::function<double()> m_rightX;
+  std::function<bool()> m_slowMode;
 };

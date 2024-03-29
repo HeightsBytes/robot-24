@@ -35,10 +35,6 @@ RobotContainer::RobotContainer() {
   NamedCommands::registerCommand("rev_shooter",
                                  Commands::RevShooter(&m_shooter));
 
-  NamedCommands::registerCommand("flip_gyro_2N1", m_drive.SetGyro(-120_deg));
-
-  //   NamedCommands::registerCommand("flip_gyro_2N-5F", m_drive.SetGyro());
-
   NamedCommands::registerCommand(
       "aim_arm", m_arm.SetTargetStateCMD(ArmSubsystem::State::kTargetting));
 
@@ -65,7 +61,8 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(DefaultDrive(
       &m_drive, [this] { return m_driverController.GetLeftY(); },
       [this] { return m_driverController.GetLeftX(); },
-      [this] { return m_driverController.GetRightX(); }));
+      [this] { return m_driverController.GetRightX(); },
+      [this] { return m_driverController.GetLeftStickButton(); }));
   
 }
 

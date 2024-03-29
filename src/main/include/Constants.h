@@ -61,6 +61,7 @@ namespace DriveConstants {
   inline constexpr double kRearLeftOffset = -78.05 - 180;    // encoder 4
 
   inline constexpr auto kMaxChassisSpeed = 4.25_mps;
+  inline constexpr auto kSlowChassisSpeed = 1.25_mps;
   inline constexpr auto kMaxAngularSpeed =
       units::radians_per_second_t(1 * std::numbers::pi);
   inline constexpr auto kMaxAngularAcceleration =

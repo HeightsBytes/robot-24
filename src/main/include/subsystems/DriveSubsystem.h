@@ -23,7 +23,6 @@
 
 #include "Constants.h"
 #include "frc/filter/SlewRateLimiter.h"
-#include "subsystems/VisionSubsystem.h"
 #include "units/velocity.h"
 #include "utils/swerve/PigeonGyro.h"
 #include "utils/swerve/SwerveModule.h"
@@ -132,9 +131,5 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   frc::Field2d m_field;
 
-  // VisionSubsystem& m_visionSystem;
-
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
-
-  bool m_vision;
 };

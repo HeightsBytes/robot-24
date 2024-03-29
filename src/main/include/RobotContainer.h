@@ -22,7 +22,6 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
-#include "subsystems/VisionSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -43,7 +42,6 @@ class RobotContainer {
   frc2::CommandXboxController m_operatorController{
       OIConstants::kOperatorControllerPort};
 
-  //   VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
   ShooterSubsystem m_shooter;
   ArmSubsystem m_arm;
   IntakeSubsystem m_intake;

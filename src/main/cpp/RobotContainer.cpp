@@ -32,7 +32,7 @@ RobotContainer::RobotContainer() {
   m_chooser.AddOption("2N-Top", "2N-Top");
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   //   frc::SmartDashboard::PutData("Shooter", &m_shooter);
-    // frc::SmartDashboard::PutData("Arm", &m_arm);
+  // frc::SmartDashboard::PutData("Arm", &m_arm);
   //   frc::SmartDashboard::PutData("Intake", &m_intake);
 
   NamedCommands::registerCommand("rev_shooter",
@@ -109,8 +109,7 @@ void RobotContainer::ConfigureDriverButtons() {
                              [this] { return m_driverController.GetLeftX(); })
                              .ToPtr())
               .AlongWith(Commands::RevShooter(&m_shooter)))
-      .OnFalse(
-          m_shooter.SetFeederCMD(0).AndThen(
+      .OnFalse(m_shooter.SetFeederCMD(0).AndThen(
           m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)
               .AlongWith(DefaultDrive(
                              &m_drive,
@@ -118,9 +117,12 @@ void RobotContainer::ConfigureDriverButtons() {
                              [this] { return m_driverController.GetLeftX(); },
                              [this] { return m_driverController.GetRightX(); })
                              .ToPtr())
-                .AlongWith(m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped))));
-  (m_shooter.ShooterReadyToFireTrigger() && m_arm.AtSpeakerTargetTrigger() && m_drightTrigger).OnTrue(Commands::ShootNote(&m_shooter));
-    // m_drightTrigger.OnTrue(Commands::RevShooter(&m_shooter).AndThen(Commands::ShootNote(&m_shooter)));
+              .AlongWith(m_shooter.SetTargetStateCMD(
+                  ShooterSubsystem::State::kStopped))));
+  (m_shooter.ShooterReadyToFireTrigger() && m_arm.AtSpeakerTargetTrigger() &&
+   m_drightTrigger)
+      .OnTrue(Commands::ShootNote(&m_shooter));
+  // m_drightTrigger.OnTrue(Commands::RevShooter(&m_shooter).AndThen(Commands::ShootNote(&m_shooter)));
 
   m_driverController.Back().OnTrue(
       m_intake.SetPivotTargetCMD(IntakeSubsystem::PivotState::kHandoff));

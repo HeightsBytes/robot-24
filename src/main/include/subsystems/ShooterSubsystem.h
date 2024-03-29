@@ -5,6 +5,8 @@
 #pragma once
 
 #include <frc/DigitalInput.h>
+#include <frc/Timer.h>
+#include <frc/event/BooleanEvent.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/Trigger.h>
@@ -12,8 +14,6 @@
 #include <rev/CANSparkMax.h>
 #include <units/angular_velocity.h>
 #include <wpi/sendable/SendableBuilder.h>
-#include <frc/event/BooleanEvent.h>
-#include <frc/Timer.h>
 
 #include <string>
 
@@ -60,7 +60,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   }
 
   bool ShooterReadyToFire() const {
-    return ShooterReady() && GetTargetState() == State::kSpeaker && m_shotTimer.HasElapsed(0.5_s);
+    return ShooterReady() && GetTargetState() == State::kSpeaker &&
+           m_shotTimer.HasElapsed(0.5_s);
   }
 
   frc2::Trigger ShooterReadyToFireTrigger() {

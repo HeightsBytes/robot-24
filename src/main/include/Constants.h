@@ -119,15 +119,6 @@ namespace ModuleConstants {
 
 }  // namespace ModuleConstants
 
-namespace VisionConstants {
-  inline const frc::Transform3d RightTransform{
-      frc::Translation3d(-15_in, -7_in, 24_in),
-      frc::Rotation3d{0_deg, 0_deg, -150_deg}};
-  inline const frc::Transform3d LeftTransform{
-      frc::Translation3d(-15_in, 7_in, 24_in),
-      frc::Rotation3d{0_deg, 0_deg, 150_deg}};
-}  // namespace VisionConstants
-
 namespace IntakeConstants {
   // TODO: find constants
 

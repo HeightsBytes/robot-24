@@ -17,7 +17,6 @@
 #include <string>
 
 #include "Constants.h"
-#include "VisionSubsystem.h"
 #include "utils/regressions/Exponential.h"
 #include "utils/regressions/Linear.h"
 #include "utils/regressions/Logarithmic.h"
@@ -53,7 +52,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
   frc2::CommandPtr SetTargetStateCMD(State state);
 
   frc2::Trigger AtSpeakerTargetTrigger() {
-    return frc2::Trigger{[this] { return GetActualState() == State::kTargetting; }};
+    return frc2::Trigger{
+        [this] { return GetActualState() == State::kTargetting; }};
   }
 
   void InitSendable(wpi::SendableBuilder& builder) override;

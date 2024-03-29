@@ -35,10 +35,8 @@ DriveSubsystem::DriveSubsystem()
                   kRearRightTurningEncoderPorts, kRearRightOffset},
 
       m_gyro(DriveConstants::CanIds::kPidgeonID),
-      // m_visionSystem(VisionSubsystem::GetInstance()),
       m_poseEstimator(kDriveKinematics, GetHeading(), GetModulePositions(),
-                      frc::Pose2d()),
-      m_vision(true) {
+                      frc::Pose2d()) {
   frc::SmartDashboard::PutData("Field", &m_field);
   AutoBuilder::configureHolonomic(
       [this] { return GetPose(); }, [this](frc::Pose2d pose) { SetPose(pose); },
@@ -58,11 +56,6 @@ DriveSubsystem::DriveSubsystem()
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_poseEstimator.Update(GetHeading(), GetModulePositions());
-
-  // std::vector<PosePacket> CamPose = m_visionSystem.GetPose();
-  // for (PosePacket i : CamPose) {
-  //   m_poseEstimator.AddVisionMeasurement(i.pose, i.timestamp);
-  // }
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
 
@@ -154,9 +147,6 @@ void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 #define LAMBDA(x) [this] { return x; }
 
   builder.SetSmartDashboardType("Swerve Drive");
-
-  builder.AddBooleanProperty("Vision", LAMBDA(m_vision),
-                             [this](bool set) -> void { m_vision = set; });
 
   builder.AddDoubleProperty("X Velocity", LAMBDA(GetVelocity().vx.value()),
                             nullptr);

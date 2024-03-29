@@ -48,8 +48,7 @@ namespace Commands {
 
   frc2::CommandPtr ShootWhenReady(ShooterSubsystem* shooter) {
     return frc2::cmd::Sequence(
-        frc2::cmd::None().Until([shooter] {return shooter->ShooterReady();}),
-        ShootNote(shooter)
-    );
+        frc2::cmd::None().Until([shooter] { return shooter->ShooterReady(); }),
+        ShootNote(shooter));
   }
 }  // namespace Commands

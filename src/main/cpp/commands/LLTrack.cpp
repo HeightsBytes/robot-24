@@ -4,8 +4,9 @@
 
 #include "commands/LLTrack.h"
 
-#include <utility>
 #include <frc/smartdashboard/SmartDashboard.h>
+
+#include <utility>
 
 #include "utils/cams/Limelight.h"
 
@@ -66,7 +67,11 @@ void LLTrack::Execute() {
 
   m_drive->Drive(
       xComponent, yComponent,
-      units::radians_per_second_t(m_controller.Calculate(m_angle.value(), (m_lastRobotAngle - m_drive->GetCompassHeading()).value()) + ff),
+      units::radians_per_second_t(
+          m_controller.Calculate(
+              m_angle.value(),
+              (m_lastRobotAngle - m_drive->GetCompassHeading()).value()) +
+          ff),
       true);
 }
 

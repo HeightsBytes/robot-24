@@ -7,7 +7,6 @@
 #include <frc/MathUtil.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-
 #include "Constants.h"
 #include "utils/Util.h"
 

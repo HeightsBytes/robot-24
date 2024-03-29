@@ -23,14 +23,8 @@ ArmSubsystem::ArmSubsystem(std::function<frc::Pose2d()> poseFunction)
       m_actual(State::kSwitching),
       m_atTarget(false),
       m_targetVal(0) {
-  // m_motor.RestoreFactoryDefaults();
 
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  // m_motor.SetSmartCurrentLimit(ArmConstants::kCurrentLimit.value());
-
-  // m_encoder.SetPositionConversionFactor(ArmConstants::kConversionFactor);
-  // m_encoder.SetInverted(ArmConstants::kEncoderInverted);
-  // m_encoder.SetZeroOffset(ArmConstants::kOffset.value());
 
   m_motor.SetInverted(true);
   m_encoder.SetPositionConversionFactor(360);
@@ -69,9 +63,6 @@ frc2::CommandPtr ArmSubsystem::SetTargetStateCMD(State state) {
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
-  // if constexpr (!Telemetry::kArm) {
-  //   return;
-  // }
 
   builder.SetSmartDashboardType("Arm");
 

@@ -16,6 +16,9 @@ ClimbSubsystem::ClimbSubsystem()
 
   m_leftMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_rightMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+  m_leftMotor.BurnFlash();
+  m_rightMotor.BurnFlash();
 }
 
 // This method will be called once per scheduler run

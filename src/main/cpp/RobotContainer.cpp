@@ -31,9 +31,6 @@ RobotContainer::RobotContainer() {
   m_chooser.AddOption("1N-Top", "1N-Top");
   m_chooser.AddOption("2N-Top", "2N-Top");
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
-  //   frc::SmartDashboard::PutData("Shooter", &m_shooter);
-  // frc::SmartDashboard::PutData("Arm", &m_arm);
-  //   frc::SmartDashboard::PutData("Intake", &m_intake);
 
   NamedCommands::registerCommand("rev_shooter",
                                  Commands::RevShooter(&m_shooter));
@@ -69,6 +66,7 @@ RobotContainer::RobotContainer() {
       &m_drive, [this] { return m_driverController.GetLeftY(); },
       [this] { return m_driverController.GetLeftX(); },
       [this] { return m_driverController.GetRightX(); }));
+  
 }
 
 void RobotContainer::ConfigureDriverButtons() {

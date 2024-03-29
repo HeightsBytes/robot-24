@@ -39,8 +39,6 @@ IntakeSubsystem::IntakeSubsystem()
   m_pivotController.SetD(IntakeConstants::kD);
   m_pivotController.SetPositionPIDWrappingEnabled(false);
 
-  // m_pivotEncoder.SetPosition(GetAngle().value());
-
   m_pivotController.SetOutputRange(-1, 1);
 
   m_pivot.BurnFlash();
@@ -60,28 +58,22 @@ void IntakeSubsystem::Periodic() {
   m_pivotController.SetReference(StateToOutput(m_pivotTarget).value() + 88,
                                  rev::CANSparkMax::ControlType::kPosition);
 
-  // m_pivot.Set(target);
-
   m_intake.SetVoltage(units::volt_t(StateToOutput(m_intakeTarget)));
 
-  frc::SmartDashboard::PutBoolean("Limit Switch", GetLimitSwitch());
 }
 
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {
-  if constexpr (!Telemetry::kIntake) {
-    return;
-  }
 
   builder.SetSmartDashboardType("Intake");
 
 #define LAMBDA(x) [this] { return x; }
 
-  // builder.AddStringProperty("Pivot Actual", LAMBDA(ToStr(m_pivotActual)),
-  //                           nullptr);
-  // builder.AddStringProperty("Pivot Target", LAMBDA(ToStr(m_pivotTarget)),
-  //                           nullptr);
-  // builder.AddStringProperty("Intake Target", LAMBDA(ToStr(m_intakeTarget)),
-  //                           nullptr);
+  builder.AddStringProperty("Pivot Actual", LAMBDA(ToStr(m_pivotActual)),
+                            nullptr);
+  builder.AddStringProperty("Pivot Target", LAMBDA(ToStr(m_pivotTarget)),
+                            nullptr);
+  builder.AddStringProperty("Intake Target", LAMBDA(ToStr(m_intakeTarget)),
+                            nullptr);
 
   builder.AddDoubleProperty("Pivot Angle", LAMBDA(GetAngle().value()), nullptr);
 
@@ -147,11 +139,6 @@ void IntakeSubsystem::CheckState() {
   namespace IP = IntakeConstants::Positions;
 
   auto angle = GetAngle();
-
-  // if (GetLimitSwitch()) {
-  //   m_pivotActual = kHandoff;
-  //   return;
-  // }
 
   if (frc::IsNear(IP::kDeployed, angle, IP::kTollerance)) {
     m_pivotActual = kDeployed;

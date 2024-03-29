@@ -32,14 +32,6 @@
  * they are needed.
  */
 
-namespace Telemetry {
-  inline constinit const bool kIntake = true;
-  inline constinit const bool kDrive = false;
-  inline constinit const bool kShooter = true;
-  inline constinit const bool kArm = true;
-  inline constinit const bool kClimb = false;
-}  // namespace Telemetry
-
 namespace DriveConstants {
 
   namespace CanIds {

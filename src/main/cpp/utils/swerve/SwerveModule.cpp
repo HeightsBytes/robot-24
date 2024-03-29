@@ -34,7 +34,7 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
 
   // make motors default to break mode
   m_driveMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-  m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+  m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_turningMotor.SetInverted(true);
 
   // set the turn conversion factors

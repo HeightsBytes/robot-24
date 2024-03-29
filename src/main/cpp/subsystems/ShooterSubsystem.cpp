@@ -97,9 +97,6 @@ frc2::CommandPtr ShooterSubsystem::SetTargetStateCMD(State target) {
 }
 
 void ShooterSubsystem::InitSendable(wpi::SendableBuilder& builder) {
-  if constexpr (!Telemetry::kShooter) {
-    return;
-  }
   builder.SetSmartDashboardType("Shooter");
 
 #define LAMBDA(x) [this] { return x; }

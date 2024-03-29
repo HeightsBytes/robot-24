@@ -144,7 +144,7 @@ namespace IntakeConstants {
   namespace Positions {
     inline constexpr auto kDeployed = 130_deg;
     inline constexpr auto kStow = -15_deg;
-    inline constexpr auto kHandoff = -75_deg;
+    inline constexpr auto kHandoff = -77_deg;
     inline constexpr auto kTollerance = 1.25_deg;
   }  // namespace Positions
 
@@ -190,7 +190,7 @@ namespace ArmConstants {
     inline constexpr auto kTollerance = 0.375_deg;
     inline constexpr auto kHandoff = 45_deg;
     inline constexpr auto kInFrame = -70_deg;
-    inline constexpr auto kTrap = 56.25_deg;
+    inline constexpr auto kTrap = 70_deg;
   }  // namespace Setpoint
 
   namespace LLS {

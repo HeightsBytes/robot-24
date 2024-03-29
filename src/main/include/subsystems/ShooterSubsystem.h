@@ -12,6 +12,8 @@
 #include <rev/CANSparkMax.h>
 #include <units/angular_velocity.h>
 #include <wpi/sendable/SendableBuilder.h>
+#include <frc/event/BooleanEvent.h>
+#include <frc/Timer.h>
 
 #include <string>
 
@@ -57,6 +59,14 @@ class ShooterSubsystem : public frc2::SubsystemBase {
     return frc2::Trigger([this] { return ShooterReady(); });
   }
 
+  bool ShooterReadyToFire() const {
+    return ShooterReady() && GetTargetState() == State::kSpeaker && m_shotTimer.HasElapsed(0.5_s);
+  }
+
+  frc2::Trigger ShooterReadyToFireTrigger() {
+    return frc2::Trigger([this] { return ShooterReadyToFire(); });
+  }
+
   void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
@@ -83,6 +93,9 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   State m_actual0;
   State m_actual1;
   State m_target;
+  State m_lastTarget;
+
+  frc::Timer m_shotTimer;
 
   /***TUNING***/
 

@@ -45,4 +45,11 @@ namespace Commands {
         .ToPtr()
         .AndThen(frc2::cmd::Wait(0.5_s));
   }
+
+  frc2::CommandPtr ShootWhenReady(ShooterSubsystem* shooter) {
+    return frc2::cmd::Sequence(
+        frc2::cmd::None().Until([shooter] {return shooter->ShooterReady();}),
+        ShootNote(shooter)
+    );
+  }
 }  // namespace Commands

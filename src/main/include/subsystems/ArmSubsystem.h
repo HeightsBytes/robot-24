@@ -52,6 +52,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
   [[nodiscard]]
   frc2::CommandPtr SetTargetStateCMD(State state);
 
+  frc2::Trigger AtSpeakerTargetTrigger() {
+    return frc2::Trigger{[this] { return GetActualState() == State::kTargetting; }};
+  }
+
   void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
@@ -73,9 +77,9 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   bool m_atTarget;
 
-  hb::Logarithmic m_reg{117.035, -16.9294};
+  // hb::Logarithmic m_reg{117.035, -16.9294};
   // hb::SquareRoot m_regLin{-11.115, -1.7112, -88.4067, 141.609};
-  hb::Exponential m_regLin{36.2199, 1.02622};
+  hb::Exponential m_regLin{31.6811, 1.03527};
 
   double m_targetVal;
 

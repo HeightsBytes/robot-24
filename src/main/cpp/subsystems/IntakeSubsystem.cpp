@@ -57,7 +57,7 @@ void IntakeSubsystem::Periodic() {
 
   CheckState();
 
-  m_pivotController.SetReference(StateToOutput(m_pivotTarget).value() + 90.5,
+  m_pivotController.SetReference(StateToOutput(m_pivotTarget).value() + 88,
                                  rev::CANSparkMax::ControlType::kPosition);
 
   // m_pivot.Set(target);

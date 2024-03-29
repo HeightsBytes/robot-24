@@ -37,7 +37,7 @@ class LLTrack : public frc2::CommandHelper<frc2::Command, LLTrack> {
   std::function<double()> m_leftY;
   std::function<double()> m_leftX;
 
-  frc::PIDController m_controller{0.05, 0, 0};
+  frc::PIDController m_controller{0.125, 0, 0.001};
 
   bool m_hasTarget;
   units::degree_t m_angle;

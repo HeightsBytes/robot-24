@@ -5,6 +5,7 @@
 #include "commands/LLTrack.h"
 
 #include <utility>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "utils/cams/Limelight.h"
 
@@ -28,9 +29,10 @@ void LLTrack::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void LLTrack::Execute() {
-  double maxSpeed = 1.5;
+  double maxSpeed = 3;
   double x = -m_leftY();
   double y = m_leftX();
+  double yMPS = m_drive->GetVelocity().vy.value();
 
   double magnitude =
       std::pow(frc::ApplyDeadband(std::clamp(hb::hypot(x, y), 0.0, 1.0), 0.1),
@@ -58,9 +60,13 @@ void LLTrack::Execute() {
     m_angle = units::degree_t(hb::LimeLight::GetX());
     m_lastRobotAngle = m_drive->GetCompassHeading();
   }
+
+  double ff = -yMPS * 1.2;
+  frc::SmartDashboard::PutNumber("LLTrack Feedforward", ff);
+
   m_drive->Drive(
       xComponent, yComponent,
-      units::radians_per_second_t(m_controller.Calculate(m_angle.value(), (m_drive->GetCompassHeading() - m_lastRobotAngle).value())),
+      units::radians_per_second_t(m_controller.Calculate(m_angle.value(), (m_lastRobotAngle - m_drive->GetCompassHeading()).value()) + ff),
       true);
 }
 

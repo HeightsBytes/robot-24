@@ -7,6 +7,7 @@
 #include <frc/MathUtil.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+
 #include "Constants.h"
 #include "utils/Util.h"
 
@@ -25,7 +26,8 @@ ShooterSubsystem::ShooterSubsystem()
                     rev::CANSparkMax::MotorType::kBrushed),
       m_actual0(State::kStopped),
       m_actual1(State::kStopped),
-      m_target(State::kStopped) {
+      m_target(State::kStopped),
+      m_lastTarget(State::kStopped) {
   m_leftFlywheel.RestoreFactoryDefaults();
   m_rightFlywheel.RestoreFactoryDefaults();
 
@@ -74,31 +76,16 @@ void ShooterSubsystem::Periodic() {
   CheckState0();
   CheckState1();
 
-  frc::SmartDashboard::PutBoolean("Shooter Ready", GetActualState0() == State::kSpeaker && GetActualState1() == State::kSpeaker);
+  if (m_target == m_lastTarget && m_target == State::kSpeaker) {
+    m_shotTimer.Start();
+  } else {
+    m_shotTimer.Stop();
+    m_shotTimer.Reset();
+  }
 
-  // if (m_target != State::kStopped) {
-  //   m_leftFlywheel.Set(0);
-  // } else {
-  //   m_leftFlywheel.Set(0.5);
-  // }
+  frc::SmartDashboard::PutBoolean("Shooter Ready", ShooterReadyToFire());
 
-  // if (hb::InRange(RPMSetpoint0, 0, 10)) {
-  //   m_leftFlywheel.Set(0);
-  // } else {
-  //   if (last0 != RPMSetpoint0) {
-  //     m_controller0.SetReference(RPMSetpoint0,
-  //     rev::CANSparkFlex::ControlType::kVelocity);
-  //   }
-  // }
-
-  // if (hb::InRange(RPMSetpoint1, 0, 10)) {
-  //   m_rightFlywheel.Set(0);
-  // } else {
-  //   m_controller1.SetReference(RPMSetpoint1,
-  //   rev::CANSparkFlex::ControlType::kVelocity);
-  // }
-
-  // last0 = RPMSetpoint0;
+  m_lastTarget = m_target;
 }
 
 void ShooterSubsystem::SetFeeder(double setpoint) {

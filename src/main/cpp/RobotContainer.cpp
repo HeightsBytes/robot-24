@@ -122,9 +122,7 @@ void RobotContainer::ConfigureDriverButtons() {
       m_intake.SetPivotTargetCMD(IntakeSubsystem::PivotState::kHandoff));
 
   frc2::POVButton(&m_driverController, 0)
-      .OnTrue(
-          m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kTrapAmp)
-              .AlongWith(m_arm.SetTargetStateCMD(ArmSubsystem::State::kTrap)));
+      .OnTrue(m_arm.SetTargetStateCMD(ArmSubsystem::State::kTrap));
 
   frc2::POVButton(&m_driverController, 90)
       .OnTrue(Commands::ShootNote(&m_shooter));
@@ -133,6 +131,11 @@ void RobotContainer::ConfigureDriverButtons() {
       .OnTrue(
           m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kStopped)
               .AlongWith(m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow)));
+
+  frc2::POVButton(&m_driverController, 270)
+      .OnTrue(
+        m_shooter.SetTargetStateCMD(ShooterSubsystem::State::kTrapAmp)
+      );
 }
 
 void RobotContainer::ConfigureOperatorButtons() {

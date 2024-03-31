@@ -145,6 +145,9 @@ namespace ClimbConstants {
   inline constexpr int kMotorLeftID = 30;
   inline constexpr int kMotorRightID = 31;
 
+  inline constexpr int kLeftSwitchID = -1;
+  inline constexpr int kRightSwitchID = -1;
+
 }  // namespace ClimbConstants
 
 namespace ArmConstants {

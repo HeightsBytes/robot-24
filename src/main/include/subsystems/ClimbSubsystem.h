@@ -7,6 +7,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
+#include <frc/DigitalInput.h>
 
 class ClimbSubsystem : public frc2::SubsystemBase {
  public:
@@ -17,8 +18,11 @@ class ClimbSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  void SetLeftMotor(double set) { m_leftMotor.Set(set); }
-  void SetRightMotor(double set) { m_rightMotor.Set(set); }
+  void SetLeftMotor(double set) { m_leftRequested = set; }
+  void SetRightMotor(double set) { m_rightRequested = set; }
+
+  bool GetLeftSwitch() const { return m_leftSwitch.Get(); }
+  bool GetRightSwitch() const { return m_rightSwitch.Get(); }
 
   [[nodiscard]]
   frc2::CommandPtr SetMotorsCMD(double set) {
@@ -41,4 +45,10 @@ class ClimbSubsystem : public frc2::SubsystemBase {
  private:
   rev::CANSparkMax m_leftMotor;
   rev::CANSparkMax m_rightMotor;
+
+  frc::DigitalInput m_leftSwitch;
+  frc::DigitalInput m_rightSwitch;
+
+  double m_leftRequested;
+  double m_rightRequested;
 };

@@ -10,7 +10,11 @@ ClimbSubsystem::ClimbSubsystem()
     : m_leftMotor(ClimbConstants::kMotorLeftID,
                   rev::CANSparkMax::MotorType::kBrushless),
       m_rightMotor(ClimbConstants::kMotorRightID,
-                   rev::CANSparkMax::MotorType::kBrushless) {
+                   rev::CANSparkMax::MotorType::kBrushless),
+      m_leftSwitch(ClimbConstants::kLeftSwitchID),
+      m_rightSwitch(ClimbConstants::kRightSwitchID),
+      m_leftRequested(0),
+      m_rightRequested(0) {
   m_leftMotor.RestoreFactoryDefaults();
   m_rightMotor.RestoreFactoryDefaults();
 
@@ -19,7 +23,31 @@ ClimbSubsystem::ClimbSubsystem()
 
   m_leftMotor.BurnFlash();
   m_rightMotor.BurnFlash();
+
 }
 
 // This method will be called once per scheduler run
-void ClimbSubsystem::Periodic() {}
+void ClimbSubsystem::Periodic() {
+
+  double leftOut;
+  if (!m_leftSwitch.Get()) {
+    leftOut = m_leftRequested;
+  } else if (m_leftRequested < 0) {
+    leftOut = m_leftRequested;
+  } else {
+    leftOut = 0;
+  }
+
+  double rightOut;
+  if (!m_rightSwitch.Get()) {
+    rightOut = m_rightRequested;
+  } else if (m_rightRequested > 0) {
+    rightOut = m_rightRequested;
+  } else {
+    rightOut = 0;
+  }
+
+  m_leftMotor.Set(leftOut);
+  m_rightMotor.Set(rightOut);
+
+}

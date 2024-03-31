@@ -78,6 +78,20 @@ std::string TrapSubsystem::ToStr(State state) const {
       return "Switching";
       break;
   }
+  return "";
+}
+
+units::meter_t TrapSubsystem::ToOutput(State state) const {
+  switch(state) {
+    case State::kStow:
+    case State::kSwitching:
+      return TrapConstants::Positions::kStow;
+      break;
+    case State::kDeployed:
+      return TrapConstants::Positions::kDeployed;
+      break;
+  }
+  return 0_m;
 }
 
 void TrapSubsystem::InitSendable(wpi::SendableBuilder& builder) {

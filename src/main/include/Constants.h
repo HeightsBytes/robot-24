@@ -245,6 +245,27 @@ namespace AutoConstants {
 
 }  // namespace AutoConstants
 
+namespace TrapConstants {
+
+  inline constexpr int kTrapMotorID = 0;
+
+  inline constexpr double kP = 0;
+  inline constexpr double kI = 0;
+  inline constexpr double kD = 0;
+  inline constexpr double kS = 0; // Constant feedforward for constant force spring
+
+  inline constexpr double kConversionFactor = 0;
+
+  inline constexpr auto kCurrentLimit = 10_A;
+
+  namespace Positions {
+    inline constexpr auto kStow = 0_m;
+    inline constexpr auto kDeployed = 0_m; 
+  }
+  inline constexpr auto kTollerance = 0.05_m;
+
+}
+
 namespace OIConstants {
   inline constexpr int kDriverControllerPort = 0;
   inline constexpr int kOperatorControllerPort = 1;

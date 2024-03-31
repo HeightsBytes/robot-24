@@ -128,7 +128,7 @@ namespace IntakeConstants {
   namespace Positions {
     inline constexpr auto kDeployed = 130_deg;
     inline constexpr auto kStow = -15_deg;
-    inline constexpr auto kHandoff = -77_deg;
+    inline constexpr auto kHandoff = -78.5_deg;
     inline constexpr auto kTollerance = 1.25_deg;
   }  // namespace Positions
 

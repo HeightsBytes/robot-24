@@ -28,7 +28,7 @@ IntakeSubsystem::IntakeSubsystem()
 
   m_pivot.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_intake.SetIdleMode(rev::CANSparkFlex::IdleMode::kCoast);
-  m_pivot.SetInverted(true);
+  m_pivot.SetInverted(false);
   m_pivot.SetSmartCurrentLimit(30);
 
   m_pivotEncoder.SetPositionConversionFactor(360);
@@ -55,7 +55,7 @@ void IntakeSubsystem::Periodic() {
 
   CheckState();
 
-  m_pivotController.SetReference(StateToOutput(m_pivotTarget).value() + 88,
+  m_pivotController.SetReference(StateToOutput(m_pivotTarget).value() + 85,
                                  rev::CANSparkMax::ControlType::kPosition);
 
   m_intake.SetVoltage(units::volt_t(StateToOutput(m_intakeTarget)));

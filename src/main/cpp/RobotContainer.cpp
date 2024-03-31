@@ -116,7 +116,7 @@ void RobotContainer::ConfigureDriverButtons() {
                   ShooterSubsystem::State::kStopped))));
                   
   (m_shooter.ShooterReadyToFireTrigger() && m_arm.AtSpeakerTargetTrigger() &&
-   m_robotAimedAtSpeaker && m_drightTrigger)
+   (m_robotAimedAtSpeaker || m_robotSpeedTrigger) && m_drightTrigger)
       .OnTrue(Commands::ShootNote(&m_shooter));
 
   frc2::POVButton(&m_driverController, 0)

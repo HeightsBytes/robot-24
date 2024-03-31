@@ -71,6 +71,12 @@ class RobotContainer {
         } else return true;
       }};
 
+  frc2::Trigger m_robotSpeedTrigger{
+      [this] {
+        return m_drive.GetVelocity().vx.value() < 1 && m_drive.GetVelocity().vy.value() < 1;
+      }
+  };
+
   void ConfigureDriverButtons();
 
   void ConfigureOperatorButtons();

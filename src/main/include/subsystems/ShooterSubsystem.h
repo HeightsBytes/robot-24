@@ -19,7 +19,6 @@
 
 #include "Constants.h"
 
-// 2 NEO Vortex
 class ShooterSubsystem : public frc2::SubsystemBase {
  public:
   enum class State { kStopped, kIdle, kTrapAmp, kSpeaker, kSwitching };

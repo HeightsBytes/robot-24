@@ -22,7 +22,6 @@
 #include "utils/regressions/Logarithmic.h"
 #include "utils/regressions/SquareRoot.h"
 
-// 1 NEO (Vortex?) Motor
 class ArmSubsystem : public frc2::SubsystemBase {
  public:
   enum class State {

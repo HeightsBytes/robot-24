@@ -144,8 +144,8 @@ void RobotContainer::ConfigureOperatorButtons() {
       .OnTrue(m_climber.SetRightMotorCMD(-0.5))
       .OnFalse(m_climber.SetRightMotorCMD(0));
 
-  m_operatorController.B().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kDeployed));
-  m_operatorController.X().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kStow));
+  m_operatorController.RightBumper().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kDeployed));
+  m_operatorController.LeftBumper().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kStow));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

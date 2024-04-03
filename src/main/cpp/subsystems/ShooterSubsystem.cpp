@@ -57,8 +57,8 @@ ShooterSubsystem::ShooterSubsystem()
   m_leftFlywheel.SetClosedLoopRampRate(0.5);
   m_rightFlywheel.SetClosedLoopRampRate(0.5);
 
-  // m_leftFlywheel.BurnFlash();
-  // m_rightFlywheel.BurnFlash();
+  m_leftFlywheel.BurnFlash();
+  m_rightFlywheel.BurnFlash();
 }
 
 // This method will be called once per scheduler run

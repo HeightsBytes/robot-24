@@ -75,7 +75,7 @@ class RobotContainer {
 
   frc2::Trigger m_robotSpeedTrigger{
       [this] {
-        return m_drive.GetVelocity().vx.value() < 1 && m_drive.GetVelocity().vy.value() < 1;
+        return m_drive.GetVelocity().vx.value() < 0.5 && m_drive.GetVelocity().vy.value() < 1.5;
       }
   };
 

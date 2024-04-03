@@ -70,13 +70,6 @@ void RobotContainer::ConfigureDriverButtons() {
   m_driverController.A().OnTrue(
       m_arm.SetTargetStateCMD(ArmSubsystem::State::kStow));
 
-  m_driverController.Y()
-      .OnTrue(m_shooter.SetFeederCMD(-0.1))
-      .OnFalse(m_shooter.SetFeederCMD(0));
-  m_driverController.Back()
-      .OnTrue(m_shooter.SetFeederCMD(0.1))
-      .OnFalse(m_shooter.SetFeederCMD(0));
-
   m_driverController.B()
       .OnTrue(
           m_intake.SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kIntaking))

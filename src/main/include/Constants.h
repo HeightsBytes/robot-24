@@ -145,8 +145,8 @@ namespace ClimbConstants {
   inline constexpr int kMotorLeftID = 30;
   inline constexpr int kMotorRightID = 31;
 
-  inline constexpr int kLeftSwitchID = -1;
-  inline constexpr int kRightSwitchID = -1;
+  inline constexpr int kLeftSwitchID = 8;
+  inline constexpr int kRightSwitchID = 9;
 
 }  // namespace ClimbConstants
 
@@ -174,7 +174,7 @@ namespace ArmConstants {
     inline constexpr auto kCloseShot = 57.5_deg;      // 35 In
     inline constexpr auto kBlackLineShot = 42.5_deg;  // 74 In
     inline constexpr auto kBlueLineShot = 37_deg;     // 120 In
-    inline constexpr auto kTollerance = 0.375_deg;
+    inline constexpr auto kTollerance = 0.25_deg;
     inline constexpr auto kHandoff = 45_deg;
     inline constexpr auto kInFrame = -70_deg;
     inline constexpr auto kTrap = 70_deg;
@@ -247,22 +247,21 @@ namespace AutoConstants {
 
 namespace TrapConstants {
 
-  inline constexpr int kTrapMotorID = 0;
+  inline constexpr int kTrapMotorID = 28;
 
-  inline constexpr double kP = 0;
+  inline constexpr double kP = 0.05;
   inline constexpr double kI = 0;
   inline constexpr double kD = 0;
-  inline constexpr double kS = 0; // Constant feedforward for constant force spring
 
-  inline constexpr double kConversionFactor = 0;
+  inline constexpr double kConversionFactor = 1;
 
   inline constexpr auto kCurrentLimit = 10_A;
 
   namespace Positions {
-    inline constexpr auto kStow = 0_m;
-    inline constexpr auto kDeployed = 0_m; 
+    inline constexpr double kStow = 0;
+    inline constexpr double kDeployed = 180; 
   }
-  inline constexpr auto kTollerance = 0.05_m;
+  inline constexpr double kTollerance = 1;
 
 }
 

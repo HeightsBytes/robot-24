@@ -4,6 +4,8 @@
 
 #include "subsystems/ClimbSubsystem.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 #include "Constants.h"
 
 ClimbSubsystem::ClimbSubsystem()
@@ -30,7 +32,7 @@ ClimbSubsystem::ClimbSubsystem()
 void ClimbSubsystem::Periodic() {
 
   double leftOut;
-  if (!m_leftSwitch.Get()) {
+  if (!GetLeftSwitch()) {
     leftOut = m_leftRequested;
   } else if (m_leftRequested < 0) {
     leftOut = m_leftRequested;
@@ -39,7 +41,7 @@ void ClimbSubsystem::Periodic() {
   }
 
   double rightOut;
-  if (!m_rightSwitch.Get()) {
+  if (!GetRightSwitch()) {
     rightOut = m_rightRequested;
   } else if (m_rightRequested > 0) {
     rightOut = m_rightRequested;

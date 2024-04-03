@@ -22,6 +22,7 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
+#include "subsystems/TrapSubsystem.h"
 #include "utils/cams/Limelight.h"
 #include "utils/Util.h"
 
@@ -49,6 +50,7 @@ class RobotContainer {
   IntakeSubsystem m_intake;
   DriveSubsystem m_drive;
   ClimbSubsystem m_climber;
+  TrapSubsystem m_trapper;
 
   frc::SendableChooser<std::string> m_chooser;
 

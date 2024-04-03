@@ -95,7 +95,7 @@ units::degree_t ArmSubsystem::TargettingAngle() const {
   }
 
   return units::degree_t(
-      std::clamp(m_regLin.Calculate(m_lastLLAngle), 0.0, 57.5)) + 2_deg;
+      std::clamp(m_regLin.Calculate(m_lastLLAngle), 0.0, 57.5)) + 3_deg;
 }
 
 void ArmSubsystem::CheckState() {

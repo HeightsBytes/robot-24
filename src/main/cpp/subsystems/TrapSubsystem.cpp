@@ -5,6 +5,7 @@
 #include "subsystems/TrapSubsystem.h"
 
 #include <frc/MathUtil.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "Constants.h"
 
@@ -20,20 +21,22 @@ TrapSubsystem::TrapSubsystem() :
 
     m_motor.SetSmartCurrentLimit(TrapConstants::kCurrentLimit.value());
 
-    m_encoder.SetPositionConversionFactor(TrapConstants::kConversionFactor);
     m_encoder.SetPosition(0);
 
     m_controller.SetP(TrapConstants::kP);
     m_controller.SetI(TrapConstants::kI);
     m_controller.SetD(TrapConstants::kD);
+    m_controller.SetOutputRange(-0.75, 0.75);
     
     m_motor.BurnFlash();
+
   }
 
 // This method will be called once per scheduler run
 void TrapSubsystem::Periodic() {
   CheckState();
   ControlLoop();
+  frc::SmartDashboard::PutNumber("Trapper Position", GetPosition());
 }
 
 void TrapSubsystem::CheckState() {
@@ -59,8 +62,7 @@ void TrapSubsystem::CheckState() {
 
 void TrapSubsystem::ControlLoop() {
   if (m_actual != m_target) {
-    m_controller.SetReference(ToOutput(m_target).value(), rev::CANSparkMax::ControlType::kPosition,
-      0, TrapConstants::kS);
+    m_controller.SetReference(ToOutput(m_target), rev::CANSparkMax::ControlType::kPosition);
     return;
   }
   m_motor.Set(0);
@@ -81,7 +83,7 @@ std::string TrapSubsystem::ToStr(State state) const {
   return "";
 }
 
-units::meter_t TrapSubsystem::ToOutput(State state) const {
+double TrapSubsystem::ToOutput(State state) const {
   switch(state) {
     case State::kStow:
     case State::kSwitching:
@@ -91,7 +93,7 @@ units::meter_t TrapSubsystem::ToOutput(State state) const {
       return TrapConstants::Positions::kDeployed;
       break;
   }
-  return 0_m;
+  return 0;
 }
 
 void TrapSubsystem::InitSendable(wpi::SendableBuilder& builder) {
@@ -99,7 +101,7 @@ void TrapSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   #define LAMBDA(x) [this] {return x;}
 
-  builder.AddDoubleProperty("Position", LAMBDA(GetPosition().value()), nullptr);
+  builder.AddDoubleProperty("Position", LAMBDA(GetPosition()), nullptr);
 
   builder.AddStringProperty("Target State", LAMBDA(ToStr(m_target)), nullptr);
   builder.AddStringProperty("Actual State", LAMBDA(ToStr(m_actual)), nullptr);

@@ -21,8 +21,8 @@ class ClimbSubsystem : public frc2::SubsystemBase {
   void SetLeftMotor(double set) { m_leftRequested = set; }
   void SetRightMotor(double set) { m_rightRequested = set; }
 
-  bool GetLeftSwitch() const { return m_leftSwitch.Get(); }
-  bool GetRightSwitch() const { return m_rightSwitch.Get(); }
+  bool GetLeftSwitch() const { return !m_leftSwitch.Get(); }
+  bool GetRightSwitch() const { return !m_rightSwitch.Get(); }
 
   [[nodiscard]]
   frc2::CommandPtr SetMotorsCMD(double set) {

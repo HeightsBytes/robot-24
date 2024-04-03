@@ -9,6 +9,7 @@
 #include <string>
 #include <units/length.h>
 #include <wpi/sendable/SendableBuilder.h>
+#include <frc2/command/CommandPtr.h>
 
 class TrapSubsystem : public frc2::SubsystemBase {
  public:
@@ -29,7 +30,15 @@ class TrapSubsystem : public frc2::SubsystemBase {
   State GetActualState() const { return m_actual; }
   State GetTargetState() const { return m_target; }
 
-  units::meter_t GetPosition() const { return units::meter_t(m_encoder.GetPosition()); }
+  double GetPosition() const { return m_encoder.GetPosition(); }
+
+  void SetTargetState(State state) { m_target = state; }
+
+  frc2::CommandPtr SetTargetStateCMD(State state) {
+    return this->RunOnce(
+      [this, state] { SetTargetState(state); }
+    );
+  } 
 
   void InitSendable(wpi::SendableBuilder& builder) override; 
 
@@ -39,7 +48,7 @@ class TrapSubsystem : public frc2::SubsystemBase {
 
   std::string ToStr(State state) const;
 
-  units::meter_t ToOutput(State state) const;
+  double ToOutput(State state) const;
 
   void ControlLoop();
   void CheckState();

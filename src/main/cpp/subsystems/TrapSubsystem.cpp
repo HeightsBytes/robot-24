@@ -36,7 +36,6 @@ TrapSubsystem::TrapSubsystem() :
 void TrapSubsystem::Periodic() {
   CheckState();
   ControlLoop();
-  frc::SmartDashboard::PutNumber("Trapper Position", GetPosition());
 }
 
 void TrapSubsystem::CheckState() {

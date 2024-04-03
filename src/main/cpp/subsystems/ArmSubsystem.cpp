@@ -150,7 +150,7 @@ std::string ArmSubsystem::ToStr(State state) const {
       return "Trap";
       break;
   }
-  return "FAIL";
+  return "";
 }
 
 units::degree_t ArmSubsystem::ToSetpoint(State state) const {
@@ -175,6 +175,5 @@ units::degree_t ArmSubsystem::ToSetpoint(State state) const {
       return ArmConstants::Setpoint::kTrap;
       break;
   }
-  std::printf("[WARNING] ArmSubsystem::ToSetpoint Failed!");
   return 0_deg;
 }

@@ -128,7 +128,6 @@ units::degree_t IntakeSubsystem::StateToOutput(PivotState state) const {
       break;
     default:
     case kSwitching:
-      fmt::println("[INTAKE FAIL], at {}", __LINE__);
       return 0_deg;
       break;
   }
@@ -173,10 +172,8 @@ std::string IntakeSubsystem::ToStr(PivotState state) const {
     case kSwitching:
       return "Switching";
       break;
-    default:
-      return "Sad :(";
-      break;
   }
+  return "";
 }
 
 std::string IntakeSubsystem::ToStr(IntakeState state) const {
@@ -192,8 +189,6 @@ std::string IntakeSubsystem::ToStr(IntakeState state) const {
     case kHandoff:
       return "Handoff";
       break;
-    default:
-      return "Tiempo por Miller";
-      break;
   }
+  return "";
 }

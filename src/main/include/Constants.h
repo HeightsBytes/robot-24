@@ -151,22 +151,12 @@ namespace ClimbConstants {
 }  // namespace ClimbConstants
 
 namespace ArmConstants {
-  // TODO: find constants
 
   inline constexpr int kMotorID = 11;
 
   inline constexpr double kP = 0.02;
   inline constexpr double kI = 0.0001;
   inline constexpr double kD = 0;
-  inline constexpr double kG = 0;
-
-  inline constexpr auto kOffset = 0_deg;
-
-  inline constexpr auto kCurrentLimit = 0_A;
-
-  inline constexpr double kConversionFactor = 360;
-
-  inline constexpr bool kEncoderInverted = false;
 
   namespace Setpoint {
     inline constexpr auto kStow = 0_deg;
@@ -189,22 +179,16 @@ namespace ArmConstants {
 }  // namespace ArmConstants
 
 namespace ShooterConstants {
-  // TODO: find constants
 
   inline constexpr int kLeftFlywheelID = 20;
   inline constexpr int kRightFlywheelID = 22;
   inline constexpr int kLeftFeederID = 10;
   inline constexpr int kRightFeederID = 9;
-  inline constexpr int kBeamBreakPort = 0;
 
-  // Done experimentally
   inline constexpr double kP = 0.0001;
   inline constexpr double kI = 0.0000002;
-  // inline constexpr double kI = 0;
   inline constexpr double kD = 0.0002;
   inline constexpr double kFF = 0.00015;
-
-  inline constexpr auto kCurrentLimit = 60_A;
 
   namespace Setpoint {
     inline constexpr auto kIdle = 300_rpm;
@@ -214,12 +198,6 @@ namespace ShooterConstants {
     inline constexpr auto kTrapAmp1 = 3000_rpm;
   }  // namespace Setpoint
   inline constexpr auto kTollerance = 100_rpm;
-
-  inline constexpr frc::Pose2d kRedSpeakerPose = {};
-  inline constexpr frc::Pose2d kBlueSpeakerPose = {};
-
-  inline constexpr int kBlueApriltagID = 7;
-  inline constexpr int kRedApriltagID = 4;
 
 }  // namespace ShooterConstants
 
@@ -252,8 +230,6 @@ namespace TrapConstants {
   inline constexpr double kP = 0.05;
   inline constexpr double kI = 0;
   inline constexpr double kD = 0;
-
-  inline constexpr double kConversionFactor = 1;
 
   inline constexpr auto kCurrentLimit = 10_A;
 

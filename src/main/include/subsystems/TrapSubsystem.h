@@ -40,6 +40,18 @@ class TrapSubsystem : public frc2::SubsystemBase {
     );
   } 
 
+  frc2::CommandPtr SetTargetCMD(double output) {
+    return this->RunOnce(
+      [this, output] { m_motor.Set(output); }
+    );
+  }
+
+  frc2::CommandPtr StopMotorCMD() {
+    return this->RunOnce(
+      [this] { m_motor.Set(0); }
+    );
+  }
+
   void InitSendable(wpi::SendableBuilder& builder) override; 
 
  private:

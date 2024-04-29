@@ -23,6 +23,7 @@ namespace Commands {
     return frc2::cmd::Sequence(
         SetArmAwait(arm, ArmSubsystem::State::kHandoff).ToPtr(),
         SetIntakeAwait(intake, IntakeSubsystem::PivotState::kHandoff).ToPtr(),
+        // frc2::cmd::Wait(0.25_s),
         intake->SetIntakeTargetCMD(IntakeSubsystem::IntakeState::kHandoff),
         shooter->SetFeederCMD(-0.5), frc2::cmd::Wait(1_s),
         shooter->SetFeederCMD(0),
@@ -39,7 +40,7 @@ namespace Commands {
         shooter->SetFeederCMD(0),
         shooter->SetTargetStateCMD(ShooterSubsystem::State::kStopped));
   }
-
+// nathal
   frc2::CommandPtr RevShooter(ShooterSubsystem* shooter) {
     return SetRPMAwait(shooter, ShooterSubsystem::State::kSpeaker)
         .ToPtr()

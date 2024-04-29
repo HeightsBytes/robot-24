@@ -131,21 +131,24 @@ void RobotContainer::ConfigureDriverButtons() {
 
 void RobotContainer::ConfigureOperatorButtons() {
   frc2::POVButton(&m_operatorController, 0)
-      .OnTrue(m_climber.SetLeftMotorCMD(-0.5))
+      .OnTrue(m_climber.SetLeftMotorCMD(-1))
       .OnFalse(m_climber.SetLeftMotorCMD(0));
   frc2::POVButton(&m_operatorController, 180)
-      .OnTrue(m_climber.SetLeftMotorCMD(0.5))
+      .OnTrue(m_climber.SetLeftMotorCMD(1))
       .OnFalse(m_climber.SetLeftMotorCMD(0));
 
   m_operatorController.Y()
-      .OnTrue(m_climber.SetRightMotorCMD(0.5))
+      .OnTrue(m_climber.SetRightMotorCMD(1))
       .OnFalse(m_climber.SetRightMotorCMD(0));
   m_operatorController.A()
-      .OnTrue(m_climber.SetRightMotorCMD(-0.5))
+      .OnTrue(m_climber.SetRightMotorCMD(-1))
       .OnFalse(m_climber.SetRightMotorCMD(0));
 
-  m_operatorController.RightBumper().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kDeployed));
-  m_operatorController.LeftBumper().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kStow));
+//   m_operatorController.RightBumper().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kDeployed));
+//   m_operatorController.LeftBumper().OnTrue(m_trapper.SetTargetStateCMD(TrapSubsystem::State::kStow));
+
+  // m_operatorController.RightBumper().OnTrue(m_trapper.SetTargetCMD(0.5)).OnFalse(m_trapper.StopMotorCMD());
+  // m_operatorController.LeftBumper().OnTrue(m_trapper.SetTargetCMD(-0.5)).OnFalse(m_trapper.StopMotorCMD());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

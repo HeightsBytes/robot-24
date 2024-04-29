@@ -60,6 +60,8 @@ void IntakeSubsystem::Periodic() {
 
   m_intake.SetVoltage(units::volt_t(StateToOutput(m_intakeTarget)));
 
+  frc::SmartDashboard::PutNumber("Intake Angle", GetAngle().value());
+
 }
 
 void IntakeSubsystem::InitSendable(wpi::SendableBuilder& builder) {

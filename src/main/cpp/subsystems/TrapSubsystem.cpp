@@ -30,12 +30,16 @@ TrapSubsystem::TrapSubsystem() :
     
     m_motor.BurnFlash();
 
+    frc::SmartDashboard::PutNumber("Trapper Target", 0);
+
   }
 
 // This method will be called once per scheduler run
 void TrapSubsystem::Periodic() {
-  CheckState();
-  ControlLoop();
+  // CheckState();
+  // ControlLoop();
+  // frc::SmartDashboard::PutNumber("Trapper Position", GetPosition());
+  // m_controller.SetReference(frc::SmartDashboard::GetNumber("Trapper Target", 0), rev::CANSparkMax::ControlType::kPosition);
 }
 
 void TrapSubsystem::CheckState() {

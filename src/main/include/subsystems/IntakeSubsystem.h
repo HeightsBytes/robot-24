@@ -30,7 +30,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
   units::degree_t GetAngle() const {
-    return units::degree_t(m_pivotEncoder.GetPosition() - 90.5);
+    return units::degree_t(m_pivotEncoder.GetPosition() - 85);
   }
 
   bool AtPivotTarget() const { return m_pivotTarget == m_pivotActual; }

@@ -128,12 +128,12 @@ namespace IntakeConstants {
   namespace Positions {
     inline constexpr auto kDeployed = 130_deg;
     inline constexpr auto kStow = -15_deg;
-    inline constexpr auto kHandoff = -78.5_deg;
+    inline constexpr auto kHandoff = -77_deg;
     inline constexpr auto kTollerance = 1.25_deg;
   }  // namespace Positions
 
   namespace Speeds {
-    inline constexpr double kIntake = 0.3 * 12;
+    inline constexpr double kIntake = 0.4 * 12;
     inline constexpr double kHandoff = -0.3 * 12;
     inline constexpr double kStopped = 0;
   }  // namespace Speeds
@@ -167,7 +167,7 @@ namespace ArmConstants {
     inline constexpr auto kTollerance = 0.25_deg;
     inline constexpr auto kHandoff = 45_deg;
     inline constexpr auto kInFrame = -70_deg;
-    inline constexpr auto kTrap = 70_deg;
+    inline constexpr auto kTrap = 68_deg;
   }  // namespace Setpoint
 
   namespace LLS {
@@ -194,7 +194,7 @@ namespace ShooterConstants {
     inline constexpr auto kIdle = 300_rpm;
     inline constexpr auto kShooting0 = 5500_rpm;
     inline constexpr auto kShooting1 = 3000_rpm;
-    inline constexpr auto kTrapAmp0 = 1500_rpm;
+    inline constexpr auto kTrapAmp0 = 6000_rpm;
     inline constexpr auto kTrapAmp1 = 3000_rpm;
   }  // namespace Setpoint
   inline constexpr auto kTollerance = 100_rpm;
@@ -235,7 +235,7 @@ namespace TrapConstants {
 
   namespace Positions {
     inline constexpr double kStow = 0;
-    inline constexpr double kDeployed = 180; 
+    inline constexpr double kDeployed = 215; 
   }
   inline constexpr double kTollerance = 1;
 
